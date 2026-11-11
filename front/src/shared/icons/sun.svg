@@ -1,0 +1,30 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(0 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(45 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(90 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(135 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(180 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(225 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(270 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(315 50 50)"/>
+	</g>
+	<g fill="#ffb800">
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(0 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(45 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(90 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(135 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(180 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(225 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(270 50 50)"/>
+	<rect x="45" y="6" width="10" height="20" rx="5" transform="rotate(315 50 50)"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<circle cx="50" cy="50" r="24"/>
+	</g>
+	<g fill="#ffd23f">
+	<circle cx="50" cy="50" r="24"/>
+	</g>
+	<path d="M36 44a16 16 0 0 1 8-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

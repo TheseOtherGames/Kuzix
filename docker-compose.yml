@@ -1,0 +1,16 @@
+# PostgreSQL for Kuzix. Credentials come from server/.env (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB),
+# so they match DATABASE_URL. Data lives in ./data. Host port = POSTGRES_PORT (default 5432); compose only
+# interpolates it from server/.env when run with `docker compose --env-file server/.env up`.
+services:
+  db:
+    image: docker.io/library/postgres:17-alpine
+    restart: unless-stopped
+    env_file: server/.env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      retries: 5

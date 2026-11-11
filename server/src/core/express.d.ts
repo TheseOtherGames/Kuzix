@@ -1,0 +1,12 @@
+import type { Quiz } from '../features/quiz/quiz.types';
+
+declare global {
+	namespace Express {
+		interface Request {
+			userId?: number;
+			quiz?: Quiz;
+		}
+	}
+}
+
+export {};

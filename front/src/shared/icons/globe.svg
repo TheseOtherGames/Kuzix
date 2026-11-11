@@ -1,0 +1,18 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<circle cx="50" cy="50" r="38"/>
+	</g>
+	<g fill="#3d8bff">
+	<circle cx="50" cy="50" r="38"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<path d="M24 30Q36 22 44 30Q46 42 34 46Q28 56 20 50Q16 40 24 30Z"/>
+	<path d="M58 54Q72 50 76 60Q72 76 60 80Q54 70 58 54Z"/>
+	</g>
+	<g fill="#1fc96f">
+	<path d="M24 30Q36 22 44 30Q46 42 34 46Q28 56 20 50Q16 40 24 30Z"/>
+	<path d="M58 54Q72 50 76 60Q72 76 60 80Q54 70 58 54Z"/>
+	</g>
+	<path d="M22 42a30 30 0 0 1 12-16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

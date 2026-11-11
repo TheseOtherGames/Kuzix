@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE: ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
+      REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+      SSH: ssh -p ${{ secrets.REMOTE_PORT }} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build front
+        run: npm run build
+        env:
+          # Public URL used in sitemap.xml, robots.txt and llms.txt (repository variable).
+          FRONT_URL: ${{ vars.FRONT_URL }}
+
+      - name: Set up SSH key
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Upload
+        run: |
+          $SSH "$REMOTE" "mkdir -p '$REMOTE_PATH/front/dist' '$REMOTE_PATH/server'"
+          # --delete only inside folders we own; server/.env, data/ and backups/ on the host are never touched.
+          rsync -az --delete -e "$SSH" front/dist/ "$REMOTE:$REMOTE_PATH/front/dist/"
+          rsync -az --delete --exclude .env -e "$SSH" server/ "$REMOTE:$REMOTE_PATH/server/"
+          rsync -az -e "$SSH" package.json package-lock.json docker-compose.yml scripts "$REMOTE:$REMOTE_PATH/"
+
+      - name: Install and restart
+        run: |
+          $SSH "$REMOTE" "cd '$REMOTE_PATH' && npm ci --omit=dev && docker compose --env-file server/.env up -d --wait db && systemctl --user restart kuzix"

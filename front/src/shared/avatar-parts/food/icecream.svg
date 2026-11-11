@@ -1,0 +1,38 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" data-eye-y="50" data-top="25">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M33 58L50 97L67 58z"/>
+	</g>
+	<g fill="#f2a65a">
+		<path d="M33 58L50 97L67 58z"/>
+	</g>
+	<path d="M40 64l16 16M50 62l10 10M38 72l10 10M60 64l-16 16M50 62l-10 10M62 72l-10 10" stroke="#d9893d" stroke-width="2.5" stroke-linecap="round"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="50" cy="48" r="24"/>
+		<circle cx="30" cy="62" r="7"/>
+		<circle cx="44" cy="66" r="6"/>
+		<circle cx="58" cy="65" r="7"/>
+		<circle cx="71" cy="61" r="6"/>
+	</g>
+	<g fill="#ff9ec4">
+		<circle cx="50" cy="48" r="24"/>
+		<circle cx="30" cy="62" r="7"/>
+		<circle cx="44" cy="66" r="6"/>
+		<circle cx="58" cy="65" r="7"/>
+		<circle cx="71" cy="61" r="6"/>
+	</g>
+	<g stroke-width="3" stroke-linecap="round">
+		<path d="M38 32l3-2" stroke="#3d8bff"/>
+		<path d="M58 30l3 2" stroke="#ffd23f"/>
+		<path d="M68 42l1 3" stroke="#1fc96f"/>
+		<path d="M31 44l-1 3" stroke="#9b5cff"/>
+	</g>
+	<circle cx="40" cy="50" r="4.5" fill="#2a2238"/>
+	<circle cx="60" cy="50" r="4.5" fill="#2a2238"/>
+	<circle cx="41.6" cy="48.4" r="1.6" fill="#fff"/>
+	<circle cx="61.6" cy="48.4" r="1.6" fill="#fff"/>
+	<path d="M44 58q6 6 12 0" fill="none" stroke="#2a2238" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<ellipse cx="33" cy="58" rx="5" ry="3" fill="#ff6b9a" opacity=".55"/>
+	<ellipse cx="67" cy="58" rx="5" ry="3" fill="#ff6b9a" opacity=".55"/>
+	<path d="M34 40q4-6 10-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

@@ -1,0 +1,9 @@
+.vscode
+.code-workspace
+.idea
+.claude
+node_modules
+front/dist
+data
+backups
+server/.env

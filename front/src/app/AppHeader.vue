@@ -1,0 +1,127 @@
+<script setup lang="ts">
+import AppIcon from '../shared/ui/AppIcon.vue';
+import AvatarIcon from '../shared/ui/AvatarIcon.vue';
+import { t } from '../shared/i18n/i18n';
+import { useRouter } from 'vue-router';
+import { auth, logout } from '../features/auth/auth.store';
+import { cycleTheme, theme, THEME_ICONS } from '../shared/theme.store';
+import { toast } from '../shared/toast.store';
+import BaseButton from '../shared/ui/BaseButton.vue';
+import PillButton from '../shared/ui/PillButton.vue';
+import TopBar from '../shared/ui/TopBar.vue';
+
+const LOGO_COLORS = ['var(--color-1)', 'var(--color-2)', 'var(--color-3)', 'var(--color-4)', 'var(--color-5)', 'var(--color-6)'];
+
+const router = useRouter();
+
+const onLogout = (): void => {
+	logout();
+	toast.info(t('header.seeYou'));
+	router.push('/');
+};
+</script>
+
+<template>
+	<TopBar>
+		<RouterLink to="/" class="logo" :aria-label="t('header.home')">
+			<span v-for="(letter, i) in 'Kuzix'" :key="i" :style="{ color: LOGO_COLORS[i % LOGO_COLORS.length] }">{{ letter }}</span>
+		</RouterLink>
+		<nav class="nav">
+			<template v-if="auth.user">
+				<PillButton to="/dashboard" :label="t('header.myQuizzes')"><AppIcon name="folder" /></PillButton>
+				<PillButton to="/profile" :label="auth.user.username"><AvatarIcon :value="auth.user.avatar" /></PillButton>
+			</template>
+			<span class="divider" aria-hidden="true"></span>
+			<button
+				type="button"
+				class="round theme"
+				:title="t('header.theme', { theme: t(`theme.${theme}`) })"
+				:aria-label="t('header.theme', { theme: t(`theme.${theme}`) })"
+				@click="cycleTheme"
+			>
+				<AppIcon :name="THEME_ICONS[theme]" />
+			</button>
+			<button v-if="auth.user" type="button" class="round logout" :title="t('common.logOut')" :aria-label="t('common.logOut')" @click="onLogout">
+				<AppIcon name="power" />
+			</button>
+			<BaseButton v-else to="/login" size="sm">{{ t('common.logIn') }}</BaseButton>
+		</nav>
+	</TopBar>
+</template>
+
+<style scoped>
+.logo {
+	flex-shrink: 0;
+	font-size: 1.6rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-decoration: none;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+	white-space: nowrap;
+}
+
+.logo span {
+	display: inline-block;
+	transition: transform 0.2s;
+}
+
+.logo:hover span:nth-child(odd) {
+	transform: translateY(-0.2rem) rotate(-6deg);
+}
+
+.logo:hover span:nth-child(even) {
+	transform: translateY(0.1rem) rotate(4deg);
+}
+
+.nav {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.divider {
+	width: 1px;
+	height: 1.6rem;
+	margin: 0 0.3rem;
+	background: var(--border);
+}
+
+.round .app-icon {
+	font-size: 1.35em;
+}
+
+.round {
+	display: grid;
+	place-items: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: var(--surface-2);
+	color: var(--text);
+	font-size: 1.15rem;
+	cursor: pointer;
+	transition: transform 0.2s, background 0.15s, color 0.15s;
+}
+
+.theme:hover {
+	transform: rotate(-20deg) scale(1.1);
+}
+
+.logout:hover {
+	background: var(--danger);
+	color: var(--on-color);
+	transform: scale(1.08);
+}
+
+@media (max-width: 640px) {
+	.divider {
+		display: none;
+	}
+
+	.logo {
+		font-size: 1.3rem;
+	}
+}
+</style>

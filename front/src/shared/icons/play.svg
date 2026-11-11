@@ -1,0 +1,10 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<path d="M26 14L84 50L26 86Z"/>
+	</g>
+	<g fill="#ffd23f">
+	<path d="M26 14L84 50L26 86Z"/>
+	</g>
+	<path d="M34 30V46" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

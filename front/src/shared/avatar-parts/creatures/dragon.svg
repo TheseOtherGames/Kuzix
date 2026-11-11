@@ -1,0 +1,52 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" data-mouth-y="74" data-top="24">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M26 52Q10 40 6 18q8 7 13 5q1 8 8 10q-3 8 3 15z"/>
+		<path d="M74 52Q90 40 94 18q-8 7-13 5q-1 8-8 10q3 8-3 15z"/>
+	</g>
+	<g fill="#ff8fab">
+		<path d="M26 52Q10 40 6 18q8 7 13 5q1 8 8 10q-3 8 3 15z"/>
+		<path d="M74 52Q90 40 94 18q-8 7-13 5q-1 8-8 10q3 8-3 15z"/>
+	</g>
+	<path d="M8 22q8 14 18 24M20 26q4 10 8 18M92 22q-8 14-18 24M80 26q-4 10-8 18" fill="none" stroke="#e5245a" stroke-width="2" stroke-linecap="round"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M34 34q-8-14 0-26q0 12 10 20z"/>
+		<path d="M66 34q8-14 0-26q0 12-10 20z"/>
+	</g>
+	<g fill="#fff1d6">
+		<path d="M34 34q-8-14 0-26q0 12 10 20z"/>
+		<path d="M66 34q8-14 0-26q0 12-10 20z"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M22 54l-10-4 4 10z"/>
+		<path d="M78 54l10-4-4 10z"/>
+		<circle cx="50" cy="58" r="28"/>
+	</g>
+	<g fill="#ff3d71">
+		<path d="M22 54l-10-4 4 10z"/>
+		<path d="M78 54l10-4-4 10z"/>
+		<circle cx="50" cy="58" r="28"/>
+	</g>
+	<path d="M44 32l3-5 3 5 3-5 3 5z" fill="#ffd23f"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<ellipse cx="50" cy="70" rx="17" ry="11"/>
+	</g>
+	<g fill="#ff8fab">
+		<ellipse cx="50" cy="70" rx="17" ry="11"/>
+	</g>
+	<ellipse cx="44" cy="66" rx="2" ry="1.5" fill="#2a2238"/>
+	<ellipse cx="56" cy="66" rx="2" ry="1.5" fill="#2a2238"/>
+	<g fill="#d6dbe8">
+		<circle cx="70" cy="60" r="3"/>
+		<circle cx="76" cy="54" r="2.2"/>
+		<circle cx="80" cy="48" r="1.5"/>
+	</g>
+	<circle cx="39" cy="54" r="4.5" fill="#2a2238"/>
+	<circle cx="61" cy="54" r="4.5" fill="#2a2238"/>
+	<circle cx="40.6" cy="52.4" r="1.6" fill="#fff"/>
+	<circle cx="62.6" cy="52.4" r="1.6" fill="#fff"/>
+	<path d="M33 45l9 3M67 45l-9 3" fill="none" stroke="#2a2238" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M42 74q8 5 16 0" fill="none" stroke="#2a2238" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M44 75l1.5 3.5 2-3M52.5 75.5l2 3 1.5-3.5" fill="#fff" stroke="#2a2238" stroke-width="1.2" stroke-linejoin="round"/>
+	<path d="M30 46q4-6 10-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

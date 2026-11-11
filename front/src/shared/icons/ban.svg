@@ -1,0 +1,7 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<circle cx="50" cy="50" r="34" fill="#fff" stroke="#2a2238" stroke-width="18"/>
+	<path d="M26 26L74 74" fill="none" stroke="#2a2238" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+	<circle cx="50" cy="50" r="34" fill="none" stroke="#ff3d71" stroke-width="12"/>
+	<path d="M26 26L74 74" fill="none" stroke="#ff3d71" stroke-width="12" stroke-linecap="butt" stroke-linejoin="round"/>
+</svg>

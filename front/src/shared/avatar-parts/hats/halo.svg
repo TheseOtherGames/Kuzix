@@ -1,0 +1,7 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<ellipse cx="50" cy="12" rx="20" ry="6" fill="none" stroke="#ffd23f" stroke-width="10" opacity=".25"/>
+	<ellipse cx="50" cy="12" rx="18" ry="5" fill="none" stroke="#2a2238" stroke-width="7"/>
+	<ellipse cx="50" cy="12" rx="18" ry="5" fill="none" stroke="#ffd23f" stroke-width="3.5"/>
+	<path d="M38 10q4-2 8-2" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+</svg>

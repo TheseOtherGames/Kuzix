@@ -1,0 +1,18 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<path d="M14 88L32 34L68 70Z"/>
+	</g>
+	<g fill="#ffb800">
+	<path d="M14 88L32 34L68 70Z"/>
+	</g>
+	<path d="M23 61L41 79" fill="none" stroke="#ff3d71" stroke-width="7" stroke-linecap="butt" stroke-linejoin="round"/>
+	<circle cx="68" cy="26" r="6" fill="#3d8bff" stroke="#2a2238" stroke-width="3"/>
+	<circle cx="48" cy="14" r="5" fill="#1fc96f" stroke="#2a2238" stroke-width="3"/>
+	<circle cx="86" cy="48" r="5" fill="#ff3d71" stroke="#2a2238" stroke-width="3"/>
+	<circle cx="84" cy="14" r="4" fill="#ffd23f" stroke="#2a2238" stroke-width="3"/>
+	<path d="M46 34Q56 24 50 12" fill="none" stroke="#2a2238" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M46 34Q56 24 50 12" fill="none" stroke="#9b5cff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M66 54Q78 46 90 64" fill="none" stroke="#2a2238" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M66 54Q78 46 90 64" fill="none" stroke="#1fc96f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

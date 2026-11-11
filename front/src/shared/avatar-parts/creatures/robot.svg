@@ -1,0 +1,31 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" data-mouth-y="63">
+	<path d="M50 26V12" fill="none" stroke="#2a2238" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="50" cy="11" r="5"/>
+	</g>
+	<g fill="#ff3d71">
+		<circle cx="50" cy="11" r="5"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<rect x="12" y="46" width="10" height="18" rx="4"/>
+		<rect x="78" y="46" width="10" height="18" rx="4"/>
+	</g>
+	<g fill="#ffb800">
+		<rect x="12" y="46" width="10" height="18" rx="4"/>
+		<rect x="78" y="46" width="10" height="18" rx="4"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<rect x="20" y="26" width="60" height="56" rx="14"/>
+	</g>
+	<g fill="#3dd6c6">
+		<rect x="20" y="26" width="60" height="56" rx="14"/>
+	</g>
+	<rect x="27" y="40" width="46" height="30" rx="9" fill="#2a2238"/>
+	<circle cx="39" cy="53" r="5" fill="#7dffb0"/>
+	<circle cx="61" cy="53" r="5" fill="#7dffb0"/>
+	<path d="M42 63l4 3 4-3 4 3 4-3" fill="none" stroke="#7dffb0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+	<circle cx="27" cy="33" r="2" fill="#2a2238"/>
+	<circle cx="73" cy="33" r="2" fill="#2a2238"/>
+	<path d="M25 76q4-6 10-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+</svg>

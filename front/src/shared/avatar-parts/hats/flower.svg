@@ -1,0 +1,66 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<path d="M24 34q26-14 52 0" fill="none" stroke="#1fc96f" stroke-width="5" stroke-linecap="round"/>
+	<ellipse cx="36" cy="22" rx="5" ry="2.5" transform="rotate(-30 36 22)" fill="#1fc96f"/>
+	<ellipse cx="64" cy="22" rx="5" ry="2.5" transform="rotate(30 64 22)" fill="#1fc96f"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="26" cy="26.5" r="4.2"/>
+		<circle cx="30.3" cy="29.6" r="4.2"/>
+		<circle cx="28.6" cy="34.6" r="4.2"/>
+		<circle cx="23.4" cy="34.6" r="4.2"/>
+		<circle cx="21.7" cy="29.6" r="4.2"/>
+	</g>
+	<g fill="#ff6fae">
+		<circle cx="26" cy="26.5" r="4.2"/>
+		<circle cx="30.3" cy="29.6" r="4.2"/>
+		<circle cx="28.6" cy="34.6" r="4.2"/>
+		<circle cx="23.4" cy="34.6" r="4.2"/>
+		<circle cx="21.7" cy="29.6" r="4.2"/>
+	</g>
+	<circle cx="26" cy="31" r="2.6" fill="#ffd23f"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="41" cy="20.5" r="4.2"/>
+		<circle cx="45.3" cy="23.6" r="4.2"/>
+		<circle cx="43.6" cy="28.6" r="4.2"/>
+		<circle cx="38.4" cy="28.6" r="4.2"/>
+		<circle cx="36.7" cy="23.6" r="4.2"/>
+	</g>
+	<g fill="#ffffff">
+		<circle cx="41" cy="20.5" r="4.2"/>
+		<circle cx="45.3" cy="23.6" r="4.2"/>
+		<circle cx="43.6" cy="28.6" r="4.2"/>
+		<circle cx="38.4" cy="28.6" r="4.2"/>
+		<circle cx="36.7" cy="23.6" r="4.2"/>
+	</g>
+	<circle cx="41" cy="25" r="2.6" fill="#ffd23f"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="59" cy="20.5" r="4.2"/>
+		<circle cx="63.3" cy="23.6" r="4.2"/>
+		<circle cx="61.6" cy="28.6" r="4.2"/>
+		<circle cx="56.4" cy="28.6" r="4.2"/>
+		<circle cx="54.7" cy="23.6" r="4.2"/>
+	</g>
+	<g fill="#9b5cff">
+		<circle cx="59" cy="20.5" r="4.2"/>
+		<circle cx="63.3" cy="23.6" r="4.2"/>
+		<circle cx="61.6" cy="28.6" r="4.2"/>
+		<circle cx="56.4" cy="28.6" r="4.2"/>
+		<circle cx="54.7" cy="23.6" r="4.2"/>
+	</g>
+	<circle cx="59" cy="25" r="2.6" fill="#ffd23f"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<circle cx="74" cy="26.5" r="4.2"/>
+		<circle cx="78.3" cy="29.6" r="4.2"/>
+		<circle cx="76.6" cy="34.6" r="4.2"/>
+		<circle cx="71.4" cy="34.6" r="4.2"/>
+		<circle cx="69.7" cy="29.6" r="4.2"/>
+	</g>
+	<g fill="#3d8bff">
+		<circle cx="74" cy="26.5" r="4.2"/>
+		<circle cx="78.3" cy="29.6" r="4.2"/>
+		<circle cx="76.6" cy="34.6" r="4.2"/>
+		<circle cx="71.4" cy="34.6" r="4.2"/>
+		<circle cx="69.7" cy="29.6" r="4.2"/>
+	</g>
+	<circle cx="74" cy="31" r="2.6" fill="#ffd23f"/>
+</svg>

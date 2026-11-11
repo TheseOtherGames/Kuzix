@@ -1,0 +1,15 @@
+# systemd user service running the Kuzix server. Install once on the host:
+#   mkdir -p ~/.config/systemd/user && cp deploy/kuzix.service ~/.config/systemd/user/
+#   edit WorkingDirectory below, then:
+#   systemctl --user daemon-reload && systemctl --user enable --now kuzix
+#   sudo loginctl enable-linger "$USER"   # keep it running after logout / start at boot
+[Unit]
+Description=Kuzix server
+
+[Service]
+WorkingDirectory=%h/kuzix
+ExecStart=/usr/bin/env npm start
+Restart=always
+
+[Install]
+WantedBy=default.target

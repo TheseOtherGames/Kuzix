@@ -1,0 +1,11 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+	<circle cx="50" cy="50" r="38"/>
+	</g>
+	<g fill="#3d8bff">
+	<circle cx="50" cy="50" r="38"/>
+	</g>
+	<circle cx="50" cy="31" r="6.5" fill="#fff"/>
+	<rect x="43.5" y="43" width="13" height="30" rx="6.5" fill="#fff"/>
+</svg>
