@@ -32,6 +32,9 @@ jobs:
         env:
           # Public URL used in sitemap.xml, robots.txt and llms.txt (repository variable).
           FRONT_URL: ${{ vars.FRONT_URL }}
+          # Optional Umami analytics (repository variables); no script is injected when unset.
+          VITE_UMAMI_URL: ${{ vars.UMAMI_URL }}
+          VITE_UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID }}
 
       - name: Set up SSH key
         run: |
