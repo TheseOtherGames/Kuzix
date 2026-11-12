@@ -17,10 +17,14 @@ import {
 	parseQuizInput,
 	updateQuiz,
 } from './quiz.service';
-import { getPlayerAnswers } from '../user/user.service';
+import { findUserById, getPlayerAnswers } from '../user/user.service';
 import { abortGame, games } from '../game/game.registry';
 
 export const quizRouter = Router();
+
+const maxQuestions = async (userId: number): Promise<number> => {
+	return (await findUserById(userId))!.limits.maxQuestions;
+};
 
 quizRouter.use(requireAuth);
 
@@ -29,7 +33,7 @@ quizRouter.get('/', async (req, res) => {
 });
 
 quizRouter.post('/', async (req, res) => {
-	const id = await createQuiz(req.userId!, parseQuizInput(req.body));
+	const id = await createQuiz(req.userId!, parseQuizInput(req.body, await maxQuestions(req.userId!)));
 	res.status(201).json({ id });
 });
 
@@ -39,7 +43,7 @@ quizRouter.get('/:id', requireQuizOwner, async (req, res) => {
 });
 
 quizRouter.put('/:id', requireQuizOwner, async (req, res) => {
-	await updateQuiz(req.quiz!, parseQuizInput(req.body));
+	await updateQuiz(req.quiz!, parseQuizInput(req.body, await maxQuestions(req.userId!)));
 	res.status(204).end();
 });
 

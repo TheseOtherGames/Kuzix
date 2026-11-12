@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS users (
 	created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Subscription plan; its limits live in server/src/features/user/plans.ts.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
+
 CREATE TABLE IF NOT EXISTS user_identities (
 	provider TEXT NOT NULL,
 	provider_user_id TEXT NOT NULL,

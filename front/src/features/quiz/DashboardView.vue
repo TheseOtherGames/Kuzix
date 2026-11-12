@@ -14,6 +14,7 @@ import { downloadFile, slugify } from '../../shared/download';
 import type { MessageKey } from '../../shared/i18n/en';
 import { LOCALES, locale, t, tp } from '../../shared/i18n/i18n';
 import { toast } from '../../shared/toast.store';
+import { auth } from '../auth/auth.store';
 
 const router = useRouter();
 const quizzes = ref<QuizSummary[]>([]);
@@ -23,6 +24,7 @@ const closing = ref<QuizSummary | null>(null);
 const deleting = ref<QuizSummary | null>(null);
 const recoding = ref<QuizSummary | null>(null);
 const importInput = ref<HTMLInputElement | null>(null);
+const atQuizLimit = computed(() => quizzes.value.length >= (auth.user?.limits.maxQuizzes ?? 0));
 const importing = ref(false);
 const dragging = ref(false);
 
@@ -49,7 +51,7 @@ const aiPrompt = computed(() => {
 	const correctMax = clamp(ai.correctMax, correctMin, answers, correctMin);
 	const prompt = t('dash.aiPrompt', {
 		topic: ai.topic.trim() || '[?]',
-		count: clamp(ai.count, 1, 100, 10),
+		count: clamp(ai.count, 1, auth.user?.limits.maxQuestions ?? 10, 10),
 		answers,
 		correct: correctMin === correctMax
 			? tp('dash.ai.correctExact', correctMin)
@@ -167,10 +169,10 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 <template>
 	<div class="dashboard">
 		<header class="top">
-			<h1>{{ t('dash.title') }}</h1>
+			<h1>{{ t('dash.title') }} <span class="muted num">{{ quizzes.length }} / {{ auth.user?.limits.maxQuizzes }}</span></h1>
 			<div class="top-actions">
 				<PillButton variant="secondary" :label="t('dash.import')" @click="importing = true"><AppIcon name="upload" /></PillButton>
-				<PillButton to="/quizzes/new" variant="success" :label="t('dash.newQuiz')"><AppIcon name="plus" /></PillButton>
+				<PillButton v-if="!atQuizLimit" to="/quizzes/new" variant="success" :label="t('dash.newQuiz')"><AppIcon name="plus" /></PillButton>
 			</div>
 		</header>
 
@@ -213,7 +215,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 							class="tool"
 							:to="`/quizzes/${quiz.id}/edit`"
 						><AppIcon name="pencil" />{{ t('dash.edit') }}</RouterLink>
-						<button type="button" class="tool" @click="duplicateQuiz(quiz)"><AppIcon name="page" />{{ t('dash.duplicate') }}</button>
+						<button v-if="!atQuizLimit" type="button" class="tool" @click="duplicateQuiz(quiz)"><AppIcon name="page" />{{ t('dash.duplicate') }}</button>
 						<button type="button" class="tool" @click="exportQuiz(quiz)"><AppIcon name="download" />{{ t('dash.export') }}</button>
 						<button type="button" class="tool" @click="recoding = quiz"><AppIcon name="refresh" />{{ t('dash.newCode') }}</button>
 						<button type="button" class="tool danger" @click="deleting = quiz"><AppIcon name="trash" />{{ t('dash.delete') }}</button>
@@ -301,7 +303,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 						<div class="ai-form">
 							<label>
 								<span>{{ t('dash.ai.count') }}<InfoTip :text="t('dash.ai.countInfo')" /></span>
-								<input v-model.number="ai.count" type="number" min="1" max="100" step="1" inputmode="numeric" />
+								<input v-model.number="ai.count" type="number" min="1" :max="auth.user?.limits.maxQuestions" step="1" inputmode="numeric" />
 							</label>
 							<label>
 								<span>{{ t('dash.ai.time') }}<InfoTip :text="t('dash.ai.timeInfo')" /></span>

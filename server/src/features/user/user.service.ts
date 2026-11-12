@@ -1,10 +1,17 @@
 import { pool, withTransaction } from '../../core/db/pool';
-import type { OAuthProfile, PlayHistoryEntry, User, UserStats } from './user.types';
+import type { OAuthProfile, Plan, PlayHistoryEntry, User, UserStats } from './user.types';
+import { PLANS } from './plans';
 import type { PlayerAnswerDetail } from '../quiz/quiz.types';
 import { assert, HttpError } from '../../core/httpError';
 import { POINTS_PER_DIFFICULTY } from '../game/scoring';
 
-const USER_COLUMNS = 'id, email, username, avatar';
+const USER_COLUMNS = 'id, email, username, avatar, plan';
+
+type UserRow = Omit<User, 'limits'>;
+
+const toUser = <T extends UserRow>(row: T): T & User => {
+	return { ...row, limits: PLANS[row.plan as Plan] ?? PLANS.free };
+};
 
 export const cleanUsername = (value: unknown): string => {
 	const username = typeof value === 'string' ? value.trim() : '';
@@ -19,44 +26,44 @@ export const cleanAvatar = (value: unknown): string => {
 };
 
 export const findUserById = async (id: number): Promise<User | null> => {
-	const { rows } = await pool.query<User>(`SELECT ${USER_COLUMNS} FROM users WHERE id = $1`, [id]);
-	return rows[0] ?? null;
+	const { rows } = await pool.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE id = $1`, [id]);
+	return rows[0] ? toUser(rows[0]) : null;
 };
 
 export const findUserWithPassword = async (email: string): Promise<(User & { passwordHash: string | null }) | null> => {
-	const { rows } = await pool.query(
+	const { rows } = await pool.query<UserRow & { passwordHash: string | null }>(
 		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash" FROM users WHERE email = $1`,
 		[email],
 	);
-	return rows[0] ?? null;
+	return rows[0] ? toUser(rows[0]) : null;
 };
 
 export const createUser = async (email: string, passwordHash: string, username: string): Promise<User> => {
-	const { rows } = await pool.query<User>(
+	const { rows } = await pool.query<UserRow>(
 		`INSERT INTO users (email, password_hash, username) VALUES ($1, $2, $3) RETURNING ${USER_COLUMNS}`,
 		[email, passwordHash, username],
 	);
-	return rows[0];
+	return toUser(rows[0]);
 };
 
 export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProfile): Promise<User> => {
 	return withTransaction(async (client) => {
-		const identity = await client.query<User>(
-			`SELECT u.id, u.email, u.username, u.avatar FROM user_identities i
+		const identity = await client.query<UserRow>(
+			`SELECT u.id, u.email, u.username, u.avatar, u.plan FROM user_identities i
 			JOIN users u ON u.id = i.user_id
 			WHERE i.provider = $1 AND i.provider_user_id = $2`,
 			[provider, profile.id],
 		);
 		if (identity.rows[0]) {
-			return identity.rows[0];
+			return toUser(identity.rows[0]);
 		}
-		let user: User | undefined;
+		let user: UserRow | undefined;
 		if (profile.email) {
-			const existing = await client.query<User>(`SELECT ${USER_COLUMNS} FROM users WHERE email = $1`, [profile.email]);
+			const existing = await client.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE email = $1`, [profile.email]);
 			user = existing.rows[0];
 		}
 		if (!user) {
-			const created = await client.query<User>(
+			const created = await client.query<UserRow>(
 				`INSERT INTO users (email, username) VALUES ($1, $2) RETURNING ${USER_COLUMNS}`,
 				[profile.email, profile.username.slice(0, 24)],
 			);
@@ -66,16 +73,16 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 			'INSERT INTO user_identities (provider, provider_user_id, user_id) VALUES ($1, $2, $3)',
 			[provider, profile.id, user.id],
 		);
-		return user;
+		return toUser(user);
 	});
 };
 
 export const updateProfile = async (id: number, username: string, avatar: string): Promise<User> => {
-	const { rows } = await pool.query<User>(
+	const { rows } = await pool.query<UserRow>(
 		`UPDATE users SET username = $2, avatar = $3 WHERE id = $1 RETURNING ${USER_COLUMNS}`,
 		[id, username, avatar],
 	);
-	return rows[0];
+	return toUser(rows[0]);
 };
 
 export const claimPlayer = async (userId: number, playerToken: string): Promise<void> => {

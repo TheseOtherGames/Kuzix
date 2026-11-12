@@ -281,7 +281,7 @@ const shareLink = async (): Promise<void> => {
 
 				<div class="side">
 					<template v-if="state.phase === 'reveal'">
-						<Leaderboard v-if="showReveal" :entries="state.players" :limit="5" />
+						<Leaderboard v-if="showReveal && !isLastQuestion" :entries="state.players" :limit="5" />
 						<BaseButton size="lg" block @click="next">{{ nextLabel }}</BaseButton>
 						<BaseButton v-if="!state.question.cancelled" variant="ghost" block @click="cancelOpen = true"><AppIcon name="ban" /> {{ t('host.cancelQ') }}</BaseButton>
 					</template>

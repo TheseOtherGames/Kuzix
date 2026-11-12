@@ -3,6 +3,15 @@ export interface User {
 	email: string | null;
 	username: string;
 	avatar: string;
+	plan: Plan;
+	limits: PlanLimits;
+}
+
+export type Plan = 'free';
+
+export interface PlanLimits {
+	maxQuestions: number;
+	maxQuizzes: number;
 }
 
 export interface AuthResponse {

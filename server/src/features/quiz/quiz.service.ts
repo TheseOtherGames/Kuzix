@@ -4,6 +4,7 @@ import { pool, withTransaction } from '../../core/db/pool';
 import type { Answer, Question, Quiz, QuizInput, QuizSummary, Run } from './quiz.types';
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { MAX_TITLE_LENGTH, uniqueTitle } from './title';
+import { findUserById } from '../user/user.service';
 
 const CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
 export const MIN_ANSWERS = 2;
@@ -23,14 +24,14 @@ const isIntBetween = (value: unknown, min: number, max: number): value is number
 	return Number.isInteger(value) && (value as number) >= min && (value as number) <= max;
 };
 
-export const parseQuizInput = (body: unknown): QuizInput => {
+export const parseQuizInput = (body: unknown, maxQuestions: number): QuizInput => {
 	const input = body as Partial<QuizInput> | null;
 	assert(input && isString(input.title, MAX_TITLE_LENGTH), 'Title is required (max 100 characters)');
 	assert(input.revealMode === 'question' || input.revealMode === 'end', 'Invalid reveal mode');
 	// Missing in files exported before the setting existed: fall back to the default.
 	const countdown = input.countdown ?? DEFAULT_COUNTDOWN;
 	assert(isIntBetween(countdown, 0, MAX_COUNTDOWN), `Countdown must be 0 to ${MAX_COUNTDOWN} seconds`);
-	assert(Array.isArray(input.questions) && input.questions.length >= 1 && input.questions.length <= 100, 'A quiz needs 1 to 100 questions');
+	assert(Array.isArray(input.questions) && input.questions.length >= 1 && input.questions.length <= maxQuestions, `A quiz needs 1 to ${maxQuestions} questions`);
 	const questions = input.questions.map((question, index) => {
 		const label = `Question ${index + 1}`;
 		assert(question && isString(question.text, 300), `${label}: text is required (max 300 characters)`);
@@ -91,6 +92,9 @@ const freeTitle = async (ownerId: number, title: string, excludeQuizId: number |
 };
 
 export const createQuiz = async (ownerId: number, input: QuizInput): Promise<number> => {
+	// ponytail: count-then-insert can race past the limit by one on parallel requests; fine for a plan cap.
+	const { rows: [{ count }] } = await pool.query<{ count: number }>('SELECT count(*)::int AS count FROM quizzes WHERE owner_id = $1', [ownerId]);
+	assert(count < (await findUserById(ownerId))!.limits.maxQuizzes, 'Quiz limit reached for your plan');
 	const code = await findFreeCode();
 	const title = await freeTitle(ownerId, input.title);
 	return withTransaction(async (client) => {

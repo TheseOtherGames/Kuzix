@@ -540,5 +540,6 @@ export const frServerErrors: Record<string, string> = {
 	'every answer needs a text (max 120 characters)': 'chaque réponse doit avoir un texte (120 caractères max)',
 	'text is required (max 300 characters)': 'le texte est obligatoire (300 caractères max)',
 	'time limit must be 5 to 120 seconds': 'le temps limite doit être entre 5 et 120 secondes',
+	'Quiz limit reached for your plan': 'Limite de quiz atteinte pour votre offre',
 	'2 to 6 answers required': '2 à 6 réponses requises',
 };

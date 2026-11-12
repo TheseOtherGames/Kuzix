@@ -11,6 +11,7 @@ import type { Quiz, QuizDraft, QuestionDraft } from './quiz.types';
 import { api } from '../../shared/api';
 import { t, tp } from '../../shared/i18n/i18n';
 import { toast } from '../../shared/toast.store';
+import { auth } from '../auth/auth.store';
 
 const DEFAULT_ANSWERS = 4;
 
@@ -143,12 +144,12 @@ const save = async (confirmed = false): Promise<void> => {
 						<span class="unit" aria-hidden="true">s</span>
 					</span>
 				</label>
-				<p class="muted count">{{ tp('editor.count', quiz.questions.length) }}</p>
+				<p class="muted count">{{ tp('editor.count', quiz.questions.length) }} / {{ auth.user?.limits.maxQuestions }}</p>
 				<p v-if="hasAnswers" class="notice"><AppIcon name="warning" /> {{ t('editor.playedNotice') }}</p>
 			</BaseCard>
 
 			<div class="actions">
-				<BaseButton variant="secondary" block @click="addQuestion"><AppIcon name="plus" /> {{ t('editor.add') }}</BaseButton>
+				<BaseButton variant="secondary" block :disabled="quiz.questions.length >= (auth.user?.limits.maxQuestions ?? 0)" @click="addQuestion"><AppIcon name="plus" /> {{ t('editor.add') }}</BaseButton>
 				<div class="row">
 					<BaseButton variant="ghost" to="/dashboard">{{ t('common.cancel') }}</BaseButton>
 					<BaseButton type="submit" variant="success" :loading="saving">{{ t('editor.save') }}</BaseButton>
