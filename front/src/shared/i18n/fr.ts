@@ -262,6 +262,7 @@ export const fr: Record<MessageKey, string> = {
 	'editor.warnText': 'Les joueurs gardent leur score et leur rang, mais les statistiques détaillées (quelle réponse chaque joueur a choisie, et quand) seront perdues pour toutes les parties passées de ce quiz.',
 	'editor.warnHint': 'Pour les garder, annulez et dupliquez plutôt le quiz.',
 	'editor.saveAnyway': 'Enregistrer quand même',
+	'editor.leaveText': 'Les modifications de ce quiz seront perdues.',
 	'editor.deleteQTitle': 'Supprimer cette question ?',
 	'editor.deleteQText': 'La question {n} (« {text} ») et ses réponses seront supprimées.',
 	'editor.deleteQConfirm': 'Supprimer la question',

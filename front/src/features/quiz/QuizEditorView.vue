@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, toRaw } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRaw } from 'vue';
+import { onBeforeRouteLeave, useRoute, useRouter, type RouteLocationNormalized } from 'vue-router';
 import AppIcon from '../../shared/ui/AppIcon.vue';
 import BaseButton from '../../shared/ui/BaseButton.vue';
 import BaseCard from '../../shared/ui/BaseCard.vue';
@@ -33,6 +33,45 @@ const newQuestion = (): QuestionDraft => ({
 
 const quiz = ref<QuizDraft>({ title: '', revealMode: 'question', countdown: 3, questions: [newQuestion()] });
 
+// Unsaved-changes workflow: compare against a JSON snapshot of the last loaded/saved state.
+const savedState = ref(JSON.stringify(quiz.value));
+const dirty = computed(() => JSON.stringify(quiz.value) !== savedState.value);
+const pendingLeave = ref<RouteLocationNormalized | null>(null);
+// Where to go after a successful save ("Save and leave" target, else the dashboard).
+let afterSave = '/dashboard';
+
+const undo = (): void => {
+	quiz.value = JSON.parse(savedState.value);
+};
+
+onBeforeRouteLeave((to) => {
+	if (!dirty.value) {
+		return true;
+	}
+	pendingLeave.value = to;
+	return false;
+});
+
+const leave = (withSave: boolean): void => {
+	const to = pendingLeave.value!.fullPath;
+	pendingLeave.value = null;
+	if (withSave) {
+		afterSave = to;
+		save();
+		return;
+	}
+	undo();
+	router.push(to);
+};
+
+const onBeforeUnload = (event: BeforeUnloadEvent): void => {
+	if (dirty.value) {
+		event.preventDefault();
+	}
+};
+window.addEventListener('beforeunload', onBeforeUnload);
+onBeforeUnmount(() => window.removeEventListener('beforeunload', onBeforeUnload));
+
 // Client-only identity per question: stable v-for key and colour, so a moved question keeps its colour.
 const questionIds = new WeakMap<QuestionDraft, number>();
 let nextQuestionId = 0;
@@ -53,6 +92,7 @@ onMounted(async () => {
 		nextQuestionId = 0;
 		quiz.value = { title: loaded.title, revealMode: loaded.revealMode, countdown: loaded.countdown, questions: loaded.questions };
 		hasAnswers.value = loaded.hasAnswers;
+		savedState.value = JSON.stringify(quiz.value);
 	} catch (error) {
 		toast.error((error as Error).message);
 		router.replace('/dashboard');
@@ -93,6 +133,7 @@ const save = async (confirmed = false): Promise<void> => {
 	const missing = quiz.value.questions.findIndex((question) => !question.answers.some((answer) => answer.isCorrect));
 	if (missing !== -1) {
 		toast.error(t('editor.missingCorrect', { n: missing + 1 }));
+		afterSave = '/dashboard';
 		return;
 	}
 	if (hasAnswers.value && !confirmed) {
@@ -107,9 +148,11 @@ const save = async (confirmed = false): Promise<void> => {
 		} else {
 			await api('/quizzes', 'POST', quiz.value);
 		}
+		savedState.value = JSON.stringify(quiz.value);
 		toast.success(t('editor.saved'));
-		router.push('/dashboard');
+		router.push(afterSave);
 	} catch (error) {
+		afterSave = '/dashboard';
 		toast.error((error as Error).message);
 	} finally {
 		saving.value = false;
@@ -150,9 +193,14 @@ const save = async (confirmed = false): Promise<void> => {
 
 			<div class="actions">
 				<BaseButton variant="secondary" block :disabled="quiz.questions.length >= (auth.user?.limits.maxQuestions ?? 0)" @click="addQuestion"><AppIcon name="plus" /> {{ t('editor.add') }}</BaseButton>
+				<div v-if="dirty" class="unsaved" role="status">
+					<span class="unsaved-icon"><AppIcon name="pencil" /></span>
+					<strong>{{ t('pf.unsaved') }}</strong>
+					<BaseButton variant="ghost" size="sm" :disabled="saving" :title="t('pf.undo')" @click="undo"><AppIcon name="undo" /></BaseButton>
+				</div>
 				<div class="row">
 					<BaseButton variant="ghost" to="/dashboard">{{ t('common.cancel') }}</BaseButton>
-					<BaseButton type="submit" variant="success" :loading="saving">{{ t('editor.save') }}</BaseButton>
+					<BaseButton type="submit" variant="success" :disabled="!dirty" :loading="saving">{{ t('editor.save') }}</BaseButton>
 				</div>
 			</div>
 		</aside>
@@ -181,11 +229,20 @@ const save = async (confirmed = false): Promise<void> => {
 			</template>
 		</BaseModal>
 
-		<BaseModal :open="warning" :title="t('editor.warnTitle')" @close="warning = false">
+		<BaseModal :open="pendingLeave !== null" :title="t('pf.leaveTitle')" @close="pendingLeave = null">
+			<p>{{ t('editor.leaveText') }}</p>
+			<template #actions>
+				<BaseButton variant="ghost" @click="pendingLeave = null">{{ t('pf.leaveStay') }}</BaseButton>
+				<BaseButton variant="danger" @click="leave(false)">{{ t('pf.leaveDiscard') }}</BaseButton>
+				<BaseButton :loading="saving" @click="leave(true)"><AppIcon name="save" /> {{ t('pf.leaveSave') }}</BaseButton>
+			</template>
+		</BaseModal>
+
+		<BaseModal :open="warning" :title="t('editor.warnTitle')" @close="warning = false; afterSave = '/dashboard'">
 			<p>{{ t('editor.warnText') }}</p>
 			<p class="muted">{{ t('editor.warnHint') }}</p>
 			<template #actions>
-				<BaseButton variant="ghost" @click="warning = false">{{ t('common.cancel') }}</BaseButton>
+				<BaseButton variant="ghost" @click="warning = false; afterSave = '/dashboard'">{{ t('common.cancel') }}</BaseButton>
 				<BaseButton variant="danger" :loading="saving" @click="save(true)">{{ t('editor.saveAnyway') }}</BaseButton>
 			</template>
 		</BaseModal>
@@ -277,6 +334,46 @@ const save = async (confirmed = false): Promise<void> => {
 	display: flex;
 	flex-direction: column;
 	gap: 0.6rem;
+}
+
+.unsaved {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.4rem 0.4rem 0.4rem 0.5rem;
+	border: 2px solid var(--color-3);
+	border-radius: 999px;
+	background: var(--surface);
+	box-shadow: var(--shadow), 0 0 0 4px color-mix(in srgb, var(--color-3) 25%, transparent);
+	animation: nudge 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.unsaved strong {
+	flex: 1;
+	font-size: 0.95rem;
+}
+
+.unsaved-icon {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--color-3) 25%, transparent);
+	animation: wobble 1.6s ease-in-out infinite;
+}
+
+@keyframes nudge {
+	from {
+		transform: translateY(0.6rem);
+	}
+}
+
+@keyframes wobble {
+	50% {
+		transform: rotate(-12deg);
+	}
 }
 
 .row {

@@ -260,6 +260,7 @@ export const en = {
 	'editor.warnText': 'Players keep their score and rank, but the detailed stats (which answer each player picked, and when) will be lost for every past game of this quiz.',
 	'editor.warnHint': 'To keep them, cancel and duplicate the quiz instead.',
 	'editor.saveAnyway': 'Save anyway',
+	'editor.leaveText': 'Your changes to this quiz will be lost.',
 	'editor.deleteQTitle': 'Delete this question?',
 	'editor.deleteQText': 'Question {n} (“{text}”) and its answers will be removed.',
 	'editor.deleteQConfirm': 'Delete question',
