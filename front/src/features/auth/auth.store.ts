@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 import type { AuthResponse, Profile, User } from './user.types';
 import { api, ApiError } from '../../shared/api';
-import { randomAvatar } from '../../shared/avatars';
+import { randomBase } from '../../shared/avatars';
 import { t } from '../../shared/i18n/i18n';
 import { toast } from '../../shared/toast.store';
 
@@ -16,7 +16,7 @@ export const auth = reactive({
 // Guest profile lives in memory only, it is lost when the page is left.
 export const guestProfile = reactive<Profile>({
 	nickname: '',
-	avatar: randomAvatar(),
+	avatar: randomBase(),
 });
 
 export const currentProfile = (): Profile => {

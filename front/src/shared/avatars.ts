@@ -160,6 +160,9 @@ export const avatarSvg = (value: string): string | null => {
 
 const pick = <T>(list: T[]): T => list[Math.floor(Math.random() * list.length)];
 
+/** Random character only: no accessories, classic name tag (guest default). */
+export const randomBase = (): string => pick(AVATAR_BASES).id;
+
 export const randomAvatar = (): string => formatAvatar({
 	base: pick(AVATAR_BASES).id,
 	hat: Math.random() < 0.5 ? pick(AVATAR_HATS).id : '',
