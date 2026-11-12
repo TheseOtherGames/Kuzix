@@ -166,6 +166,7 @@ const answered = computed(() => state.value?.myAnswer !== null && state.value?.m
 				<h1>{{ t('play.whoAreYou') }}</h1>
 				<label>
 					{{ t('pf.nickname') }}
+					<span class="char-count">{{ profile.nickname.length }}/24</span>
 					<input v-model="profile.nickname" maxlength="24" required autofocus :placeholder="t('pf.nicknamePh')" />
 				</label>
 				<p class="muted join-hint">{{ t('play.joinHint') }}</p>

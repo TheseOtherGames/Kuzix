@@ -52,6 +52,7 @@ const onLogout = (): void => {
 
 <style scoped>
 .logo {
+	position: relative;
 	flex-shrink: 0;
 	font-size: 1.6rem;
 	font-weight: 700;
@@ -59,6 +60,23 @@ const onLogout = (): void => {
 	text-decoration: none;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
 	white-space: nowrap;
+}
+
+.logo::after {
+	content: 'beta';
+	position: absolute;
+	right: -0.9rem;
+	bottom: -0.35rem;
+	padding: 0.05rem 0.35rem;
+	border-radius: 999px;
+	background: var(--accent);
+	color: var(--on-accent);
+	font-size: 0.55rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	text-shadow: none;
+	transform: rotate(-8deg);
 }
 
 .logo span {

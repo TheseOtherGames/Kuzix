@@ -120,6 +120,7 @@ const onStepKey = (event: KeyboardEvent): void => {
 				</div>
 				<label>
 					{{ t('pf.nickname') }}
+					<span class="char-count">{{ model.nickname.length }}/24</span>
 					<input v-model="model.nickname" maxlength="24" required :placeholder="t('pf.nicknamePh')" />
 				</label>
 				<p class="intro">{{ t('pf.intro') }}</p>

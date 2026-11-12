@@ -124,6 +124,9 @@ export const en = {
 	'admin.noGames': 'No game is running right now',
 	'footer.by': 'a game by',
 	'footer.language': 'Language',
+	'changelog.open': "What's new",
+	'changelog.title': "What's new in Kuzix",
+	'changelog.latest': 'Latest',
 
 	'theme.system': 'System',
 	'theme.dark': 'Dark',

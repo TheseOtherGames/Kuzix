@@ -2,6 +2,20 @@
 import AppHeader from './AppHeader.vue';
 import ToastContainer from '../shared/ui/ToastContainer.vue';
 import { LOCALES, locale, t } from '../shared/i18n/i18n';
+import { ref } from 'vue';
+import AppIcon from '../shared/ui/AppIcon.vue';
+import ChangelogModal from './ChangelogModal.vue';
+import { CURRENT_VERSION } from './changelog';
+
+const SEEN_KEY = 'kuzix-seen-version';
+const changelogOpen = ref(false);
+const unseen = ref(localStorage.getItem(SEEN_KEY) !== CURRENT_VERSION);
+
+const openChangelog = (): void => {
+	changelogOpen.value = true;
+	unseen.value = false;
+	localStorage.setItem(SEEN_KEY, CURRENT_VERSION);
+};
 </script>
 
 <template>
@@ -24,7 +38,11 @@ import { LOCALES, locale, t } from '../shared/i18n/i18n';
 				{{ option.value.toUpperCase() }}
 			</button>
 		</span>
+		<button type="button" class="version" :class="{ unseen }" :title="t('changelog.open')" :aria-label="t('changelog.open')" @click="openChangelog">
+			<AppIcon name="sparkles" />v{{ CURRENT_VERSION }}
+		</button>
 	</footer>
+	<ChangelogModal :open="changelogOpen" @close="changelogOpen = false" />
 	<ToastContainer />
 </template>
 
@@ -85,6 +103,49 @@ import { LOCALES, locale, t } from '../shared/i18n/i18n';
 .langs button[aria-pressed='true'] {
 	background: var(--accent);
 	color: var(--on-accent);
+}
+
+.version {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.2rem 0.7rem;
+	border: none;
+	border-radius: 999px;
+	background: var(--surface-2);
+	color: var(--text-muted);
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: transform 0.2s, color 0.15s, box-shadow 0.15s;
+}
+
+.version:hover {
+	color: var(--text);
+	box-shadow: 0 0 0 2px var(--accent-line);
+	transform: translateY(-1px);
+}
+
+/* Dot until the visitor opens the changelog of the current version. */
+.version.unseen::after {
+	content: '';
+	position: absolute;
+	top: -0.1rem;
+	right: -0.1rem;
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 50%;
+	background: var(--accent);
+	box-shadow: 0 0 0 2px var(--bg);
+	animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+	50% {
+		transform: scale(1.35);
+	}
 }
 
 .main.immersive {

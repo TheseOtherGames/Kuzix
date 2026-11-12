@@ -126,6 +126,9 @@ export const fr: Record<MessageKey, string> = {
 	'admin.noGames': 'Aucune partie en cours',
 	'footer.by': 'un jeu de',
 	'footer.language': 'Langue',
+	'changelog.open': 'Nouveautés',
+	'changelog.title': 'Les nouveautés de Kuzix',
+	'changelog.latest': 'Dernière',
 
 	'theme.system': 'Système',
 	'theme.dark': 'Sombre',

@@ -52,6 +52,7 @@ const submit = async (): Promise<void> => {
 		<form class="form" @submit.prevent="submit">
 			<label v-if="isRegister">
 				{{ t('auth.username') }}
+				<span class="char-count">{{ form.username.length }}/24</span>
 				<input v-model="form.username" maxlength="24" required autocomplete="nickname" />
 			</label>
 			<label>

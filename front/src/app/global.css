@@ -252,6 +252,15 @@ textarea,
 	user-select: text;
 }
 
+/* Live "n/max" counter floated to the right of a label's text. */
+.char-count {
+	float: right;
+	font-size: 0.85em;
+	font-weight: 400;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-muted);
+}
+
 .muted {
 	color: var(--text-muted);
 }
