@@ -1,4 +1,4 @@
-import { auth } from '../features/auth/auth.store';
+import { auth, logout } from '../features/auth/auth.store';
 import { t } from './i18n/i18n';
 
 export class ApiError extends Error {
@@ -22,6 +22,10 @@ export const api = async <T = void>(path: string, method = 'GET', body?: unknown
 	});
 	if (!response.ok) {
 		const data = await response.json().catch(() => ({}));
+		// Banned mid-session: drop the token so the app falls back to the logged-out state.
+		if (response.status === 403 && data.error === 'This account has been banned') {
+			logout();
+		}
 		throw new ApiError(response.status, data.error ?? t('common.requestFailed', { status: response.status }));
 	}
 	return response.status === 204 ? (undefined as T) : response.json();

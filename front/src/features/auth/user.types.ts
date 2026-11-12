@@ -4,6 +4,7 @@ export interface User {
 	username: string;
 	avatar: string;
 	plan: Plan;
+	isAdmin: boolean;
 	limits: PlanLimits;
 }
 

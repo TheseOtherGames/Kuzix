@@ -4,6 +4,7 @@ import { auth } from '../features/auth/auth.store';
 declare module 'vue-router' {
 	interface RouteMeta {
 		requiresAuth?: boolean;
+		requiresAdmin?: boolean;
 		immersive?: boolean;
 		mode?: 'login' | 'register';
 	}
@@ -23,13 +24,29 @@ export const router = createRouter({
 		{ path: '/host/:id', component: () => import('../features/game/HostView.vue'), meta: { requiresAuth: true, immersive: true } },
 		{ path: '/play/:code', component: () => import('../features/game/PlayView.vue'), meta: { immersive: true } },
 		{ path: '/profile', component: () => import('../features/profile/ProfileView.vue'), meta: { requiresAuth: true } },
-		{ path: '/:pathMatch(.*)*', component: () => import('./NotFoundView.vue') },
+		{
+			path: '/admin',
+			component: () => import('../features/admin/AdminView.vue'),
+			meta: { requiresAuth: true, requiresAdmin: true },
+			children: [
+				{ path: '', component: () => import('../features/admin/AdminOverview.vue') },
+				{ path: 'users', component: () => import('../features/admin/AdminUsers.vue') },
+				{ path: 'quizzes', component: () => import('../features/admin/AdminQuizzes.vue') },
+				{ path: 'games', component: () => import('../features/admin/AdminGames.vue') },
+			],
+		},
+		{ path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./NotFoundView.vue') },
 	],
 });
 
 router.beforeEach((to) => {
 	if (to.meta.requiresAuth && !auth.user) {
 		return { path: '/login', query: { redirect: to.fullPath } };
+	}
+	// UX only: the server checks admin access on every /api/admin call.
+	// Same page as a wrong URL (URL kept), so /admin doesn't reveal it exists.
+	if (to.meta.requiresAdmin && !auth.user?.isAdmin) {
+		return { name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, query: to.query, hash: to.hash };
 	}
 	return true;
 });

@@ -57,6 +57,8 @@ export const loadUser = async (): Promise<void> => {
 		if (error instanceof ApiError && error.status === 401) {
 			logout();
 			toast.info(t('auth.expired'));
+		} else if (error instanceof ApiError && error.status === 403) {
+			toast.error(error.message);
 		}
 	}
 };

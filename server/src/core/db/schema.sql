@@ -10,6 +10,13 @@ CREATE TABLE IF NOT EXISTS users (
 -- Subscription plan; its limits live in server/src/features/user/plans.ts.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
 
+-- Application admin (access to /admin). Grant the first one by hand: UPDATE users SET is_admin = true WHERE email = '...';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT false;
+
+-- Banned by an admin: every request and login is refused while set.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS banned_at TIMESTAMPTZ;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT;
+
 CREATE TABLE IF NOT EXISTS user_identities (
 	provider TEXT NOT NULL,
 	provider_user_id TEXT NOT NULL,

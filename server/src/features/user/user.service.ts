@@ -5,7 +5,7 @@ import type { PlayerAnswerDetail } from '../quiz/quiz.types';
 import { assert, HttpError } from '../../core/httpError';
 import { POINTS_PER_DIFFICULTY } from '../game/scoring';
 
-const USER_COLUMNS = 'id, email, username, avatar, plan';
+const USER_COLUMNS = 'id, email, username, avatar, plan, is_admin AS "isAdmin"';
 
 type UserRow = Omit<User, 'limits'>;
 
@@ -30,9 +30,9 @@ export const findUserById = async (id: number): Promise<User | null> => {
 	return rows[0] ? toUser(rows[0]) : null;
 };
 
-export const findUserWithPassword = async (email: string): Promise<(User & { passwordHash: string | null }) | null> => {
-	const { rows } = await pool.query<UserRow & { passwordHash: string | null }>(
-		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash" FROM users WHERE email = $1`,
+export const findUserWithPassword = async (email: string): Promise<(User & { passwordHash: string | null; banned: boolean }) | null> => {
+	const { rows } = await pool.query<UserRow & { passwordHash: string | null; banned: boolean }>(
+		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash", banned_at IS NOT NULL AS banned FROM users WHERE email = $1`,
 		[email],
 	);
 	return rows[0] ? toUser(rows[0]) : null;
@@ -49,7 +49,7 @@ export const createUser = async (email: string, passwordHash: string, username: 
 export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProfile): Promise<User> => {
 	return withTransaction(async (client) => {
 		const identity = await client.query<UserRow>(
-			`SELECT u.id, u.email, u.username, u.avatar, u.plan FROM user_identities i
+			`SELECT u.id, u.email, u.username, u.avatar, u.plan, u.is_admin AS "isAdmin" FROM user_identities i
 			JOIN users u ON u.id = i.user_id
 			WHERE i.provider = $1 AND i.provider_user_id = $2`,
 			[provider, profile.id],
@@ -149,5 +149,10 @@ export const getPlayerAnswers = async (playerId: number): Promise<PlayerAnswerDe
 
 export const isPlayerOwnedBy = async (playerId: number, userId: number): Promise<boolean> => {
 	const { rowCount } = await pool.query('SELECT 1 FROM players WHERE id = $1 AND user_id = $2', [playerId, userId]);
+	return Boolean(rowCount);
+};
+
+export const isBanned = async (userId: number): Promise<boolean> => {
+	const { rowCount } = await pool.query('SELECT 1 FROM users WHERE id = $1 AND banned_at IS NOT NULL', [userId]);
 	return Boolean(rowCount);
 };

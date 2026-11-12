@@ -3,7 +3,8 @@ import { config } from '../../core/config';
 import { hashPassword, randomToken, signToken, verifyPassword } from './auth.service';
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { enabledProviders, exchangeCode, getProvider } from './oauth.providers';
-import { cleanUsername, createUser, findOrCreateOAuthUser, findUserWithPassword } from '../user/user.service';
+import { cleanUsername, createUser, findOrCreateOAuthUser, findUserWithPassword, isBanned } from '../user/user.service';
+import { BANNED_MESSAGE } from './auth.middleware';
 
 const STATE_COOKIE = 'oauth_state';
 
@@ -49,7 +50,8 @@ authRouter.post('/login', async (req, res) => {
 	if (!found?.passwordHash || !(await verifyPassword(password, found.passwordHash))) {
 		throw new HttpError(401, 'Invalid email or password');
 	}
-	const { passwordHash, ...user } = found;
+	assert(!found.banned, BANNED_MESSAGE, 403);
+	const { passwordHash, banned, ...user } = found;
 	res.json({ token: signToken(user.id), user });
 });
 
@@ -84,9 +86,13 @@ authRouter.get('/:provider/callback', async (req, res) => {
 		assert(expectedState && req.query.state === expectedState, 'Invalid login state');
 		const accessToken = await exchangeCode(provider, req.query.code, callbackUrl(req.params.provider));
 		const user = await findOrCreateOAuthUser(req.params.provider, await provider.fetchProfile(accessToken));
+		assert(!(await isBanned(user.id)), BANNED_MESSAGE, 403);
 		res.redirect(`${config.frontUrl}/auth/callback#token=${signToken(user.id)}`);
 	} catch (error) {
-		console.error(error);
-		res.redirect(`${config.frontUrl}/auth/callback#error=${encodeURIComponent('Social login failed')}`);
+		const banned = error instanceof HttpError && error.message === BANNED_MESSAGE;
+		if (!banned) {
+			console.error(error);
+		}
+		res.redirect(`${config.frontUrl}/auth/callback#error=${encodeURIComponent(banned ? BANNED_MESSAGE : 'Social login failed')}`);
 	}
 });

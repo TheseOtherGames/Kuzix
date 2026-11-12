@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 
 // Public, indexable routes. Everything else (dashboard, editor, games, profile) needs a login or a game code.
 const PUBLIC_ROUTES = ['/', '/login', '/register'];
-const PRIVATE_PREFIXES = ['/api/', '/auth/', '/dashboard', '/quizzes/', '/host/', '/play/', '/profile'];
+const PRIVATE_PREFIXES = ['/api/', '/auth/', '/dashboard', '/quizzes/', '/host/', '/play/', '/profile', '/admin'];
 
 const seoFiles = (siteUrl: string): Plugin => ({
 	name: 'kuzix-seo-files',
