@@ -163,7 +163,7 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 		`SELECT q.id, q.code, q.title, q.created_at AS "createdAt",
 			EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL) AS "isOpen",
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = q.id) AS "questionsCount",
-			(SELECT count(*)::int FROM runs r WHERE r.quiz_id = q.id) AS "runsCount"
+			(SELECT count(*)::int FROM runs r WHERE r.quiz_id = q.id AND r.cleared_at IS NULL) AS "runsCount"
 		FROM quizzes q
 		WHERE q.owner_id = $1 AND q.deleted_at IS NULL
 		ORDER BY q.created_at DESC`,
@@ -228,9 +228,17 @@ export const deleteQuiz = async (quizId: number): Promise<void> => {
 	});
 };
 
+// Finished runs only: a running game keeps its stats. No runId = every run of the quiz.
+export const clearStats = async (quizId: number, runId?: number): Promise<void> => {
+	await pool.query(
+		'UPDATE runs SET cleared_at = now() WHERE quiz_id = $1 AND ($2::int IS NULL OR id = $2) AND ended_at IS NOT NULL AND cleared_at IS NULL',
+		[quizId, runId ?? null],
+	);
+};
+
 export const listRuns = async (quizId: number): Promise<Run[]> => {
 	const runs = await pool.query<Omit<Run, 'players'>>(
-		'SELECT id, started_at AS "startedAt", ended_at AS "endedAt" FROM runs WHERE quiz_id = $1 ORDER BY started_at DESC',
+		'SELECT id, started_at AS "startedAt", ended_at AS "endedAt" FROM runs WHERE quiz_id = $1 AND cleared_at IS NULL ORDER BY started_at DESC',
 		[quizId],
 	);
 	const players = await pool.query<Run['players'][number] & { runId: number }>(
@@ -247,7 +255,7 @@ export const listRuns = async (quizId: number): Promise<Run[]> => {
 
 export const isPlayerInQuiz = async (playerId: number, quizId: number): Promise<boolean> => {
 	const { rowCount } = await pool.query(
-		'SELECT 1 FROM players p JOIN runs r ON r.id = p.run_id WHERE p.id = $1 AND r.quiz_id = $2',
+		'SELECT 1 FROM players p JOIN runs r ON r.id = p.run_id WHERE p.id = $1 AND r.quiz_id = $2 AND r.cleared_at IS NULL',
 		[playerId, quizId],
 	);
 	return Boolean(rowCount);

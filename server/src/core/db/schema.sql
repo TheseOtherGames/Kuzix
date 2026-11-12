@@ -57,6 +57,9 @@ CREATE TABLE IF NOT EXISTS runs (
 	ended_at TIMESTAMPTZ
 );
 
+-- Owner cleared the stats: hidden from them, players keep the run in their history.
+ALTER TABLE runs ADD COLUMN IF NOT EXISTS cleared_at TIMESTAMPTZ;
+
 CREATE UNIQUE INDEX IF NOT EXISTS runs_one_open_per_quiz ON runs (quiz_id) WHERE ended_at IS NULL;
 
 CREATE TABLE IF NOT EXISTS players (

@@ -2,9 +2,10 @@ import { Router } from 'express';
 import type { QuizDetail } from './quiz.types';
 import { requireAuth } from '../auth/auth.middleware';
 import { requireQuizOwner } from './quiz.middleware';
-import { HttpError } from '../../core/httpError';
+import { assert, HttpError } from '../../core/httpError';
 import {
 	assignNewCode,
+	clearStats,
 	closeRun,
 	createQuiz,
 	deleteQuiz,
@@ -76,6 +77,18 @@ quizRouter.post('/:id/duplicate', requireQuizOwner, async (req, res) => {
 
 quizRouter.get('/:id/runs', requireQuizOwner, async (req, res) => {
 	res.json(await listRuns(req.quiz!.id));
+});
+
+quizRouter.delete('/:id/runs', requireQuizOwner, async (req, res) => {
+	await clearStats(req.quiz!.id);
+	res.status(204).end();
+});
+
+quizRouter.delete('/:id/runs/:runId', requireQuizOwner, async (req, res) => {
+	const runId = Number(req.params.runId);
+	assert(Number.isInteger(runId), 'Invalid game');
+	await clearStats(req.quiz!.id, runId);
+	res.status(204).end();
 });
 
 quizRouter.get('/:id/players/:playerId', requireQuizOwner, async (req, res) => {

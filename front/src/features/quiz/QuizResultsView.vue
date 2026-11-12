@@ -21,6 +21,20 @@ const runs = ref<Run[]>([]);
 const selected = ref<LeaderboardEntry | null>(null);
 const selectedCount = ref(0);
 const answers = ref<PlayerAnswerDetail[]>([]);
+// 'all' = every finished session, a run = just that one.
+const clearing = ref<Run | 'all' | null>(null);
+
+const clearStats = async (): Promise<void> => {
+	const target = clearing.value;
+	try {
+		await api(target === 'all' ? `/quizzes/${quizId}/runs` : `/quizzes/${quizId}/runs/${target!.id}`, 'DELETE');
+		runs.value = runs.value.filter((run) => target === 'all' ? !run.endedAt : run !== target);
+		clearing.value = null;
+		toast.success(t('results.cleared'));
+	} catch (error) {
+		toast.error((error as Error).message);
+	}
+};
 
 onMounted(async () => {
 	try {
@@ -69,14 +83,23 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 <template>
 	<div class="results">
 		<header class="top">
-			<h1>{{ t('results.title', { title }) }}</h1>
-			<BaseButton v-if="runs.length" variant="secondary" @click="exportStats()"><AppIcon name="download" /> {{ t('results.export') }}</BaseButton>
+			<div>
+				<BaseButton variant="ghost" size="sm" to="/dashboard">← {{ t('dash.title') }}</BaseButton>
+				<h1>{{ t('results.title', { title }) }}</h1>
+			</div>
+			<div class="top-actions">
+				<BaseButton v-if="runs.length" variant="secondary" @click="exportStats()"><AppIcon name="download" /> {{ t('results.export') }}</BaseButton>
+				<BaseButton v-if="runs.some((run) => run.endedAt)" variant="danger" @click="clearing = 'all'"><AppIcon name="trash" /> {{ t('results.clear') }}</BaseButton>
+			</div>
 		</header>
 		<p v-if="!runs.length" class="muted">{{ t('results.none') }}</p>
 		<BaseCard v-for="(run, i) in runs" :key="run.id" :accent="ANSWER_COLORS[i % ANSWER_COLORS.length]">
 			<div class="run-head">
 				<h2>{{ new Date(run.startedAt).toLocaleString(locale) }}</h2>
-				<BaseButton v-if="run.players.length" variant="ghost" size="sm" @click="exportStats(run)"><AppIcon name="download" /> {{ t('results.exportRun') }}</BaseButton>
+				<div class="run-actions">
+					<BaseButton v-if="run.players.length" variant="ghost" size="sm" @click="exportStats(run)"><AppIcon name="download" /> {{ t('results.exportRun') }}</BaseButton>
+					<BaseButton v-if="run.endedAt" variant="ghost" size="sm" :aria-label="t('results.clearRun')" :title="t('results.clearRun')" @click="clearing = run"><AppIcon name="trash" /></BaseButton>
+				</div>
 			</div>
 			<p class="muted">
 				{{ tp('results.players', run.players.length) }} · {{ run.endedAt ? t('results.finished') : t('results.inProgress') }} · {{ t('results.clickHint') }}
@@ -86,6 +109,16 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 
 		<BaseModal :open="Boolean(selected)" :title="title" wide @close="selected = null">
 			<PlayerReport v-if="selected" :player="selected" :players-count="selectedCount" :answers="answers" />
+		</BaseModal>
+
+		<BaseModal :open="Boolean(clearing)" :title="clearing === 'all' ? t('results.clearTitle') : t('results.clearRunTitle')" @close="clearing = null">
+			<p v-if="clearing === 'all'">{{ t('results.clearText') }}</p>
+			<p v-else-if="clearing">{{ t('results.clearRunText', { date: new Date(clearing.startedAt).toLocaleString(locale) }) }}</p>
+			<p class="notice"><AppIcon name="warning" /> {{ t('results.clearWarning') }}</p>
+			<template #actions>
+				<BaseButton variant="ghost" @click="clearing = null">{{ t('common.cancel') }}</BaseButton>
+				<BaseButton variant="danger" @click="clearStats">{{ t('results.clearConfirm') }}</BaseButton>
+			</template>
 		</BaseModal>
 	</div>
 </template>
@@ -119,5 +152,23 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 
 .top h1 {
 	margin: 0;
+}
+
+.run-actions {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.top-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.notice {
+	padding: 0.6rem 0.8rem;
+	border-radius: var(--radius-sm);
+	background: color-mix(in srgb, var(--color-3) 20%, transparent);
+	font-size: 0.9rem;
 }
 </style>
