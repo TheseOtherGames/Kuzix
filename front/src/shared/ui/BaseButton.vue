@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { getCurrentInstance, onMounted, onUpdated, useAttrs } from 'vue';
 import { RouterLink, type RouteLocationRaw } from 'vue-router';
 
 withDefaults(defineProps<{
-	variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+	variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'tool' | 'tool-danger';
 	size?: 'sm' | 'md' | 'lg';
 	to?: RouteLocationRaw;
 	href?: string;
@@ -16,17 +15,7 @@ withDefaults(defineProps<{
 	size: 'md',
 	type: 'button',
 });
-
-// Every button gets a hover title: an explicit `title` (or `data-tip` tooltip) wins, otherwise the button's own text.
-const attrs = useAttrs();
-const instance = getCurrentInstance();
-function syncTitle() {
-	if (attrs.title || attrs['data-tip']) return;
-	const el = instance?.proxy?.$el as HTMLElement | undefined;
-	if (el) el.title = el.textContent?.trim() ?? '';
-}
-onMounted(syncTitle);
-onUpdated(syncTitle);
+// Hover titles come from shared/buttonTitles.ts, for every button in the app.
 </script>
 
 <template>
@@ -114,6 +103,43 @@ onUpdated(syncTitle);
 
 .ghost:active:not(:disabled) {
 	box-shadow: inset 0 0 0 2px var(--border);
+}
+
+.tool,
+.tool-danger {
+	gap: 0.3rem;
+	padding: 0.45rem 0.55rem;
+	border: 2px solid var(--border);
+	border-radius: var(--radius-sm);
+	background: var(--surface-2);
+	color: var(--text);
+	box-shadow: none;
+	font-size: 0.8rem;
+	font-weight: 500;
+	transition: transform 0.15s, border-color 0.15s;
+}
+
+.tool > :slotted(.app-icon),
+.tool-danger > :slotted(.app-icon) {
+	font-size: 1.15rem;
+	margin-block: -0.2rem;
+}
+
+.tool:hover:not(:disabled),
+.tool-danger:hover:not(:disabled) {
+	border-color: var(--accent-line);
+	box-shadow: none;
+	filter: none;
+}
+
+.tool-danger:hover:not(:disabled) {
+	border-color: var(--danger);
+	color: var(--danger);
+}
+
+.tool:active:not(:disabled),
+.tool-danger:active:not(:disabled) {
+	box-shadow: none;
 }
 
 .sm {

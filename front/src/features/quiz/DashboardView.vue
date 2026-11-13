@@ -210,15 +210,11 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 				<section class="section">
 					<h3 class="section-title">{{ t('dash.sectionManage') }}</h3>
 					<div class="manage">
-						<RouterLink
-							v-if="!quiz.isOpen"
-							class="tool"
-							:to="`/quizzes/${quiz.id}/edit`"
-						><AppIcon name="pencil" />{{ t('dash.edit') }}</RouterLink>
-						<button v-if="!atQuizLimit" type="button" class="tool" @click="duplicateQuiz(quiz)"><AppIcon name="page" />{{ t('dash.duplicate') }}</button>
-						<button type="button" class="tool" @click="exportQuiz(quiz)"><AppIcon name="download" />{{ t('dash.export') }}</button>
-						<button v-if="quiz.code" type="button" class="tool" @click="recoding = quiz"><AppIcon name="refresh" />{{ t('dash.newCode') }}</button>
-						<button type="button" class="tool danger" @click="deleting = quiz"><AppIcon name="trash" />{{ t('dash.delete') }}</button>
+						<BaseButton v-if="!quiz.isOpen" variant="tool" :to="`/quizzes/${quiz.id}/edit`"><AppIcon name="pencil" />{{ t('dash.edit') }}</BaseButton>
+						<BaseButton v-if="!atQuizLimit" variant="tool" @click="duplicateQuiz(quiz)"><AppIcon name="page" />{{ t('dash.duplicate') }}</BaseButton>
+						<BaseButton variant="tool" @click="exportQuiz(quiz)"><AppIcon name="download" />{{ t('dash.export') }}</BaseButton>
+						<BaseButton v-if="quiz.code" variant="tool" @click="recoding = quiz"><AppIcon name="refresh" />{{ t('dash.newCode') }}</BaseButton>
+						<BaseButton variant="tool-danger" @click="deleting = quiz"><AppIcon name="trash" />{{ t('dash.delete') }}</BaseButton>
 					</div>
 				</section>
 			</BaseCard>
@@ -490,39 +486,6 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 .play > *,
 .manage > * {
 	flex: 1 1 auto;
-}
-
-.tool {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.3rem;
-	padding: 0.45rem 0.55rem;
-	white-space: nowrap;
-	border: 2px solid var(--border);
-	border-radius: var(--radius-sm);
-	background: var(--surface-2);
-	color: var(--text);
-	font-size: 0.8rem;
-	font-weight: 500;
-	text-decoration: none;
-	cursor: pointer;
-	transition: transform 0.15s, border-color 0.15s;
-}
-
-.tool .app-icon {
-	font-size: 1.15rem;
-	margin-block: -0.2rem;
-}
-
-.tool:hover {
-	transform: translateY(-0.15rem);
-	border-color: var(--accent-line);
-}
-
-.tool.danger:hover {
-	border-color: var(--danger);
-	color: var(--danger);
 }
 
 .big-code {
