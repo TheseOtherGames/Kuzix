@@ -2,7 +2,7 @@
 import AppIcon from '../../shared/ui/AppIcon.vue';
 import AvatarIcon from '../../shared/ui/AvatarIcon.vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { onBeforeRouteLeave, useRouter, type RouteLocationNormalized } from 'vue-router';
+import { onBeforeRouteLeave, useRoute, useRouter, type RouteLocationNormalized } from 'vue-router';
 import BaseButton from '../../shared/ui/BaseButton.vue';
 import BaseCard from '../../shared/ui/BaseCard.vue';
 import BaseModal from '../../shared/ui/BaseModal.vue';
@@ -19,11 +19,11 @@ import { LOCALES, locale, t } from '../../shared/i18n/i18n';
 import { theme, type Theme } from '../../shared/theme.store';
 import { toast } from '../../shared/toast.store';
 
-type Tab = 'profile' | 'stats' | 'settings';
+type Tab = 'profile' | 'statistics' | 'settings';
 
 const TABS: { value: Tab; key: 'profile.tabProfile' | 'profile.tabStats' | 'profile.tabSettings'; icon: string }[] = [
 	{ value: 'profile', key: 'profile.tabProfile', icon: 'smile' },
-	{ value: 'stats', key: 'profile.tabStats', icon: 'chart' },
+	{ value: 'statistics', key: 'profile.tabStats', icon: 'chart' },
 	{ value: 'settings', key: 'profile.tabSettings', icon: 'gear' },
 ];
 const THEMES: { value: Theme; icon: string }[] = [
@@ -43,7 +43,10 @@ const settingGroups = computed(() => [
 	},
 ]);
 
-const tab = ref<Tab>('profile');
+// Each tab has its own URL: /profile, /profile/statistics, /profile/settings.
+const route = useRoute();
+const tab = computed<Tab>(() => (route.params.tab as Tab | undefined) || 'profile');
+const setTab = (value: Tab): Promise<unknown> => router.push(value === 'profile' ? '/profile' : `/profile/${value}`);
 const profile = ref<Profile>({ nickname: auth.user!.username, avatar: auth.user!.avatar });
 const saving = ref(false);
 const router = useRouter();
@@ -143,14 +146,14 @@ const showGame = async (entry: PlayHistoryEntry): Promise<void> => {
 };
 
 // WAI-ARIA tabs: arrow keys move between tabs.
-const onTabKey = (event: KeyboardEvent): void => {
+const onTabKey = async (event: KeyboardEvent): Promise<void> => {
 	const offset = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
 	if (!offset) {
 		return;
 	}
 	const index = (TABS.findIndex((entry) => entry.value === tab.value) + offset + TABS.length) % TABS.length;
-	tab.value = TABS[index].value;
-	document.getElementById(`tab-${tab.value}`)?.focus();
+	await setTab(TABS[index].value);
+	document.getElementById(`tab-${TABS[index].value}`)?.focus();
 };
 </script>
 
@@ -169,7 +172,7 @@ const onTabKey = (event: KeyboardEvent): void => {
 				:aria-selected="tab === entry.value"
 				:aria-controls="`panel-${entry.value}`"
 				:tabindex="tab === entry.value ? 0 : -1"
-				@click="tab = entry.value"
+				@click="setTab(entry.value)"
 			>
 				<AppIcon :name="entry.icon" />{{ t(entry.key) }}
 				<span v-if="entry.value === 'profile' && dirty" class="tab-dot" :title="t('pf.unsaved')" aria-hidden="true"></span>
@@ -189,7 +192,7 @@ const onTabKey = (event: KeyboardEvent): void => {
 			</BaseCard>
 		</section>
 
-		<section v-else-if="tab === 'stats'" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats" class="panel">
+		<section v-else-if="tab === 'statistics'" id="panel-statistics" role="tabpanel" aria-labelledby="tab-statistics" class="panel">
 			<div class="stats">
 				<div v-for="(tile, i) in statTiles" :key="tile.label" class="stat" :style="{ '--stat-color': ANSWER_COLORS[i] }">
 					<span class="value">{{ tile.value }}</span>

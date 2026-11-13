@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.4.1 - 2026-11-13
+- Chaque onglet du profil a son propre lien
 - Le profil affiche votre e-mail et vos moyens de connexion
 - Code de partie saisi dans six cases
 

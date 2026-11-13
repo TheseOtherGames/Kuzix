@@ -26,7 +26,7 @@ export const router = createRouter({
 		{ path: '/quizzes/:id/results', component: () => import('../features/quiz/QuizResultsView.vue'), meta: { requiresAuth: true } },
 		{ path: '/host/:id', component: () => import('../features/game/HostView.vue'), meta: { requiresAuth: true, immersive: true } },
 		{ path: '/play/:code', component: () => import('../features/game/PlayView.vue'), meta: { immersive: true } },
-		{ path: '/profile', component: () => import('../features/profile/ProfileView.vue'), meta: { requiresAuth: true } },
+		{ path: '/profile/:tab(statistics|settings)?', component: () => import('../features/profile/ProfileView.vue'), meta: { requiresAuth: true } },
 		{
 			path: '/admin',
 			component: () => import('../features/admin/AdminView.vue'),
