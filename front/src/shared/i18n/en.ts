@@ -598,6 +598,7 @@ export const en = {
 	'av.panda': 'Panda',
 	'av.frog': 'Frog',
 	'av.cat': 'Cat',
+	'av.dog': 'Dog',
 	'av.bunny': 'Bunny',
 	'av.pig': 'Pig',
 	'av.donut': 'Donut',

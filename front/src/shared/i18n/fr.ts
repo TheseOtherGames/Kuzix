@@ -600,6 +600,7 @@ export const fr: Record<MessageKey, string> = {
 	'av.panda': 'Panda',
 	'av.frog': 'Grenouille',
 	'av.cat': 'Chat',
+	'av.dog': 'Chien',
 	'av.bunny': 'Lapin',
 	'av.pig': 'Cochon',
 	'av.donut': 'Donut',

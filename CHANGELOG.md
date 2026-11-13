@@ -2,6 +2,7 @@
 
 ## 0.4.2 - 2026-11-13
 - [feat] Admin overview shows 30-day activity charts
+- [feat] New dog avatar
 - [style] Game code boxes show random placeholder characters
 - [style] Results page back button matches the app style
 
