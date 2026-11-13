@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.4.1 - 2026-11-13
+- Profile shows your email and login methods
 - Game code entered in six separate boxes
 
 ## 0.4.0 - 2026-11-13

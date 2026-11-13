@@ -14,7 +14,7 @@ import type { PlayerAnswerDetail } from '../quiz/quiz.types';
 import type { PlayHistoryEntry, Profile, UserStats } from '../auth/user.types';
 import { api } from '../../shared/api';
 import { ANSWER_COLORS } from '../../shared/answers';
-import { auth, updateProfile } from '../auth/auth.store';
+import { auth, PROVIDER_LABELS, updateProfile } from '../auth/auth.store';
 import { LOCALES, locale, t } from '../../shared/i18n/i18n';
 import { theme, type Theme } from '../../shared/theme.store';
 import { toast } from '../../shared/toast.store';
@@ -218,7 +218,7 @@ const onTabKey = (event: KeyboardEvent): void => {
 			</BaseCard>
 		</section>
 
-		<section v-else id="panel-settings" role="tabpanel" aria-labelledby="tab-settings">
+		<section v-else id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" class="settings-panel">
 			<BaseCard accent="var(--color-3)" class="narrow settings">
 				<section v-for="group in settingGroups" :key="group.id" class="setting">
 					<header class="setting-head">
@@ -236,6 +236,15 @@ const onTabKey = (event: KeyboardEvent): void => {
 						</label>
 					</div>
 				</section>
+			</BaseCard>
+
+			<BaseCard accent="var(--color-2)" class="narrow account">
+				<h2>{{ t('profile.account') }}</h2>
+				<p v-if="auth.user?.email"><strong>{{ t('auth.email') }}</strong> <span class="selectable">{{ auth.user.email }}</span></p>
+				<p>
+					<strong>{{ t('profile.loginMethods') }}</strong>
+					{{ auth.user?.providers.map((provider) => provider === 'password' ? t('profile.passwordLogin') : PROVIDER_LABELS[provider] ?? provider).join(', ') }}
+				</p>
 			</BaseCard>
 		</section>
 
@@ -323,6 +332,26 @@ const onTabKey = (event: KeyboardEvent): void => {
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;
+}
+
+.settings-panel {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 1.5rem;
+}
+
+/* Side by side when the window is wide enough, stacked otherwise. */
+.settings-panel > * {
+	flex: 1 1 22rem;
+}
+
+.account p {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0.4rem 0 0;
+	overflow-wrap: anywhere;
 }
 
 .narrow {

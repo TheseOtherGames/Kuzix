@@ -5,7 +5,10 @@ import type { PlayerAnswerDetail } from '../quiz/quiz.types';
 import { assert, HttpError } from '../../core/httpError';
 import { POINTS_PER_DIFFICULTY } from '../game/scoring';
 
-const USER_COLUMNS = 'id, email, username, avatar, plan, is_admin AS "isAdmin"';
+// providers: how the account can log in ('password' + linked OAuth providers).
+const USER_COLUMNS = `id, email, username, avatar, plan, is_admin AS "isAdmin",
+	ARRAY(SELECT 'password' WHERE users.password_hash IS NOT NULL
+		UNION ALL SELECT provider FROM user_identities WHERE user_id = users.id ORDER BY 1) AS providers`;
 
 type UserRow = Omit<User, 'limits'>;
 
@@ -49,9 +52,8 @@ export const createUser = async (email: string, passwordHash: string, username: 
 export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProfile): Promise<User> => {
 	return withTransaction(async (client) => {
 		const identity = await client.query<UserRow>(
-			`SELECT u.id, u.email, u.username, u.avatar, u.plan, u.is_admin AS "isAdmin" FROM user_identities i
-			JOIN users u ON u.id = i.user_id
-			WHERE i.provider = $1 AND i.provider_user_id = $2`,
+			`SELECT ${USER_COLUMNS} FROM users
+			WHERE id = (SELECT user_id FROM user_identities WHERE provider = $1 AND provider_user_id = $2)`,
 			[provider, profile.id],
 		);
 		if (identity.rows[0]) {

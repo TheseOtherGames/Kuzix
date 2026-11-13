@@ -5,10 +5,8 @@ import { useRoute, useRouter } from 'vue-router';
 import BaseButton from '../../shared/ui/BaseButton.vue';
 import BaseCard from '../../shared/ui/BaseCard.vue';
 import { api } from '../../shared/api';
-import { loginWithPassword, register } from './auth.store';
+import { loginWithPassword, PROVIDER_LABELS, register } from './auth.store';
 import { toast } from '../../shared/toast.store';
-
-const PROVIDER_LABELS: Record<string, string> = { google: 'Google', github: 'GitHub' };
 
 const route = useRoute();
 const router = useRouter();

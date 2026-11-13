@@ -5,6 +5,7 @@ export interface User {
 	avatar: string;
 	plan: Plan;
 	isAdmin: boolean;
+	providers: string[];
 	limits: PlanLimits;
 }
 

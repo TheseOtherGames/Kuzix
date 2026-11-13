@@ -41,6 +41,8 @@ const claimPendingScore = async (): Promise<void> => {
 	}
 };
 
+export const PROVIDER_LABELS: Record<string, string> = { google: 'Google', github: 'GitHub' };
+
 export const logout = (): void => {
 	auth.token = null;
 	auth.user = null;
