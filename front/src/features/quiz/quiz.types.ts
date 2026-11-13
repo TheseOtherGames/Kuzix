@@ -41,7 +41,15 @@ export interface RunPlayer {
 	avatar: string;
 	score: number;
 	rank: number | null;
-	registered: boolean;
+	answers: RunAnswer[];
+}
+
+// One answer given by a player; question and answer are 0-based positions in the quiz.
+export interface RunAnswer {
+	question: number;
+	answer: number;
+	timeMs: number;
+	points: number;
 }
 
 export interface Run {

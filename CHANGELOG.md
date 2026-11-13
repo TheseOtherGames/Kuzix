@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 - 2026-11-13
+- [feat] Results page shows full quiz, question and player stats
+- [feat] Results open on the latest session, with a session picker
+- [feat] Stats export adds correct answers and average time
+- [feat] Export each session's player answers as CSV
+- [feat] Exports no longer show whether a player has an account
+- [feat] Results stats explain themselves with info bubbles
+- [style] Results page session panel and stat tiles redesigned
+
 ## 0.4.3 - 2026-11-13
 - [feat] Final podium always shows all three places
 - [feat] Final ranking can be shown as a full list

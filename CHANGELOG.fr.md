@@ -1,5 +1,14 @@
 # Journal des modifications
 
+## 0.4.4 - 2026-11-13
+- [feat] La page de résultats affiche toutes les stats du quiz, des questions et des joueurs
+- [feat] Les résultats s'ouvrent sur la dernière session, avec un choix de session
+- [feat] L'export des stats ajoute bonnes réponses et temps moyen
+- [feat] Export CSV des réponses des joueurs par session
+- [feat] Les exports n'indiquent plus si un joueur a un compte
+- [feat] Les stats des résultats s'expliquent avec des bulles d'info
+- [style] Panneau de session et tuiles de stats des résultats redessinés
+
 ## 0.4.3 - 2026-11-13
 - [feat] Le podium final affiche toujours les trois places
 - [feat] Le classement final peut s'afficher en liste complète

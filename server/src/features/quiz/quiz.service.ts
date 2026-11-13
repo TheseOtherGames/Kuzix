@@ -1,7 +1,7 @@
 import { randomInt } from 'node:crypto';
 import type pg from 'pg';
 import { pool, withTransaction } from '../../core/db/pool';
-import type { Answer, Question, Quiz, QuizInput, QuizSummary, Run } from './quiz.types';
+import type { Answer, Question, Quiz, QuizInput, QuizSummary, Run, RunAnswer } from './quiz.types';
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { MAX_TITLE_LENGTH, uniqueTitle } from './title';
 import { findUserById } from '../user/user.service';
@@ -267,16 +267,29 @@ export const listRuns = async (quizId: number): Promise<Run[]> => {
 		'SELECT id, started_at AS "startedAt", ended_at AS "endedAt" FROM runs WHERE quiz_id = $1 AND cleared_at IS NULL ORDER BY started_at DESC',
 		[quizId],
 	);
-	const players = await pool.query<Run['players'][number] & { runId: number }>(
-		`SELECT p.id, p.run_id AS "runId", p.nickname, p.avatar, p.score, p.rank, p.user_id IS NOT NULL AS registered
+	const players = await pool.query<Omit<Run['players'][number], 'answers'> & { runId: number }>(
+		`SELECT p.id, p.run_id AS "runId", p.nickname, p.avatar, p.score, p.rank
 		FROM players p JOIN runs r ON r.id = p.run_id
 		WHERE r.quiz_id = $1 ORDER BY p.score DESC`,
 		[quizId],
 	);
 
+	// Positions, not ids: the front matches them with the quiz it already loaded (editing a played quiz wipes its answers).
+	const answers = await pool.query<RunAnswer & { playerId: number }>(
+		`SELECT pa.player_id AS "playerId", qu.position AS question, a.position AS answer, pa.time_ms AS "timeMs", pa.points
+		FROM player_answers pa
+		JOIN questions qu ON qu.id = pa.question_id
+		JOIN answers a ON a.id = pa.answer_id
+		WHERE qu.quiz_id = $1`,
+		[quizId],
+	);
+
 	return runs.rows.map((run) => ({
 		...run,
-		players: players.rows.filter((player) => player.runId === run.id).map(({ runId, ...player }) => player),
+		players: players.rows.filter((player) => player.runId === run.id).map(({ runId, ...player }) => ({
+			...player,
+			answers: answers.rows.filter((row) => row.playerId === player.id).map(({ playerId, ...row }) => row),
+		})),
 	}));
 };
 

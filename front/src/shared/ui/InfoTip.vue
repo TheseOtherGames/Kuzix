@@ -56,8 +56,12 @@ const hide = (): void => {
 <style scoped>
 .info-tip {
 	display: inline-flex;
+	flex-shrink: 0; /* in a flex row with long text it would squash into an oval and push the "i" off-centre */
 	vertical-align: middle;
 	margin-left: 0.35rem;
+	/* The icon and its bubble inherit text styles from wherever the tip sits (e.g. uppercase labels): reset them. */
+	letter-spacing: normal;
+	text-transform: none;
 }
 
 .icon {
