@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { dismissToast, toasts } from '../toast.store';
-import AppIcon from './AppIcon.vue';
+import { dismissToast, toasts } from '@/shared/toast.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
 
 const ICONS = { success: 'check', error: 'cross', info: 'info' };
 </script>

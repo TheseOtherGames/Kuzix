@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import AdminChart from './AdminChart.vue';
-import type { AdminOverview } from './admin.types';
-import { api } from '../../shared/api';
-import { t, tp } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import AdminChart from '@/features/admin/AdminChart.vue';
+import type { AdminOverview } from '@/features/admin/admin.types';
+import { api } from '@/shared/api';
+import { t, tp } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
 
 const overview = ref<AdminOverview | null>(null);
 

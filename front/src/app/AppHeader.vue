@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import AppIcon from '../shared/ui/AppIcon.vue';
-import AvatarIcon from '../shared/ui/AvatarIcon.vue';
-import BaseModal from '../shared/ui/BaseModal.vue';
-import { t } from '../shared/i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import { t } from '@/shared/i18n/i18n';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { auth, logout } from '../features/auth/auth.store';
-import { cycleTheme, theme, THEME_ICONS } from '../shared/theme.store';
-import { toast } from '../shared/toast.store';
-import BaseButton from '../shared/ui/BaseButton.vue';
-import PillButton from '../shared/ui/PillButton.vue';
-import TopBar from '../shared/ui/TopBar.vue';
+import { auth, logout } from '@/features/auth/auth.store';
+import { cycleTheme, theme, THEME_ICONS } from '@/shared/theme.store';
+import { toast } from '@/shared/toast.store';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import PillButton from '@/shared/ui/PillButton.vue';
+import TopBar from '@/shared/ui/TopBar.vue';
 
 const LOGO_COLORS = [
 	'var(--color-1)',

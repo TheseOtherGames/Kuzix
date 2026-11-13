@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { MessageKey } from '../../shared/i18n/en';
+import type { MessageKey } from '@/shared/i18n/en';
 import { computed } from 'vue';
-import { ANSWER_COLORS, ANSWER_ICONS } from '../../shared/answers';
-import { t } from '../../shared/i18n/i18n';
-import AppIcon from '../../shared/ui/AppIcon.vue';
+import { ANSWER_COLORS, ANSWER_ICONS } from '@/shared/answers';
+import { t } from '@/shared/i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
 
 export type AnswerTileState = 'idle' | 'selected' | 'correct' | 'wrong' | 'dimmed';
 

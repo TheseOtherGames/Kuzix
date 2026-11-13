@@ -1,7 +1,7 @@
-import en from '../../../CHANGELOG.md?raw';
-import fr from '../../../CHANGELOG.fr.md?raw';
+import en from '@/../../CHANGELOG.md?raw';
+import fr from '@/../../CHANGELOG.fr.md?raw';
 import { computed } from 'vue';
-import { locale } from '../shared/i18n/i18n';
+import { locale } from '@/shared/i18n/i18n';
 
 export const CHANGE_TYPES = [
 	'feat',

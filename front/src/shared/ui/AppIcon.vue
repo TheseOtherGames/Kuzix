@@ -1,6 +1,6 @@
 <script lang="ts">
 // System icons: one file per icon in shared/icons/<name>.svg (see the system-icons skill).
-const files = import.meta.glob<string>('../icons/*.svg', { query: '?raw', import: 'default', eager: true });
+const files = import.meta.glob<string>('@/shared/icons/*.svg', { query: '?raw', import: 'default', eager: true });
 const ICONS: Record<string, string> = {};
 for (const [path, source] of Object.entries(files)) {
 	const root = source.match(/<svg[^>]*>/)![0];

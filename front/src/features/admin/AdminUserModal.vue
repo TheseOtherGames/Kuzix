@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import AvatarIcon from '../../shared/ui/AvatarIcon.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseModal from '../../shared/ui/BaseModal.vue';
-import NameTag from '../../shared/ui/NameTag.vue';
-import type { AdminUserDetail } from './admin.types';
-import { api } from '../../shared/api';
-import { locale, t, tp } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
-import { auth } from '../auth/auth.store';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import NameTag from '@/shared/ui/NameTag.vue';
+import type { AdminUserDetail } from '@/features/admin/admin.types';
+import { api } from '@/shared/api';
+import { locale, t, tp } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
+import { auth } from '@/features/auth/auth.store';
 
 const props = defineProps<{ userId: number | null }>();
 const emit = defineEmits<{ close: []; changed: [] }>();

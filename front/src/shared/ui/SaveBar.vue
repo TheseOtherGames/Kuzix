@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppIcon from './AppIcon.vue';
-import BaseButton from './BaseButton.vue';
-import { t } from '../i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import { t } from '@/shared/i18n/i18n';
 
 // Must sit inside the <form> it saves: the Save button submits it.
 defineProps<{

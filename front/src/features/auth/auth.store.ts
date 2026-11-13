@@ -1,9 +1,9 @@
 import { reactive } from 'vue';
-import type { AuthResponse, Profile, User } from './user.types';
-import { api, ApiError } from '../../shared/api';
-import { randomBase } from '../../shared/avatars';
-import { t } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
+import type { AuthResponse, Profile, User } from '@/features/auth/user.types';
+import { api, ApiError } from '@/shared/api';
+import { randomBase } from '@/shared/avatars';
+import { t } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
 
 const TOKEN_KEY = 'kuzix-token';
 const PENDING_CLAIM_KEY = 'kuzix-pending-claim';

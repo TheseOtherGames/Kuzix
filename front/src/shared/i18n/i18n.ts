@@ -1,6 +1,6 @@
 import { ref, watchEffect } from 'vue';
-import { en, type MessageKey } from './en';
-import { fr, frServerErrors } from './fr';
+import { en, type MessageKey } from '@/shared/i18n/en';
+import { fr, frServerErrors } from '@/shared/i18n/fr';
 
 export type Locale = 'en' | 'fr';
 type Params = Record<string, string | number>;

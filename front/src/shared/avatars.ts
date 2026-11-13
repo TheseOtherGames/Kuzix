@@ -119,7 +119,7 @@ export const AVATAR_CATEGORIES: AvatarCategory[] = [
 	'creatures',
 ];
 
-const files = import.meta.glob<string>('./avatar-parts/*/*.svg', { query: '?raw', import: 'default', eager: true });
+const files = import.meta.glob<string>('@/shared/avatar-parts/*/*.svg', { query: '?raw', import: 'default', eager: true });
 
 const parts = Object.entries(files).map(([path, source]) => {
 	const [, folder, id] = path.match(/\/([^/]+)\/([^/]+)\.svg$/)!;

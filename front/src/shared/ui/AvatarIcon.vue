@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { avatarSvg } from '../avatars';
+import { avatarSvg } from '@/shared/avatars';
 
 const props = defineProps<{ value: string }>();
 

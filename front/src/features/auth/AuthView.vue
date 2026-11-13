@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { t } from '../../shared/i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import { api } from '../../shared/api';
-import { loginWithPassword, PROVIDER_LABELS, register } from './auth.store';
-import { toast } from '../../shared/toast.store';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import { api } from '@/shared/api';
+import { loginWithPassword, PROVIDER_LABELS, register } from '@/features/auth/auth.store';
+import { toast } from '@/shared/toast.store';
 
 const route = useRoute();
 const router = useRouter();

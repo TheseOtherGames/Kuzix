@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { QuestionDraft } from './quiz.types';
-import { ANSWER_COLORS, ANSWER_ICONS, MAX_ANSWERS, MIN_ANSWERS, POINTS_PER_DIFFICULTY } from '../../shared/answers';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import InfoTip from '../../shared/ui/InfoTip.vue';
-import type { MessageKey } from '../../shared/i18n/en';
-import { t } from '../../shared/i18n/i18n';
+import type { QuestionDraft } from '@/features/quiz/quiz.types';
+import { ANSWER_COLORS, ANSWER_ICONS, MAX_ANSWERS, MIN_ANSWERS, POINTS_PER_DIFFICULTY } from '@/shared/answers';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import InfoTip from '@/shared/ui/InfoTip.vue';
+import type { MessageKey } from '@/shared/i18n/en';
+import { t } from '@/shared/i18n/i18n';
 
 defineProps<{
 	index: number;

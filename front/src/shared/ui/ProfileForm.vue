@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import AppIcon from './AppIcon.vue';
-import AvatarIcon from './AvatarIcon.vue';
-import NameTag from './NameTag.vue';
-import { t } from '../i18n/i18n';
-import type { MessageKey } from '../i18n/en';
-import type { Profile } from '../../features/auth/user.types';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
+import NameTag from '@/shared/ui/NameTag.vue';
+import { t } from '@/shared/i18n/i18n';
+import type { MessageKey } from '@/shared/i18n/en';
+import type { Profile } from '@/features/auth/user.types';
 import {AVATAR_BASES,
 	AVATAR_CATEGORIES,
 	AVATAR_FACES,
@@ -18,7 +18,7 @@ import {AVATAR_BASES,
 	parseAvatar,
 	randomAvatar,
 	type AvatarCategory,
-	type AvatarValue} from '../avatars';
+	type AvatarValue} from '@/shared/avatars';
 
 type Step = 'base' | 'hat' | 'face' | 'item' | 'tag';
 

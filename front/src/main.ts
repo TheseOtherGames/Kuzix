@@ -1,10 +1,10 @@
 import { createApp } from 'vue';
-import App from './app/App.vue';
-import { router } from './app/router';
-import { loadUser } from './features/auth/auth.store';
-import './shared/theme.store';
-import './shared/buttonTitles';
-import './app/global.css';
+import App from '@/app/App.vue';
+import { router } from '@/app/router';
+import { loadUser } from '@/features/auth/auth.store';
+import '@/shared/theme.store';
+import '@/shared/buttonTitles';
+import '@/app/global.css';
 
 const { VITE_UMAMI_URL, VITE_UMAMI_WEBSITE_ID } = import.meta.env;
 if (VITE_UMAMI_URL && VITE_UMAMI_WEBSITE_ID) {

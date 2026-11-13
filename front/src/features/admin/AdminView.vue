@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import type { MessageKey } from '../../shared/i18n/en';
-import { t } from '../../shared/i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import type { MessageKey } from '@/shared/i18n/en';
+import { t } from '@/shared/i18n/i18n';
 
 const SECTIONS: { to: string; label: MessageKey; icon: string; tint: string }[] = [
 	{

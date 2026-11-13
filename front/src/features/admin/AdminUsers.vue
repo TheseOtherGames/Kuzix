@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import AvatarIcon from '../../shared/ui/AvatarIcon.vue';
-import AdminUserModal from './AdminUserModal.vue';
-import type { AdminUser } from './admin.types';
-import { api } from '../../shared/api';
-import { locale, t } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
-import { auth } from '../auth/auth.store';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
+import AdminUserModal from '@/features/admin/AdminUserModal.vue';
+import type { AdminUser } from '@/features/admin/admin.types';
+import { api } from '@/shared/api';
+import { locale, t } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
+import { auth } from '@/features/auth/auth.store';
 
 // Mirrors LIST_LIMIT in server admin.service.ts.
 const LIST_LIMIT = 200;

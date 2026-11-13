@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { locale } from '../../shared/i18n/i18n';
+import { locale } from '@/shared/i18n/i18n';
 
 // One series per chart (never two scales on one axis): render it twice for two measures.
 const props = defineProps<{

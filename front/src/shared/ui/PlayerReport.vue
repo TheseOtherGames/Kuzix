@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import NameTag from './NameTag.vue';
-import AppIcon from './AppIcon.vue';
-import AvatarIcon from './AvatarIcon.vue';
+import NameTag from '@/shared/ui/NameTag.vue';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
 import { computed } from 'vue';
-import type { PlayerAnswerDetail } from '../../features/quiz/quiz.types';
-import { t } from '../i18n/i18n';
+import type { PlayerAnswerDetail } from '@/features/quiz/quiz.types';
+import { t } from '@/shared/i18n/i18n';
 
 const MEDALS = ['medal-gold', 'medal-silver', 'medal-bronze'];
 

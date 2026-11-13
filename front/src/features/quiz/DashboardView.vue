@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import PillButton from '../../shared/ui/PillButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import BaseModal from '../../shared/ui/BaseModal.vue';
-import InfoTip from '../../shared/ui/InfoTip.vue';
-import type { Quiz, QuizDraft, QuizSummary } from './quiz.types';
-import { api } from '../../shared/api';
-import { ANSWER_COLORS } from '../../shared/answers';
-import { downloadFile, slugify } from '../../shared/download';
-import type { MessageKey } from '../../shared/i18n/en';
-import { LOCALES, locale, t, tp } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
-import { auth } from '../auth/auth.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import PillButton from '@/shared/ui/PillButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import InfoTip from '@/shared/ui/InfoTip.vue';
+import type { Quiz, QuizDraft, QuizSummary } from '@/features/quiz/quiz.types';
+import { api } from '@/shared/api';
+import { ANSWER_COLORS } from '@/shared/answers';
+import { downloadFile, slugify } from '@/shared/download';
+import type { MessageKey } from '@/shared/i18n/en';
+import { LOCALES, locale, t, tp } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
+import { auth } from '@/features/auth/auth.store';
 
 const router = useRouter();
 const quizzes = ref<QuizSummary[]>([]);

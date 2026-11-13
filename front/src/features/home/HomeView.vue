@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { t } from '../../shared/i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import { ANSWER_COLORS, ANSWER_ICONS } from '../../shared/answers';
-import { auth } from '../auth/auth.store';
-import { api, ApiError } from '../../shared/api';
-import { toast } from '../../shared/toast.store';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import { ANSWER_COLORS, ANSWER_ICONS } from '@/shared/answers';
+import { auth } from '@/features/auth/auth.store';
+import { api, ApiError } from '@/shared/api';
+import { toast } from '@/shared/toast.store';
 
 const router = useRouter();
 const CODE_LENGTH = 6;

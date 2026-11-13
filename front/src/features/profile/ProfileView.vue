@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import AvatarIcon from '../../shared/ui/AvatarIcon.vue';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave, useRoute, useRouter, type RouteLocationNormalized } from 'vue-router';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import BaseModal from '../../shared/ui/BaseModal.vue';
-import InfoTip from '../../shared/ui/InfoTip.vue';
-import PlayerReport from '../../shared/ui/PlayerReport.vue';
-import ProfileForm from '../../shared/ui/ProfileForm.vue';
-import SaveBar from '../../shared/ui/SaveBar.vue';
-import type { PlayerAnswerDetail } from '../quiz/quiz.types';
-import type { PlayHistoryEntry, Profile, UserStats } from '../auth/user.types';
-import { api } from '../../shared/api';
-import { ANSWER_COLORS } from '../../shared/answers';
-import { auth, PROVIDER_LABELS, updateProfile } from '../auth/auth.store';
-import { LOCALES, locale, t } from '../../shared/i18n/i18n';
-import { theme, type Theme } from '../../shared/theme.store';
-import { toast } from '../../shared/toast.store';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import InfoTip from '@/shared/ui/InfoTip.vue';
+import PlayerReport from '@/shared/ui/PlayerReport.vue';
+import ProfileForm from '@/shared/ui/ProfileForm.vue';
+import SaveBar from '@/shared/ui/SaveBar.vue';
+import type { PlayerAnswerDetail } from '@/features/quiz/quiz.types';
+import type { PlayHistoryEntry, Profile, UserStats } from '@/features/auth/user.types';
+import { api } from '@/shared/api';
+import { ANSWER_COLORS } from '@/shared/answers';
+import { auth, PROVIDER_LABELS, updateProfile } from '@/features/auth/auth.store';
+import { LOCALES, locale, t } from '@/shared/i18n/i18n';
+import { theme, type Theme } from '@/shared/theme.store';
+import { toast } from '@/shared/toast.store';
 
 type Tab = 'profile' | 'statistics' | 'settings';
 

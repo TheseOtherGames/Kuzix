@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { t } from '../i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 import { onBeforeUnmount, watch } from 'vue';
 
 const props = defineProps<{

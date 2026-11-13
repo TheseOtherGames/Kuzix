@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { tagLook } from '../avatars';
+import { tagLook } from '@/shared/avatars';
 
 const props = defineProps<{
 	name: string;
@@ -87,7 +87,7 @@ const letters = computed(() => (tag.value.style === 'wave' ? Array.from(props.na
 	display: inline-block;
 	width: 1em;
 	height: 1em;
-	background: url('../icons/sparkles.svg') center / contain no-repeat;
+	background: url('@/shared/icons/sparkles.svg') center / contain no-repeat;
 	vertical-align: -0.1em;
 	font-size: 0.8em;
 	animation: twinkle 1.6s ease-in-out infinite;

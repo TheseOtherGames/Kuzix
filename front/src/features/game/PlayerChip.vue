@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import NameTag from '../../shared/ui/NameTag.vue';
-import AvatarIcon from '../../shared/ui/AvatarIcon.vue';
-import { t } from '../../shared/i18n/i18n';
+import NameTag from '@/shared/ui/NameTag.vue';
+import AvatarIcon from '@/shared/ui/AvatarIcon.vue';
+import { t } from '@/shared/i18n/i18n';
 
 defineProps<{
 	avatar: string;

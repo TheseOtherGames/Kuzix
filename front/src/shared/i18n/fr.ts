@@ -1,4 +1,4 @@
-import type { MessageKey } from './en';
+import type { MessageKey } from '@/shared/i18n/en';
 
 export const fr: Record<MessageKey, string> = {
 	'common.cancel': 'Annuler',

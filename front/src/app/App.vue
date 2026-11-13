@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import AppHeader from './AppHeader.vue';
-import ToastContainer from '../shared/ui/ToastContainer.vue';
-import { LOCALES, locale, t } from '../shared/i18n/i18n';
+import AppHeader from '@/app/AppHeader.vue';
+import ToastContainer from '@/shared/ui/ToastContainer.vue';
+import { LOCALES, locale, t } from '@/shared/i18n/i18n';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import AppIcon from '../shared/ui/AppIcon.vue';
-import ChangelogModal from './ChangelogModal.vue';
-import { CURRENT_VERSION } from './changelog';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import ChangelogModal from '@/app/ChangelogModal.vue';
+import { CURRENT_VERSION } from '@/app/changelog';
 
 const route = useRoute();
 

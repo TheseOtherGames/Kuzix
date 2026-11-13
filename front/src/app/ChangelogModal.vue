@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { locale, t } from '../shared/i18n/i18n';
-import AppIcon from '../shared/ui/AppIcon.vue';
-import BaseModal from '../shared/ui/BaseModal.vue';
-import { ISSUE_URL, RELEASES } from './changelog';
+import { locale, t } from '@/shared/i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import { ISSUE_URL, RELEASES } from '@/app/changelog';
 
 defineProps<{ open: boolean }>();
 const emit = defineEmits<{ close: [] }>();

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import AdminUserModal from './AdminUserModal.vue';
-import type { AdminQuiz } from './admin.types';
-import { api } from '../../shared/api';
-import { locale, t } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
+import AdminUserModal from '@/features/admin/AdminUserModal.vue';
+import type { AdminQuiz } from '@/features/admin/admin.types';
+import { api } from '@/shared/api';
+import { locale, t } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
 
 // Mirrors LIST_LIMIT in server admin.service.ts.
 const LIST_LIMIT = 200;

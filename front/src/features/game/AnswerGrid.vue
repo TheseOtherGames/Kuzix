@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AnswerTile, { type AnswerTileState } from './AnswerTile.vue';
+import AnswerTile, { type AnswerTileState } from '@/features/game/AnswerTile.vue';
 
 const props = defineProps<{
 	count: number;

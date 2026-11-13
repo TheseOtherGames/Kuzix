@@ -1,4 +1,4 @@
-import type { RevealMode } from '../quiz/quiz.types';
+import type { RevealMode } from '@/features/quiz/quiz.types';
 
 export type GamePhase = 'lobby' | 'countdown' | 'question' | 'reveal' | 'end';
 

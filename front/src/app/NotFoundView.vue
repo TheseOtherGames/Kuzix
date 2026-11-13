@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { t } from '../shared/i18n/i18n';
-import AppIcon from '../shared/ui/AppIcon.vue';
-import BaseButton from '../shared/ui/BaseButton.vue';
+import { t } from '@/shared/i18n/i18n';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
 </script>
 
 <template>

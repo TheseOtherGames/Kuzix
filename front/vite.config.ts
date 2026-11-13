@@ -63,6 +63,7 @@ export default defineConfig(({ mode }) => {
 	return {
 		root: import.meta.dirname,
 		plugins: [vue(), seoFiles(siteUrl)],
+		resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
 		build: {
 			target: 'baseline-widely-available',
 			minify: 'oxc',

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router';
-import { LOCALES, locale, t } from '../../shared/i18n/i18n';
-import { cycleTheme, theme, THEME_ICONS } from '../../shared/theme.store';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import PillButton from '../../shared/ui/PillButton.vue';
-import TopBar from '../../shared/ui/TopBar.vue';
+import { LOCALES, locale, t } from '@/shared/i18n/i18n';
+import { cycleTheme, theme, THEME_ICONS } from '@/shared/theme.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import PillButton from '@/shared/ui/PillButton.vue';
+import TopBar from '@/shared/ui/TopBar.vue';
 
 const toggleLocale = (): void => {
 	locale.value = locale.value === 'en' ? 'fr' : 'en';

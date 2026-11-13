@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { t } from '../../shared/i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const props = defineProps<{

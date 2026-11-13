@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseModal from '../../shared/ui/BaseModal.vue';
-import type { AdminLiveGame } from './admin.types';
-import type { MessageKey } from '../../shared/i18n/en';
-import { api } from '../../shared/api';
-import { t } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import type { AdminLiveGame } from '@/features/admin/admin.types';
+import type { MessageKey } from '@/shared/i18n/en';
+import { api } from '@/shared/api';
+import { t } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
 
 const games = ref<AdminLiveGame[] | null>(null);
 const closing = ref<AdminLiveGame | null>(null);

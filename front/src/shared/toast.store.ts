@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { translateServerError } from './i18n/i18n';
+import { translateServerError } from '@/shared/i18n/i18n';
 
 export type ToastType = 'success' | 'error' | 'info';
 

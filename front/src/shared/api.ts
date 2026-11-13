@@ -1,5 +1,5 @@
-import { auth, logout } from '../features/auth/auth.store';
-import { t } from './i18n/i18n';
+import { auth, logout } from '@/features/auth/auth.store';
+import { t } from '@/shared/i18n/i18n';
 
 export class ApiError extends Error {
 	constructor(public status: number, message: string) {

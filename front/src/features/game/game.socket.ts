@@ -1,6 +1,6 @@
-import type { ClientMessage, ServerMessage } from './game.types';
-import { t } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
+import type { ClientMessage, ServerMessage } from '@/features/game/game.types';
+import { t } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
 
 const RECONNECT_DELAY_MS = 2000;
 

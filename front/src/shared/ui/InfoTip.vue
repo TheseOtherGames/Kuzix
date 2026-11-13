@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, useId } from 'vue';
-import { t } from '../i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 
 defineProps<{ text: string }>();
 

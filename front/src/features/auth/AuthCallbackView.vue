@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { t } from '../../shared/i18n/i18n';
+import { t } from '@/shared/i18n/i18n';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { login } from './auth.store';
-import { toast } from '../../shared/toast.store';
+import { login } from '@/features/auth/auth.store';
+import { toast } from '@/shared/toast.store';
 
 const router = useRouter();
 

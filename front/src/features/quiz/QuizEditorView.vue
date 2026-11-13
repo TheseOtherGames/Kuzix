@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRaw } from 'vue';
 import { onBeforeRouteLeave, useRoute, useRouter, type RouteLocationNormalized } from 'vue-router';
-import AppIcon from '../../shared/ui/AppIcon.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
-import BaseCard from '../../shared/ui/BaseCard.vue';
-import BaseModal from '../../shared/ui/BaseModal.vue';
-import InfoTip from '../../shared/ui/InfoTip.vue';
-import QuestionEditor from './QuestionEditor.vue';
-import type { Quiz, QuizDraft, QuestionDraft } from './quiz.types';
-import { api } from '../../shared/api';
-import { t, tp } from '../../shared/i18n/i18n';
-import { toast } from '../../shared/toast.store';
-import { auth } from '../auth/auth.store';
+import AppIcon from '@/shared/ui/AppIcon.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseCard from '@/shared/ui/BaseCard.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
+import InfoTip from '@/shared/ui/InfoTip.vue';
+import QuestionEditor from '@/features/quiz/QuestionEditor.vue';
+import type { Quiz, QuizDraft, QuestionDraft } from '@/features/quiz/quiz.types';
+import { api } from '@/shared/api';
+import { t, tp } from '@/shared/i18n/i18n';
+import { toast } from '@/shared/toast.store';
+import { auth } from '@/features/auth/auth.store';
 
 const DEFAULT_ANSWERS = 4;
 
