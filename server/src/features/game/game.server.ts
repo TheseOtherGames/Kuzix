@@ -29,6 +29,13 @@ const loadGame = async (quiz: Quiz): Promise<Game | null> => {
 	return game;
 };
 
+export const findGameByCode = async (raw: unknown): Promise<Game | null> => {
+	const code = String(raw).toLowerCase();
+	const quizId = /^[a-z0-9]{6}$/.test(code) ? await findQuizIdByCode(code) : null;
+	const quiz = quizId ? await getQuiz(quizId) : null;
+	return quiz ? loadGame(quiz) : null;
+};
+
 const handle = async (ws: WebSocket, message: ClientMessage, session: Session | null): Promise<Session | null> => {
 	switch (message.type) {
 		case 'host': {
@@ -41,10 +48,7 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 			return { game };
 		}
 		case 'join': {
-			const code = String(message.code).toLowerCase();
-			const quizId = /^[a-z0-9]{6}$/.test(code) ? await findQuizIdByCode(code) : null;
-			const quiz = quizId ? await getQuiz(quizId) : null;
-			const game = quiz ? await loadGame(quiz) : null;
+			const game = await findGameByCode(message.code);
 			assert(game, 'No open quiz with this code', 404);
 			const userId = message.token ? verifyToken(String(message.token)) : null;
 			assert(userId !== game.quiz.ownerId, 'You cannot join your own quiz, host it instead', 403);

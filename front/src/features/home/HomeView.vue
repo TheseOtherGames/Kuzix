@@ -7,16 +7,28 @@ import BaseCard from '../../shared/ui/BaseCard.vue';
 import AppIcon from '../../shared/ui/AppIcon.vue';
 import { ANSWER_COLORS, ANSWER_ICONS } from '../../shared/answers';
 import { auth } from '../auth/auth.store';
+import { api, ApiError } from '../../shared/api';
+import { toast } from '../../shared/toast.store';
 
 const router = useRouter();
 const code = ref('');
 
 const cleanCode = computed(() => code.value.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 6));
 
-const join = (): void => {
-	if (cleanCode.value.length === 6) {
-		router.push(`/play/${cleanCode.value}`);
+const join = async (): Promise<void> => {
+	if (cleanCode.value.length !== 6) {
+		return;
 	}
+	try {
+		await api(`/games/${cleanCode.value}`);
+	} catch (error) {
+		// ponytail: only a 404 stops here, other failures let the play page report the real error.
+		if (error instanceof ApiError && error.status === 404) {
+			toast.error(t('play.unknownCode'));
+			return;
+		}
+	}
+	router.push(`/play/${cleanCode.value}`);
 };
 </script>
 

@@ -18,6 +18,7 @@ import type { Profile } from '../auth/user.types';
 import { GameSocket } from './game.socket';
 import { auth, currentProfile, guestProfile, setPendingClaim } from '../auth/auth.store';
 import { toast } from '../../shared/toast.store';
+import { api, ApiError } from '../../shared/api';
 
 const route = useRoute();
 const router = useRouter();
@@ -127,6 +128,14 @@ const join = (): void => {
 
 if (sessionStorage.getItem(tokenKey)) {
 	connect();
+} else {
+	// Direct link with a wrong code: back home with a toast, like the home page join.
+	api(`/games/${encodeURIComponent(code)}`).catch((error) => {
+		if (error instanceof ApiError && error.status === 404) {
+			toast.error(t('play.unknownCode'));
+			router.replace('/');
+		}
+	});
 }
 
 onBeforeUnmount(leave);

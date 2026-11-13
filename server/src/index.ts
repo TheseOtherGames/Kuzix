@@ -8,7 +8,7 @@ import { authRouter } from './features/auth/auth.routes';
 import { quizRouter } from './features/quiz/quiz.routes';
 import { userRouter } from './features/user/user.routes';
 import { adminRouter } from './features/admin/admin.routes';
-import { attachGameServer } from './features/game/game.server';
+import { attachGameServer, findGameByCode } from './features/game/game.server';
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -16,6 +16,10 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/quizzes', quizRouter);
 app.use('/api/admin', adminRouter);
+// Lets the join page tell a wrong code apart before asking for a nickname.
+app.get('/api/games/:code', async (req, res) => {
+	res.status(await findGameByCode(req.params.code) ? 204 : 404).end();
+});
 app.use('/api', notFound);
 
 // Built front (npm run build). Hashed assets never change, so they are cached for a year.

@@ -220,6 +220,7 @@ export const fr: Record<MessageKey, string> = {
 	'play.whoAreYou': 'Qui êtes-vous ?',
 	'play.joinHint': 'Vous personnaliserez votre avatar et votre étiquette dans la salle d\'attente.',
 	'play.lookTitle': 'Personnalisez votre look en attendant',
+	'play.unknownCode': 'Ce code n\'existe pas',
 	'play.join': 'Rejoindre la partie',
 	'play.youreIn': 'C\'est parti, {name} !',
 	'play.lobby.one': 'Regardez l\'écran de l\'animateur, la partie commence bientôt. {n} joueur ici.',

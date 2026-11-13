@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.3.4 - 2026-11-13
+- Un code de partie inconnu affiche une erreur sur l'accueil
 - Les codes de quiz n'existent que quand le quiz est ouvert
 - Infos des cartes de quiz alignées en bas
 - Bouton admin déplacé en fin de barre de navigation

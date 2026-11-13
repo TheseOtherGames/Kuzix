@@ -218,6 +218,7 @@ export const en = {
 	'play.whoAreYou': 'Who are you?',
 	'play.joinHint': 'You will customise your avatar and name tag in the waiting room.',
 	'play.lookTitle': 'Customise your look while you wait',
+	'play.unknownCode': 'This code doesn\'t exist',
 	'play.join': 'Join the game',
 	'play.youreIn': 'You\'re in, {name}!',
 	'play.lobby.one': 'Look at the host screen, the game starts soon. {n} player here.',
