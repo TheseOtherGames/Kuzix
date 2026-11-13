@@ -7,6 +7,7 @@ export interface AdminOverview {
 	players: number;
 	liveGames: number;
 	livePlayers: number;
+	activity: { day: string; users: number; players: number }[];
 }
 
 export interface AdminUser {

@@ -48,6 +48,8 @@ export const en = {
 	'admin.refresh': 'Refresh',
 	'admin.empty': 'Nothing found',
 	'admin.capped': 'Only the {n} most recent are shown, refine the search to find others.',
+	'admin.chart.users': 'New users · last 30 days',
+	'admin.chart.players': 'Players · last 30 days',
 	'admin.kpi.users': 'Users',
 	'admin.kpi.newUsers.one': '+{n} this week',
 	'admin.kpi.newUsers.other': '+{n} this week',

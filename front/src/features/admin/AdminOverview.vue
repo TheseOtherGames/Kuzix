@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import AppIcon from '../../shared/ui/AppIcon.vue';
+import AdminChart from './AdminChart.vue';
 import type { AdminOverview } from './admin.types';
 import { api } from '../../shared/api';
 import { t, tp } from '../../shared/i18n/i18n';
@@ -30,6 +31,8 @@ const tiles = computed(() => {
 	];
 });
 
+const series = (key: 'users' | 'players') => overview.value?.activity.map((row) => ({ day: row.day, value: row[key] })) ?? [];
+
 onMounted(async () => {
 	try {
 		overview.value = await api<AdminOverview>('/admin/overview');
@@ -55,9 +58,20 @@ onMounted(async () => {
 			<span class="tile-sub">{{ tile.sub }}</span>
 		</RouterLink>
 	</div>
+	<div v-if="overview" class="charts">
+		<AdminChart :title="t('admin.chart.users')" :points="series('users')" color="var(--color-4)" />
+		<AdminChart :title="t('admin.chart.players')" :points="series('players')" color="var(--color-3)" />
+	</div>
 </template>
 
 <style scoped>
+.charts {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
 .tiles {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));

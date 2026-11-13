@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.4.2 - 2026-11-13
+- [feat] La vue admin affiche des graphiques d'activité sur 30 jours
 - [style] Les cases du code de partie affichent des caractères aléatoires
 
 ## 0.4.1 - 2026-11-13

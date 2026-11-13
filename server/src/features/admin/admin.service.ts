@@ -8,7 +8,7 @@ import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminUser, AdminUserDetai
 const LIST_LIMIT = 200;
 
 export const getOverview = async (): Promise<AdminOverview> => {
-	const { rows } = await pool.query<Omit<AdminOverview, 'liveGames' | 'livePlayers'>>(
+	const { rows } = await pool.query<Omit<AdminOverview, 'liveGames' | 'livePlayers' | 'activity'>>(
 		`SELECT
 			(SELECT count(*)::int FROM users) AS users,
 			(SELECT count(*)::int FROM users WHERE created_at > now() - interval '7 days') AS "newUsers7d",
@@ -17,9 +17,18 @@ export const getOverview = async (): Promise<AdminOverview> => {
 			(SELECT count(*)::int FROM runs r WHERE EXISTS (SELECT 1 FROM players p WHERE p.run_id = r.id)) AS "gamesPlayed",
 			(SELECT count(*)::int FROM players) AS players`,
 	);
+	// Last 30 days, one row per day (empty days included) for the dashboard charts.
+	const { rows: activity } = await pool.query<AdminOverview['activity'][number]>(
+		`SELECT to_char(d, 'YYYY-MM-DD') AS day,
+			(SELECT count(*)::int FROM users WHERE created_at >= d AND created_at < d + interval '1 day') AS users,
+			(SELECT count(*)::int FROM players WHERE joined_at >= d AND joined_at < d + interval '1 day') AS players
+		FROM generate_series(current_date - 29, current_date, interval '1 day') AS d`,
+	);
 	const live = [...games.values()];
 
-	return { ...rows[0], liveGames: live.length, livePlayers: live.reduce((sum, game) => sum + game.players.size, 0) };
+	return {
+		...rows[0], activity, liveGames: live.length, livePlayers: live.reduce((sum, game) => sum + game.players.size, 0),
+	};
 };
 
 const ADMIN_USER_COLUMNS = `u.id, u.email, u.username, u.avatar, u.plan, u.is_admin AS "isAdmin",

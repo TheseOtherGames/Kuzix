@@ -50,6 +50,8 @@ export const fr: Record<MessageKey, string> = {
 	'admin.refresh': 'Actualiser',
 	'admin.empty': 'Aucun résultat',
 	'admin.capped': 'Seuls les {n} plus récents sont affichés, affinez la recherche pour trouver les autres.',
+	'admin.chart.users': 'Nouveaux utilisateurs · 30 derniers jours',
+	'admin.chart.players': 'Joueurs · 30 derniers jours',
 	'admin.kpi.users': 'Utilisateurs',
 	'admin.kpi.newUsers.one': '+{n} cette semaine',
 	'admin.kpi.newUsers.other': '+{n} cette semaine',
