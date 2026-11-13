@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.4.3 - 2026-11-13
+- [feat] Le podium final affiche toujours les trois places
+- [feat] Le classement final peut s'afficher en liste complète
+
 ## 0.4.2 - 2026-11-13
 - [feat] La vue admin affiche des graphiques d'activité sur 30 jours
 - [feat] Nouvel avatar chien

@@ -193,6 +193,8 @@ export const fr: Record<MessageKey, string> = {
 	'host.podium': 'Podium',
 	'host.ranking': 'Classement final',
 	'host.backDashboard': 'Retour au tableau de bord',
+	'host.showFullRanking': 'Voir le classement complet',
+	'host.showPodium': 'Voir le podium',
 	'host.share': 'Partager le lien',
 	'host.copyCode': 'Copier le code',
 	'host.codeCopied': 'Code copié',

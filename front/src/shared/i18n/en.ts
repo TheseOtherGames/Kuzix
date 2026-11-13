@@ -191,6 +191,8 @@ export const en = {
 	'host.podium': 'Podium',
 	'host.ranking': 'Final ranking',
 	'host.backDashboard': 'Back to dashboard',
+	'host.showFullRanking': 'Show full ranking',
+	'host.showPodium': 'Show podium',
 	'host.share': 'Share link',
 	'host.copyCode': 'Copy code',
 	'host.codeCopied': 'Code copied',

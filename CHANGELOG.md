@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3 - 2026-11-13
+- [feat] Final podium always shows all three places
+- [feat] Final ranking can be shown as a full list
+
 ## 0.4.2 - 2026-11-13
 - [feat] Admin overview shows 30-day activity charts
 - [feat] New dog avatar

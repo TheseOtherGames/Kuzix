@@ -32,6 +32,7 @@ const stopOpen = ref(false);
 const cancelOpen = ref(false);
 const recodeOpen = ref(false);
 const playersOpen = ref(false);
+const fullRanking = ref(false);
 const kickTarget = ref<PlayerPublic | null>(null);
 let pausedByPopup = false;
 const joinLink = computed(() => (state.value ? `${location.origin}/play/${state.value.code}` : ''));
@@ -60,9 +61,9 @@ onBeforeUnmount(() => socket.close());
 
 const answeredCount = computed(() => state.value?.players.filter((player) => player.answered).length ?? 0);
 // Podium columns in display order (2nd, 1st, 3rd); `step` is the place, which also sets the reveal order (3rd first).
+// All three steps always show; a step without a player stays empty.
 const podium = computed(() => [1, 0, 2]
-	.map((rankIndex) => ({ player: state.value?.players[rankIndex], step: rankIndex + 1 }))
-	.filter((spot): spot is { player: PlayerPublic; step: number } => Boolean(spot.player)));
+	.map((rankIndex): { player?: PlayerPublic; step: number } => ({ player: state.value?.players[rankIndex], step: rankIndex + 1 })));
 
 const showReveal = computed(() => state.value?.phase === 'reveal' && state.value.revealMode === 'question');
 const isLastQuestion = computed(() => state.value?.question?.index === (state.value?.questionsCount ?? 0) - 1);
@@ -317,18 +318,24 @@ const shareLink = async (): Promise<void> => {
 
 		<section v-else-if="state.phase === 'end'" class="end">
 			<h1 class="end-title"><AppIcon name="trophy" /> {{ t('host.ranking') }}</h1>
-			<ol class="podium" :aria-label="t('host.podium')">
-				<li v-for="spot in podium" :key="spot.player.id" class="spot" :class="`place-${spot.step}`">
-					<div class="winner">
-						<span class="winner-avatar" aria-hidden="true"><AvatarIcon :value="spot.player.avatar" /></span>
-						<NameTag :name="spot.player.nickname" :look="spot.player.avatar" />
-						<strong class="winner-score">{{ t('play.points', { n: spot.player.score }) }}</strong>
-					</div>
-					<div class="step"><span><AppIcon v-if="spot.player.rank <= 3" :name="['medal-gold', 'medal-silver', 'medal-bronze'][spot.player.rank - 1]" /><template v-else>{{ spot.player.rank }}</template></span></div>
-				</li>
-			</ol>
-			<Leaderboard v-if="state.players.length > 3" class="rest" :entries="state.players.slice(3)" />
-			<BaseButton to="/dashboard" size="lg">{{ t('host.backDashboard') }}</BaseButton>
+			<Leaderboard v-if="fullRanking" :entries="state.players" />
+			<template v-else>
+				<ol class="podium" :aria-label="t('host.podium')">
+					<li v-for="spot in podium" :key="spot.step" class="spot" :class="`place-${spot.step}`">
+						<div v-if="spot.player" class="winner">
+							<span class="winner-avatar" aria-hidden="true"><AvatarIcon :value="spot.player.avatar" /></span>
+							<NameTag :name="spot.player.nickname" :look="spot.player.avatar" />
+							<strong class="winner-score">{{ t('play.points', { n: spot.player.score }) }}</strong>
+						</div>
+						<div class="step"><span><AppIcon v-if="(spot.player?.rank ?? spot.step) <= 3" :name="['medal-gold', 'medal-silver', 'medal-bronze'][(spot.player?.rank ?? spot.step) - 1]" /><template v-else>{{ spot.player?.rank }}</template></span></div>
+					</li>
+				</ol>
+				<Leaderboard v-if="state.players.length > 3" class="rest" :entries="state.players.slice(3)" />
+			</template>
+			<div class="end-actions">
+				<BaseButton variant="ghost" size="lg" @click="fullRanking = !fullRanking"><AppIcon :name="fullRanking ? 'trophy' : 'players'" /> {{ fullRanking ? t('host.showPodium') : t('host.showFullRanking') }}</BaseButton>
+				<BaseButton to="/dashboard" size="lg">{{ t('host.backDashboard') }}</BaseButton>
+			</div>
 		</section>
 
 		<BaseModal :open="settingsOpen" :title="t('host.settings')" @close="settingsOpen = false">
@@ -940,6 +947,13 @@ const shareLink = async (): Promise<void> => {
 	font-size: clamp(2rem, 4vw, 3.5rem);
 	transform-origin: bottom;
 	animation: rise 0.6s ease-out var(--delay) backwards;
+}
+
+.end-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.75rem;
 }
 
 .rest {
