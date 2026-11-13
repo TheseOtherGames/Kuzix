@@ -197,7 +197,7 @@ const onTabKey = async (event: KeyboardEvent): Promise<void> => {
 
 		<section v-else-if="tab === 'statistics'" id="panel-statistics" role="tabpanel" aria-labelledby="tab-statistics" class="panel">
 			<div class="stats">
-				<div v-for="(tile, i) in statTiles" :key="tile.label" class="stat" :style="{ '--stat-color': ANSWER_COLORS[i] }">
+				<div v-for="(tile, tileIndex) in statTiles" :key="tile.label" class="stat" :style="{ '--stat-color': ANSWER_COLORS[tileIndex] }">
 					<span class="value">{{ tile.value }}</span>
 					<span class="label">{{ tile.label }}</span>
 				</div>

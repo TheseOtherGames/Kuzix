@@ -57,24 +57,24 @@ const CONFIRM: Record<Action, { title: Parameters<typeof t>[0]; text: Parameters
 };
 
 const run = async (): Promise<void> => {
-	const u = user.value!;
+	const target = user.value!;
 	const action = confirming.value!;
 	saving.value = true;
 	try {
 		if (action === 'grant' || action === 'revoke') {
-			await api(`/admin/users/${u.id}`, 'PATCH', { isAdmin: action === 'grant' });
+			await api(`/admin/users/${target.id}`, 'PATCH', { isAdmin: action === 'grant' });
 			toast.success(t('admin.roleUpdated'));
 		} else if (action === 'ban') {
-			await api(`/admin/users/${u.id}/ban`, 'POST', { reason: reason.value });
-			toast.success(t('admin.banned', { name: u.username }));
+			await api(`/admin/users/${target.id}/ban`, 'POST', { reason: reason.value });
+			toast.success(t('admin.banned', { name: target.username }));
 		} else {
-			await api(`/admin/users/${u.id}/ban`, 'DELETE');
-			toast.success(t('admin.unbanned', { name: u.username }));
+			await api(`/admin/users/${target.id}/ban`, 'DELETE');
+			toast.success(t('admin.unbanned', { name: target.username }));
 		}
 		confirming.value = null;
 		reason.value = '';
 		emit('changed');
-		await load(u.id);
+		await load(target.id);
 	} catch (error) {
 		toast.error((error as Error).message);
 	} finally {

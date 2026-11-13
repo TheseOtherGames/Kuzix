@@ -24,10 +24,10 @@ export const t = (key: MessageKey, params: Params = {}): string => {
 };
 
 // French puts 0 in "one", English in "other": Intl.PluralRules knows that.
-export const tp = (base: PluralBase, n: number, params: Params = {}): string => {
-	const form = new Intl.PluralRules(locale.value).select(n) === 'one' ? 'one' : 'other';
+export const tp = (base: PluralBase, count: number, params: Params = {}): string => {
+	const form = new Intl.PluralRules(locale.value).select(count) === 'one' ? 'one' : 'other';
 
-	return t(`${base}.${form}` as MessageKey, { n, ...params });
+	return t(`${base}.${form}` as MessageKey, { n: count, ...params });
 };
 
 // Server messages are English; "Question 3: <detail>" is the only parameterised shape.

@@ -65,8 +65,8 @@ const exportStats = (only?: Run): void => {
 		t('csv.registered'),
 		t('csv.score'),
 	];
-	const rows = runs.value.flatMap((run, i) => (only && run !== only ? [] : run.players).map((player) => [
-		runs.value.length - i,
+	const rows = runs.value.flatMap((run, runIndex) => (only && run !== only ? [] : run.players).map((player) => [
+		runs.value.length - runIndex,
 		run.startedAt,
 		run.endedAt,
 		player.rank,
@@ -105,7 +105,7 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 			</div>
 		</header>
 		<p v-if="!runs.length" class="muted">{{ t('results.none') }}</p>
-		<BaseCard v-for="(run, i) in runs" :key="run.id" :accent="ANSWER_COLORS[i % ANSWER_COLORS.length]">
+		<BaseCard v-for="(run, runIndex) in runs" :key="run.id" :accent="ANSWER_COLORS[runIndex % ANSWER_COLORS.length]">
 			<div class="run-head">
 				<h2>{{ new Date(run.startedAt).toLocaleString(locale) }}</h2>
 				<div class="run-actions">

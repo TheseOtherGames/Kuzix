@@ -10,7 +10,7 @@ const props = defineProps<{
 	correct: number[];
 }>();
 
-const total = computed(() => props.counts.reduce((sum, n) => sum + n, 0));
+const total = computed(() => props.counts.reduce((sum, count) => sum + count, 0));
 const max = computed(() => Math.max(1, ...props.counts));
 
 const bars = computed(() => props.counts.map((count, index) => {

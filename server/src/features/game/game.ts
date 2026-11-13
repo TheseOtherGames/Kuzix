@@ -361,7 +361,7 @@ export class Game {
 		const players = [...this.players.values()];
 		const ranks = computeRanks(players.map((player) => player.score));
 
-		return new Map(players.map((player, i) => [player.id, ranks[i]]));
+		return new Map(players.map((player, playerIndex) => [player.id, ranks[playerIndex]]));
 	}
 
 	private remainingMs(): number {
@@ -399,7 +399,7 @@ export class Game {
 					connected: Boolean(player.ws),
 					answered: player.answers.has(this.index),
 				}))
-				.sort((a, b) => a.rank - b.rank),
+				.sort((first, second) => first.rank - second.rank),
 			question: question && {
 				index: this.index,
 				text: question.text,
@@ -411,8 +411,8 @@ export class Game {
 			},
 			reveal: question && this.phase === 'reveal'
 				? {
-					correct: question.answers.flatMap((answer, i) => (answer.isCorrect ? [i] : [])),
-					counts: question.answers.map((_, i) => [...this.players.values()].filter((p) => p.answers.get(this.index)?.index === i).length),
+					correct: question.answers.flatMap((answer, answerIndex) => (answer.isCorrect ? [answerIndex] : [])),
+					counts: question.answers.map((_, answerIndex) => [...this.players.values()].filter((player) => player.answers.get(this.index)?.index === answerIndex).length),
 				}
 				: null,
 		};

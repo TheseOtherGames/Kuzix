@@ -10,23 +10,23 @@ import { toast } from '@/shared/toast.store';
 const overview = ref<AdminOverview | null>(null);
 
 const tiles = computed(() => {
-	const o = overview.value;
-	if (!o) {
+	const stats = overview.value;
+	if (!stats) {
 		return [];
 	}
 
 	return [
 		{
-			icon: 'players', tint: 'var(--color-4)', label: t('admin.kpi.users'), value: o.users, sub: tp('admin.kpi.newUsers', o.newUsers7d), to: '/admin/users',
+			icon: 'players', tint: 'var(--color-4)', label: t('admin.kpi.users'), value: stats.users, sub: tp('admin.kpi.newUsers', stats.newUsers7d), to: '/admin/users',
 		},
 		{
-			icon: 'folder', tint: 'var(--color-6)', label: t('admin.kpi.quizzes'), value: o.quizzes, sub: tp('admin.kpi.open', o.openQuizzes), to: '/admin/quizzes',
+			icon: 'folder', tint: 'var(--color-6)', label: t('admin.kpi.quizzes'), value: stats.quizzes, sub: tp('admin.kpi.open', stats.openQuizzes), to: '/admin/quizzes',
 		},
 		{
-			icon: 'trophy', tint: 'var(--color-3)', label: t('admin.kpi.games'), value: o.gamesPlayed, sub: tp('admin.kpi.players', o.players), to: '/admin/quizzes',
+			icon: 'trophy', tint: 'var(--color-3)', label: t('admin.kpi.games'), value: stats.gamesPlayed, sub: tp('admin.kpi.players', stats.players), to: '/admin/quizzes',
 		},
 		{
-			icon: 'signal', tint: 'var(--color-1)', label: t('admin.kpi.live'), value: o.liveGames, sub: tp('admin.kpi.livePlayers', o.livePlayers), to: '/admin/games',
+			icon: 'signal', tint: 'var(--color-1)', label: t('admin.kpi.live'), value: stats.liveGames, sub: tp('admin.kpi.livePlayers', stats.livePlayers), to: '/admin/games',
 		},
 	];
 });

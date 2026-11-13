@@ -192,7 +192,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 		</BaseCard>
 
 		<div class="grid">
-			<BaseCard v-for="(quiz, i) in quizzes" :key="quiz.id" :accent="ANSWER_COLORS[i % ANSWER_COLORS.length]" class="quiz">
+			<BaseCard v-for="(quiz, quizIndex) in quizzes" :key="quiz.id" :accent="ANSWER_COLORS[quizIndex % ANSWER_COLORS.length]" class="quiz">
 				<div class="title-row">
 					<h2>{{ quiz.title }}</h2>
 					<span class="status" :class="{ open: quiz.isOpen }">{{ quiz.isOpen ? t('dash.statusOpen') : t('dash.statusClosed') }}</span>
@@ -294,7 +294,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 								<span>{{ t('dash.ai.difficulty') }}<InfoTip :text="t('dash.ai.difficultyInfo')" /></span>
 								<select v-model.number="ai.difficulty">
 									<option :value="0">{{ t('dash.ai.mixedOption') }}</option>
-									<option v-for="n in 5" :key="n" :value="n">{{ n }} · {{ t(`q.level.${n}` as MessageKey) }}</option>
+									<option v-for="level in 5" :key="level" :value="level">{{ level }} · {{ t(`q.level.${level}` as MessageKey) }}</option>
 								</select>
 							</label>
 							<label class="wide">

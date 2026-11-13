@@ -10,11 +10,11 @@ export const migrate = async (): Promise<void> => {
 	await pool.query(sql);
 };
 
-export const withTransaction = async <T>(fn: (client: pg.PoolClient) => Promise<T>): Promise<T> => {
+export const withTransaction = async <T>(work: (client: pg.PoolClient) => Promise<T>): Promise<T> => {
 	const client = await pool.connect();
 	try {
 		await client.query('BEGIN');
-		const result = await fn(client);
+		const result = await work(client);
 		await client.query('COMMIT');
 
 		return result;

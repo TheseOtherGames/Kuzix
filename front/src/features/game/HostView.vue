@@ -61,7 +61,7 @@ onBeforeUnmount(() => socket.close());
 const answeredCount = computed(() => state.value?.players.filter((player) => player.answered).length ?? 0);
 // Podium columns in display order (2nd, 1st, 3rd); `step` is the place, which also sets the reveal order (3rd first).
 const podium = computed(() => [1, 0, 2]
-	.map((i) => ({ player: state.value?.players[i], step: i + 1 }))
+	.map((rankIndex) => ({ player: state.value?.players[rankIndex], step: rankIndex + 1 }))
 	.filter((spot): spot is { player: PlayerPublic; step: number } => Boolean(spot.player)));
 
 const showReveal = computed(() => state.value?.phase === 'reveal' && state.value.revealMode === 'question');
@@ -281,7 +281,7 @@ const shareLink = async (): Promise<void> => {
 						:running="state.phase === 'question'"
 					/>
 					<p class="difficulty" :title="t('q.difficulty')">
-						<span class="stars" aria-hidden="true"><span v-for="n in 5" :key="n" :class="{ on: n <= state.question.difficulty }">★</span></span>
+						<span class="stars" aria-hidden="true"><span v-for="star in 5" :key="star" :class="{ on: star <= state.question.difficulty }">★</span></span>
 						<span>{{ t(`q.level.${state.question.difficulty}` as MessageKey) }} · {{ state.question.difficulty * POINTS_PER_DIFFICULTY }} pts</span>
 					</p>
 				</div>

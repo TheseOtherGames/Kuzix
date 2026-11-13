@@ -12,18 +12,18 @@ const bubble = ref<HTMLElement | null>(null);
 // The bubble is a popover: it lives in the top layer, so no scrolling container (modal, panel) can clip it
 // or grow a scrollbar because of it. We place it next to the icon and keep it inside the viewport.
 const show = (): void => {
-	const el = bubble.value;
-	if (!el || !icon.value || el.matches(':popover-open')) {
+	const popover = bubble.value;
+	if (!popover || !icon.value || popover.matches(':popover-open')) {
 		return;
 	}
-	el.showPopover();
+	popover.showPopover();
 	const anchor = icon.value.getBoundingClientRect();
-	const box = el.getBoundingClientRect();
+	const box = popover.getBoundingClientRect();
 	const left = Math.min(Math.max(MARGIN_PX, anchor.left - MARGIN_PX), innerWidth - box.width - MARGIN_PX);
 	const below = anchor.bottom + MARGIN_PX;
 	const top = below + box.height > innerHeight - MARGIN_PX ? anchor.top - box.height - MARGIN_PX : below;
-	el.style.left = `${Math.max(MARGIN_PX, left)}px`;
-	el.style.top = `${Math.max(MARGIN_PX, top)}px`;
+	popover.style.left = `${Math.max(MARGIN_PX, left)}px`;
+	popover.style.top = `${Math.max(MARGIN_PX, top)}px`;
 };
 
 const hide = (): void => {

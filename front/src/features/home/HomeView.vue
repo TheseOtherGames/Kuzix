@@ -75,25 +75,25 @@ const join = async (): Promise<void> => {
 	<div class="home">
 		<section class="hero">
 			<div class="shapes" aria-hidden="true">
-				<span v-for="(icon, i) in ANSWER_ICONS.slice(0, 4)" :key="i" :style="{ animationDelay: `${i * 0.2}s` }"><AppIcon :name="icon" /></span>
+				<span v-for="(icon, iconIndex) in ANSWER_ICONS.slice(0, 4)" :key="iconIndex" :style="{ animationDelay: `${iconIndex * 0.2}s` }"><AppIcon :name="icon" /></span>
 			</div>
 			<h1>{{ t('home.title') }}</h1>
 			<p class="muted">{{ t('home.subtitle') }}</p>
 			<form class="join" @submit.prevent="join">
 				<div class="code" role="group" :aria-label="t('home.codeLabel')">
 					<input
-						v-for="(char, i) in chars"
-						:key="i"
+						v-for="(char, charIndex) in chars"
+						:key="charIndex"
 						ref="boxes"
 						:value="char"
 						inputmode="text"
 						autocomplete="off"
 						autocapitalize="off"
 						spellcheck="false"
-						:placeholder="placeholder[i]"
-						:aria-label="`${t('home.codeLabel')} ${i + 1}/${CODE_LENGTH}`"
-						@input="onInput(i, $event)"
-						@keydown="onKeydown(i, $event)"
+						:placeholder="placeholder[charIndex]"
+						:aria-label="`${t('home.codeLabel')} ${charIndex + 1}/${CODE_LENGTH}`"
+						@input="onInput(charIndex, $event)"
+						@keydown="onKeydown(charIndex, $event)"
 						@focus="($event.target as HTMLInputElement).select()"
 					/>
 				</div>

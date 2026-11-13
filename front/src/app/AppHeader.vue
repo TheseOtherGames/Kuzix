@@ -36,7 +36,7 @@ const onLogout = (): void => {
 	<TopBar>
 		<RouterLink to="/" class="logo" :aria-label="t('header.home')" :data-tip="t('header.home')">
 			<AppIcon name="logo" class="logo-mark" />
-			<span v-for="(letter, i) in 'Kuzix'" :key="i" :style="{ color: LOGO_COLORS[i % LOGO_COLORS.length] }">{{ letter }}</span>
+			<span v-for="(letter, letterIndex) in 'Kuzix'" :key="letterIndex" :style="{ color: LOGO_COLORS[letterIndex % LOGO_COLORS.length] }">{{ letter }}</span>
 		</RouterLink>
 		<nav class="nav">
 			<template v-if="auth.user">

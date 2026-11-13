@@ -9,8 +9,8 @@ export const uniqueTitle = (title: string, taken: string[]): string => {
 		return title;
 	}
 	const base = title.replace(NUMBER_SUFFIX, '');
-	for (let n = 2; ; n++) {
-		const suffix = ` (${n})`;
+	for (let copyNumber = 2; ; copyNumber++) {
+		const suffix = ` (${copyNumber})`;
 		const candidate = base.slice(0, MAX_TITLE_LENGTH - suffix.length) + suffix;
 		if (!used.has(candidate)) {
 			return candidate;

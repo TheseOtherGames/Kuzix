@@ -20,11 +20,11 @@ const COLORS = [
 <template>
 	<BaseModal :open="open" :title="t('changelog.title')" wide @close="emit('close')">
 		<ol class="releases">
-			<li v-for="(release, i) in RELEASES" :key="release.version" class="release" :style="{ '--tint': COLORS[i % COLORS.length] }">
+			<li v-for="(release, releaseIndex) in RELEASES" :key="release.version" class="release" :style="{ '--tint': COLORS[releaseIndex % COLORS.length] }">
 				<header class="release-head">
-					<span class="bubble"><AppIcon :name="i === 0 ? 'sparkles' : 'bookmark'" /></span>
+					<span class="bubble"><AppIcon :name="releaseIndex === 0 ? 'sparkles' : 'bookmark'" /></span>
 					<span class="version">v{{ release.version }}</span>
-					<span v-if="i === 0" class="latest">{{ t('changelog.latest') }}</span>
+					<span v-if="releaseIndex === 0" class="latest">{{ t('changelog.latest') }}</span>
 					<time v-if="release.date" class="date" :datetime="release.date">{{ new Date(`${release.date}T00:00`).toLocaleDateString(locale) }}</time>
 				</header>
 				<section v-for="section in release.sections" :key="section.type" class="section" :class="section.type">

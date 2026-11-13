@@ -28,7 +28,7 @@ const newQuestion = (): QuestionDraft => ({
 	text: '',
 	timeLimit: 20,
 	difficulty: 2,
-	answers: Array.from({ length: DEFAULT_ANSWERS }, (_, i) => ({ text: '', isCorrect: i === 0 })),
+	answers: Array.from({ length: DEFAULT_ANSWERS }, (_, answerIndex) => ({ text: '', isCorrect: answerIndex === 0 })),
 });
 
 const quiz = ref<QuizDraft>({

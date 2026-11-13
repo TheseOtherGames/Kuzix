@@ -20,7 +20,7 @@ const letters = computed(() => (tag.value.style === 'wave' ? Array.from(props.na
 		:style="{ '--tag-bg': tag.color.bg, '--tag-ink': tag.color.ink }"
 	>
 		<template v-if="letters.length">
-			<span v-for="(letter, i) in letters" :key="i" class="letter" :style="{ animationDelay: `${i * 0.08}s` }">{{ letter }}</span>
+			<span v-for="(letter, letterIndex) in letters" :key="letterIndex" class="letter" :style="{ animationDelay: `${letterIndex * 0.08}s` }">{{ letter }}</span>
 		</template>
 		<template v-else>{{ name }}</template>
 	</span>
