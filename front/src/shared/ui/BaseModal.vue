@@ -75,10 +75,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 }
 
 .header {
+	/* Stays at the top of a long modal so the title and close button are always visible. */
+	position: sticky;
+	top: -1.5rem;
+	z-index: 1;
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1rem;
+	margin: -1.5rem -1.5rem 0;
+	padding: 1.5rem 1.5rem 0.75rem;
+	background: var(--surface);
 }
 
 .close {
@@ -121,6 +128,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 	}
 
 	.header {
+		position: static;
+		margin: 0;
 		padding: calc(1rem + env(safe-area-inset-top)) 1.25rem 0.75rem;
 		border-bottom: 1px solid var(--border);
 	}
