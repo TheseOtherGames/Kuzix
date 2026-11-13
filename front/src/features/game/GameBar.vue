@@ -33,7 +33,7 @@ defineProps<{
 			<button
 				type="button"
 				class="round"
-				:title="t('header.theme', { theme: t(`theme.${theme}`) })"
+				:data-tip="t('header.theme', { theme: t(`theme.${theme}`) })"
 				:aria-label="t('header.theme', { theme: t(`theme.${theme}`) })"
 				@click="cycleTheme"
 			>
@@ -42,7 +42,7 @@ defineProps<{
 			<button
 				type="button"
 				class="round lang"
-				:title="`${t('footer.language')}: ${localeLabel()}`"
+				:data-tip="`${t('footer.language')}: ${localeLabel()}`"
 				:aria-label="`${t('footer.language')}: ${localeLabel()}`"
 				@click="toggleLocale"
 			>

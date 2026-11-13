@@ -281,3 +281,41 @@ textarea,
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* Navbar tooltip: put data-tip="…" on an element. Only on hover-capable devices, so taps on phones don't leave it stuck. */
+@media (hover: hover) {
+	[data-tip] {
+		position: relative;
+	}
+
+	[data-tip]::before {
+		content: attr(data-tip);
+		position: absolute;
+		top: calc(100% + 0.6rem);
+		left: 50%;
+		z-index: 60;
+		padding: 0.35rem 0.7rem;
+		border-radius: var(--radius-sm);
+		background: var(--text);
+		color: var(--bg);
+		box-shadow: var(--shadow);
+		font-size: 0.8rem;
+		font-weight: 600;
+		line-height: 1.2;
+		letter-spacing: normal;
+		text-shadow: none;
+		text-transform: none;
+		white-space: nowrap;
+		pointer-events: none;
+		opacity: 0;
+		translate: -50% -0.25rem;
+		transition: opacity 0.15s, translate 0.15s;
+	}
+
+	[data-tip]:hover::before,
+	[data-tip]:focus-visible::before {
+		opacity: 1;
+		translate: -50% 0;
+		transition-delay: 0.3s;
+	}
+}

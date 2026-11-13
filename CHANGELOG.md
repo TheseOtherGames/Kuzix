@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.4 - 2026-11-13
+- Tooltips on navigation bar buttons
+
 ## 0.3.3 - 2026-11-13
 - Link previews and better search engine listing
 - Fullscreen windows on mobile

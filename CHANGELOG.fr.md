@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.3.4 - 2026-11-13
+- Infobulles sur les boutons de la barre de navigation
+
 ## 0.3.3 - 2026-11-13
 - Aperçus de liens et meilleur référencement
 - Fenêtres en plein écran sur mobile

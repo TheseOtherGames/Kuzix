@@ -23,7 +23,7 @@ const onLogout = (): void => {
 
 <template>
 	<TopBar>
-		<RouterLink to="/" class="logo" :aria-label="t('header.home')">
+		<RouterLink to="/" class="logo" :aria-label="t('header.home')" :data-tip="t('header.home')">
 			<AppIcon name="logo" class="logo-mark" />
 			<span v-for="(letter, i) in 'Kuzix'" :key="i" :style="{ color: LOGO_COLORS[i % LOGO_COLORS.length] }">{{ letter }}</span>
 		</RouterLink>
@@ -37,16 +37,16 @@ const onLogout = (): void => {
 			<button
 				type="button"
 				class="round theme"
-				:title="t('header.theme', { theme: t(`theme.${theme}`) })"
+				:data-tip="t('header.theme', { theme: t(`theme.${theme}`) })"
 				:aria-label="t('header.theme', { theme: t(`theme.${theme}`) })"
 				@click="cycleTheme"
 			>
 				<AppIcon :name="THEME_ICONS[theme]" />
 			</button>
-			<button v-if="auth.user" type="button" class="round logout" :title="t('common.logOut')" :aria-label="t('common.logOut')" @click="onLogout">
+			<button v-if="auth.user" type="button" class="round logout" :data-tip="t('common.logOut')" :aria-label="t('common.logOut')" @click="onLogout">
 				<AppIcon name="power" />
 			</button>
-			<BaseButton v-else to="/login" size="sm">{{ t('common.logIn') }}</BaseButton>
+			<BaseButton v-else to="/login" size="sm" :data-tip="t('common.logIn')">{{ t('common.logIn') }}</BaseButton>
 		</nav>
 	</TopBar>
 </template>
@@ -139,7 +139,12 @@ const onLogout = (): void => {
 	transition: transform 0.2s, background 0.15s, color 0.15s;
 }
 
-.theme:hover {
+.round .app-icon {
+	transition: transform 0.2s;
+}
+
+/* Rotate the icon, not the button, so the tooltip stays level. */
+.theme:hover .app-icon {
 	transform: rotate(-20deg) scale(1.1);
 }
 

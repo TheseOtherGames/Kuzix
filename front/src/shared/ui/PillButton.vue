@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-	<component :is="to ? RouterLink : 'button'" :to="to" :type="to ? undefined : 'button'" class="pill" :class="variant" :title="label" :aria-label="label">
+	<component :is="to ? RouterLink : 'button'" :to="to" :type="to ? undefined : 'button'" class="pill" :class="variant" :data-tip="label" :aria-label="label">
 		<span class="pill-icon" aria-hidden="true"><slot /></span>
 		<span class="pill-label">{{ label }}</span>
 	</component>
