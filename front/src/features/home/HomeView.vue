@@ -11,12 +11,48 @@ import { api, ApiError } from '../../shared/api';
 import { toast } from '../../shared/toast.store';
 
 const router = useRouter();
-const code = ref('');
+const CODE_LENGTH = 6;
+const chars = ref<string[]>(Array(CODE_LENGTH).fill(''));
+const boxes = ref<HTMLInputElement[]>([]);
 
-const cleanCode = computed(() => code.value.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 6));
+const cleanCode = computed(() => chars.value.join(''));
+
+const focusBox = (index: number): void => {
+	boxes.value[Math.max(0, Math.min(index, CODE_LENGTH - 1))]?.focus();
+};
+
+// Typing or pasting spreads the cleaned characters from this box onwards.
+const onInput = (index: number, event: Event): void => {
+	const input = event.target as HTMLInputElement;
+	// Typing into a filled box without selection gives two chars: keep only the new one.
+	const raw = chars.value[index] && input.value.length === 2 ? input.value.replace(chars.value[index], '') : input.value;
+	const typed = raw.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, CODE_LENGTH - index);
+	if (!typed) {
+		chars.value[index] = '';
+		input.value = '';
+		return;
+	}
+	[...typed].forEach((char, offset) => (chars.value[index + offset] = char));
+	input.value = chars.value[index];
+	focusBox(index + typed.length);
+};
+
+const onKeydown = (index: number, event: KeyboardEvent): void => {
+	if (event.key === 'Backspace' && !chars.value[index] && index > 0) {
+		event.preventDefault();
+		chars.value[index - 1] = '';
+		focusBox(index - 1);
+	} else if (event.key === 'ArrowLeft') {
+		event.preventDefault();
+		focusBox(index - 1);
+	} else if (event.key === 'ArrowRight') {
+		event.preventDefault();
+		focusBox(index + 1);
+	}
+};
 
 const join = async (): Promise<void> => {
-	if (cleanCode.value.length !== 6) {
+	if (cleanCode.value.length !== CODE_LENGTH) {
 		return;
 	}
 	try {
@@ -41,17 +77,24 @@ const join = async (): Promise<void> => {
 			<h1>{{ t('home.title') }}</h1>
 			<p class="muted">{{ t('home.subtitle') }}</p>
 			<form class="join" @submit.prevent="join">
-				<input
-					v-model="code"
-					class="code"
-					inputmode="text"
-					autocomplete="off"
-					autocapitalize="off"
-					maxlength="6"
-					placeholder="abc123"
-					:aria-label="t('home.codeLabel')"
-				/>
-				<BaseButton type="submit" size="lg" variant="success" :disabled="cleanCode.length !== 6">{{ t('home.play') }}</BaseButton>
+				<div class="code" role="group" :aria-label="t('home.codeLabel')">
+					<input
+						v-for="(char, i) in chars"
+						:key="i"
+						ref="boxes"
+						:value="char"
+						inputmode="text"
+						autocomplete="off"
+						autocapitalize="off"
+						spellcheck="false"
+						:placeholder="'abc123'[i]"
+						:aria-label="`${t('home.codeLabel')} ${i + 1}/${CODE_LENGTH}`"
+						@input="onInput(i, $event)"
+						@keydown="onKeydown(i, $event)"
+						@focus="($event.target as HTMLInputElement).select()"
+					/>
+				</div>
+				<BaseButton type="submit" size="lg" variant="success" :disabled="cleanCode.length !== CODE_LENGTH">{{ t('home.play') }}</BaseButton>
 			</form>
 		</section>
 
@@ -108,11 +151,19 @@ const join = async (): Promise<void> => {
 }
 
 .code {
-	flex: 1 1 12rem;
+	display: flex;
+	flex: 1 1 100%;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.code input {
+	width: 3rem;
+	min-width: 0;
+	padding: 0.5rem 0;
 	font-family: var(--font-mono);
 	font-size: 1.6rem;
 	font-weight: 700;
-	letter-spacing: 0.25em;
 	text-align: center;
 	text-transform: lowercase;
 }

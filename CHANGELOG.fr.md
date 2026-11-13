@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.4.1 - 2026-11-13
+- Code de partie saisi dans six cases
+
 ## 0.4.0 - 2026-11-13
 - La réponse choisie reste cachée jusqu’à la révélation
 - Confirmation affichée une fois la réponse reçue

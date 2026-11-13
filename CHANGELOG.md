@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.1 - 2026-11-13
+- Game code entered in six separate boxes
+
 ## 0.4.0 - 2026-11-13
 - Your chosen answer stays hidden until the reveal
 - Confirmation shown once your answer is received
