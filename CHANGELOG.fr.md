@@ -1,6 +1,7 @@
 # Journal des modifications
 
-## 0.3.4 - 2026-11-13
+## 0.4.0 - 2026-11-13
+- Les boutons de la barre de jeu utilisent l'infobulle de navigation
 - Chaque bouton affiche un titre au survol
 - Bouton pour copier le code de la partie
 - Un code de partie inconnu affiche une erreur sur l'accueil

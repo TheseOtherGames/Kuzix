@@ -180,13 +180,13 @@ const shareLink = async (): Promise<void> => {
 				{{ (state.question ?? state.countdown)!.index + 1 }} / {{ state.questionsCount }}
 			</span>
 			<template v-if="state && state.phase !== 'end'">
-				<button type="button" class="round" :title="t('host.settings')" :aria-label="t('host.settings')" @click="settingsOpen = true"><AppIcon name="gear" /></button>
+				<button type="button" class="round" :data-tip="t('host.settings')" :aria-label="t('host.settings')" @click="settingsOpen = true"><AppIcon name="gear" /></button>
 				<button
 					v-if="state.phase !== 'lobby' || state.paused"
 					type="button"
 					class="round"
 					:class="{ active: state.paused }"
-					:title="state.paused ? t('host.resume') : t('host.pause')"
+					:data-tip="state.paused ? t('host.resume') : t('host.pause')"
 					:aria-label="state.paused ? t('host.resume') : t('host.pause')"
 					:aria-pressed="state.paused"
 					@click="togglePause"
@@ -197,13 +197,13 @@ const shareLink = async (): Promise<void> => {
 					v-if="state.phase !== 'lobby'"
 					type="button"
 					class="round"
-					:title="t('host.players')"
+					:data-tip="t('host.players')"
 					:aria-label="t('host.players')"
 					@click="playersOpen = true"
 				>
 					<AppIcon name="players" />
 				</button>
-				<button type="button" class="round stop" :title="t('host.stop')" :aria-label="t('host.stop')" @click="stopOpen = true"><AppIcon name="stop" /></button>
+				<button type="button" class="round stop" :data-tip="t('host.stop')" :aria-label="t('host.stop')" @click="stopOpen = true"><AppIcon name="stop" /></button>
 			</template>
 		</GameBar>
 

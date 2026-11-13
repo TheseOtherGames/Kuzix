@@ -1,6 +1,7 @@
 # Changelog
 
-## 0.3.4 - 2026-11-13
+## 0.4.0 - 2026-11-13
+- Game bar buttons use the navigation tooltip
 - Every button shows a tooltip title on hover
 - Copy button on the game code
 - Unknown game codes show an error on the home page
