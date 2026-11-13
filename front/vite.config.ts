@@ -3,7 +3,12 @@ import { defineConfig, loadEnv, type Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 // Public, indexable routes. Everything else (dashboard, editor, games, profile) needs a login or a game code.
-const PUBLIC_ROUTES = ['/', '/login', '/register'];
+const PUBLIC_ROUTES = [
+	'/',
+	'/login',
+	'/register',
+	'/brand',
+];
 const PRIVATE_PREFIXES = [
 	'/api/',
 	'/auth/',
@@ -40,6 +45,7 @@ Sitemap: ${siteUrl}/sitemap.xml
 - [Home](${siteUrl}/): join a game with its code, or start hosting
 - [Log in](${siteUrl}/login): access your quizzes
 - [Sign up](${siteUrl}/register): create an account to build and host quizzes
+- [Brand kit](${siteUrl}/brand): logos, colours and style guide
 
 ## Features
 

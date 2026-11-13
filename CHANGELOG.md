@@ -7,6 +7,7 @@
 - [feat] Export each session's player answers as CSV
 - [feat] Exports no longer show whether a player has an account
 - [feat] Results stats explain themselves with info bubbles
+- [feat] Brand kit page: logos, colours and style
 - [style] Results page session panel and stat tiles redesigned
 
 ## 0.4.3 - 2026-11-13

@@ -19,6 +19,7 @@ export const router = createRouter({
 		{ path: '/', component: () => import('@/features/home/HomeView.vue'), meta: { seo: { title: 'seo.homeTitle', description: 'seo.homeDescription' } } },
 		{ path: '/login', component: () => import('@/features/auth/AuthView.vue'), meta: { mode: 'login', seo: { title: 'seo.loginTitle', description: 'seo.loginDescription' } } },
 		{ path: '/register', component: () => import('@/features/auth/AuthView.vue'), meta: { mode: 'register', seo: { title: 'seo.registerTitle', description: 'seo.registerDescription' } } },
+		{ path: '/brand', component: () => import('@/features/brand/BrandView.vue'), meta: { seo: { title: 'seo.brandTitle', description: 'seo.brandDescription' } } },
 		{ path: '/auth/callback', component: () => import('@/features/auth/AuthCallbackView.vue') },
 		{ path: '/dashboard', component: () => import('@/features/quiz/DashboardView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/new', component: () => import('@/features/quiz/QuizEditorView.vue'), meta: { requiresAuth: true } },
