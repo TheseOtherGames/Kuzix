@@ -143,6 +143,7 @@ export const en = {
 	'home.subtitle': 'Enter a game code to jump in. No account needed.',
 	'home.codeLabel': 'Game code',
 	'home.play': 'Play',
+	'home.playDisabled': 'Enter the {count}-character code to play',
 	'home.createTitle': 'Create a quiz',
 	'home.createText': 'Write your questions, share the code and host the game on the big screen.',
 	'home.newQuiz': 'New quiz',

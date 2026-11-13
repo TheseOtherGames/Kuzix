@@ -145,6 +145,7 @@ export const fr: Record<MessageKey, string> = {
 	'home.subtitle': 'Entrez un code de partie pour jouer. Pas besoin de compte.',
 	'home.codeLabel': 'Code de la partie',
 	'home.play': 'Jouer',
+	'home.playDisabled': 'Entrez les {count} caractères du code pour jouer',
 	'home.createTitle': 'Créer un quiz',
 	'home.createText': 'Écrivez vos questions, partagez le code et animez la partie sur grand écran.',
 	'home.newQuiz': 'Nouveau quiz',

@@ -94,7 +94,7 @@ const join = async (): Promise<void> => {
 						@focus="($event.target as HTMLInputElement).select()"
 					/>
 				</div>
-				<BaseButton type="submit" size="lg" variant="success" :disabled="cleanCode.length !== CODE_LENGTH">{{ t('home.play') }}</BaseButton>
+				<BaseButton type="submit" size="lg" variant="success" :disabled="cleanCode.length !== CODE_LENGTH" :data-tip="cleanCode.length !== CODE_LENGTH ? t('home.playDisabled', { count: CODE_LENGTH }) : undefined">{{ t('home.play') }}</BaseButton>
 			</form>
 		</section>
 
