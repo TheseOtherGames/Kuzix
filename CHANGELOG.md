@@ -5,6 +5,7 @@
 - [feat] New dog avatar
 - [style] Game code boxes show random placeholder characters
 - [style] Results page back button matches the app style
+- [style] Modal close button matches the app style
 
 ## 0.4.1 - 2026-11-13
 - [feat] Play button explains why it is disabled

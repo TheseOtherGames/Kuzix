@@ -34,7 +34,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 				<div class="modal" :class="{ wide }" role="dialog" aria-modal="true" :aria-label="title">
 					<header class="header">
 						<h2>{{ title }}</h2>
-						<button type="button" class="close" :aria-label="t('common.close')" @click="emit('close')">✕</button>
+						<button type="button" class="close" :aria-label="t('common.close')" @click="emit('close')">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+						</button>
 					</header>
 					<div class="body">
 						<slot />
@@ -88,12 +90,39 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 	background: var(--surface);
 }
 
+/* Same round button as the game bar, with the cross from its close pill. */
 .close {
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	padding: 0;
 	border: none;
-	background: none;
-	font-size: 1.25rem;
+	border-radius: 50%;
+	background: var(--surface-2);
+	color: var(--text);
 	cursor: pointer;
-	color: var(--text-muted);
+	transition: background 0.15s, color 0.15s;
+}
+
+.close svg {
+	width: 1.1rem;
+	height: 1.1rem;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2.6;
+	stroke-linecap: round;
+	transition: transform 0.2s;
+}
+
+.close:hover {
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+.close:hover svg {
+	transform: rotate(90deg);
 }
 
 /* Stays at the bottom of a long modal so its buttons are always reachable. */

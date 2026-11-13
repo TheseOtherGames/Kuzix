@@ -5,6 +5,7 @@
 - [feat] Nouvel avatar chien
 - [style] Les cases du code de partie affichent des caractères aléatoires
 - [style] Le bouton retour des résultats suit le style de l'app
+- [style] Le bouton de fermeture des fenêtres suit le style de l'app
 
 ## 0.4.1 - 2026-11-13
 - [feat] Le bouton Jouer explique pourquoi il est désactivé
