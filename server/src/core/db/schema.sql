@@ -39,6 +39,11 @@ ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS countdown INTEGER NOT NULL DEFAULT 
 -- Soft delete: players' history still points at deleted quizzes.
 ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
+-- A quiz only has a join code while it is open (see openRun / closeRun).
+ALTER TABLE quizzes ALTER COLUMN code DROP NOT NULL;
+UPDATE quizzes q SET code = NULL
+WHERE code IS NOT NULL AND NOT EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL);
+
 CREATE TABLE IF NOT EXISTS questions (
 	id SERIAL PRIMARY KEY,
 	quiz_id INTEGER NOT NULL REFERENCES quizzes(id),

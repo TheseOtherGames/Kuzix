@@ -21,13 +21,13 @@ export interface QuizDraft {
 
 export interface Quiz extends QuizDraft {
 	id: number;
-	code: string;
+	code: string | null;
 	hasAnswers: boolean;
 }
 
 export interface QuizSummary {
 	id: number;
-	code: string;
+	code: string | null;
 	title: string;
 	isOpen: boolean;
 	questionsCount: number;

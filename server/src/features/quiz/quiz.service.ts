@@ -70,18 +70,6 @@ const insertQuestions = async (client: pg.PoolClient, quizId: number, input: Qui
 	}
 };
 
-const findFreeCode = async (): Promise<string> => {
-	// ponytail: check-then-insert; the UNIQUE constraint still guards the rare race.
-	for (let attempt = 0; attempt < 10; attempt++) {
-		const code = generateCode();
-		const { rowCount } = await pool.query('SELECT 1 FROM quizzes WHERE code = $1', [code]);
-		if (!rowCount) {
-			return code;
-		}
-	}
-	throw new Error('Could not generate a free quiz code');
-};
-
 // ponytail: titles are made unique in app code, not by a constraint; two concurrent saves can still collide (cosmetic only).
 const freeTitle = async (ownerId: number, title: string, excludeQuizId: number | null = null): Promise<string> => {
 	const { rows } = await pool.query<{ title: string }>(
@@ -95,12 +83,11 @@ export const createQuiz = async (ownerId: number, input: QuizInput): Promise<num
 	// ponytail: count-then-insert can race past the limit by one on parallel requests; fine for a plan cap.
 	const { rows: [{ count }] } = await pool.query<{ count: number }>('SELECT count(*)::int AS count FROM quizzes WHERE owner_id = $1', [ownerId]);
 	assert(count < (await findUserById(ownerId))!.limits.maxQuizzes, 'Quiz limit reached for your plan');
-	const code = await findFreeCode();
 	const title = await freeTitle(ownerId, input.title);
 	return withTransaction(async (client) => {
 		const { rows } = await client.query<{ id: number }>(
-			'INSERT INTO quizzes (code, owner_id, title, reveal_mode, countdown) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-			[code, ownerId, title, input.revealMode, input.countdown],
+			'INSERT INTO quizzes (owner_id, title, reveal_mode, countdown) VALUES ($1, $2, $3, $4) RETURNING id',
+			[ownerId, title, input.revealMode, input.countdown],
 		);
 		await insertQuestions(client, rows[0].id, input);
 		return rows[0].id;
@@ -181,16 +168,18 @@ export const duplicateQuiz = async (quiz: Quiz): Promise<number> => {
 	});
 };
 
-export const openRun = async (quizId: number): Promise<number> => {
+// Opening is what gives the quiz its join code.
+export const openRun = async (quizId: number): Promise<void> => {
 	try {
-		const { rows } = await pool.query<{ id: number }>('INSERT INTO runs (quiz_id) VALUES ($1) RETURNING id', [quizId]);
-		return rows[0].id;
+		await pool.query('INSERT INTO runs (quiz_id) VALUES ($1)', [quizId]);
 	} catch (error) {
 		if (isUniqueViolation(error)) {
 			throw new HttpError(409, 'This quiz is already open');
 		}
 		throw error;
 	}
+	// ponytail: not in the insert's transaction (a unique violation would abort it); a crash between leaves an open quiz without code, closing it again fixes it.
+	await assignNewCode(quizId);
 };
 
 export const getOpenRunId = async (quizId: number): Promise<number | null> => {
@@ -216,15 +205,17 @@ export const assignNewCode = async (quizId: number): Promise<string> => {
 
 // Every session end (finished, stopped or closed) goes through here, and each one retires the code,
 // so a code that circulated in one class can't be used to drop into the next session.
-export const closeRun = async (quizId: number): Promise<string | null> => {
-	const { rowCount } = await pool.query('UPDATE runs SET ended_at = now() WHERE quiz_id = $1 AND ended_at IS NULL', [quizId]);
-	return rowCount ? assignNewCode(quizId) : null;
+export const closeRun = async (quizId: number): Promise<void> => {
+	await withTransaction(async (client) => {
+		await client.query('UPDATE runs SET ended_at = now() WHERE quiz_id = $1 AND ended_at IS NULL', [quizId]);
+		await client.query('UPDATE quizzes SET code = NULL WHERE id = $1', [quizId]);
+	});
 };
 
 export const deleteQuiz = async (quizId: number): Promise<void> => {
 	await withTransaction(async (client) => {
 		await client.query('UPDATE runs SET ended_at = now() WHERE quiz_id = $1 AND ended_at IS NULL', [quizId]);
-		await client.query('UPDATE quizzes SET deleted_at = now() WHERE id = $1', [quizId]);
+		await client.query('UPDATE quizzes SET deleted_at = now(), code = NULL WHERE id = $1', [quizId]);
 	});
 };
 

@@ -33,7 +33,7 @@ export interface AdminUserDetail extends AdminUser {
 export interface AdminQuiz {
 	id: number;
 	title: string;
-	code: string;
+	code: string | null;
 	ownerId: number;
 	owner: string;
 	questions: number;
@@ -46,7 +46,7 @@ export interface AdminQuiz {
 export interface AdminLiveGame {
 	quizId: number;
 	title: string;
-	code: string;
+	code: string | null;
 	phase: string;
 	hostConnected: boolean;
 	players: number;

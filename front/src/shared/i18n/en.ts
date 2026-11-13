@@ -275,7 +275,7 @@ export const en = {
 	'dash.newCode': 'New code',
 	'dash.newCodeTitle': 'Generate a new code?',
 	'dash.newCodeText': 'The current code “{code}” and its share links stop working right away. Players already in the game stay connected; anyone else needs the new code.',
-	'dash.newCodeAuto': 'A new code is also generated automatically every time a session ends or the quiz is closed.',
+	'dash.newCodeAuto': 'A quiz only has a code while it is open: a fresh one is given each time it opens, and it is retired when the session ends or the quiz is closed.',
 	'dash.newCodeConfirm': 'Generate a new code',
 	'dash.newCodeDone': 'New code: {code}',
 	'dash.opened': 'Quiz opened, players can join!',

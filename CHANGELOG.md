@@ -1,6 +1,8 @@
 # Changelog
 
 ## 0.3.4 - 2026-11-13
+- Quiz codes only exist while the quiz is open
+- Quiz card details lined up at the bottom
 - Admin button moved to the end of the navigation bar
 - Back to the home page after logging in
 - Tooltips on navigation bar buttons

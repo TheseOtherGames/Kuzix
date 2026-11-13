@@ -59,7 +59,7 @@ onMounted(load);
 						<td>
 							<button type="button" class="owner" :aria-label="t('admin.openUser', { name: quiz.owner })" @click="openId = quiz.ownerId">{{ quiz.owner }}</button>
 						</td>
-						<td class="code selectable">{{ quiz.code }}</td>
+						<td class="code selectable">{{ quiz.code ?? '—' }}</td>
 						<td class="num">{{ quiz.questions }}</td>
 						<td class="num">{{ quiz.runs }}</td>
 						<td>

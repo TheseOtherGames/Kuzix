@@ -10,6 +10,7 @@ import {
 	createQuiz,
 	deleteQuiz,
 	duplicateQuiz,
+	getOpenRunId,
 	hasAnswers,
 	isPlayerInQuiz,
 	listQuizzes,
@@ -55,6 +56,7 @@ quizRouter.delete('/:id', requireQuizOwner, async (req, res) => {
 });
 
 quizRouter.post('/:id/code', requireQuizOwner, async (req, res) => {
+	assert(await getOpenRunId(req.quiz!.id), 'Open the quiz to get a code', 409);
 	const code = await assignNewCode(req.quiz!.id);
 	games.get(req.quiz!.id)?.setCode(code);
 	res.json({ code });

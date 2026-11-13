@@ -191,7 +191,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 				<ul class="facts">
 					<li><strong class="num">{{ quiz.questionsCount }}</strong><span>{{ tp('dash.questions', quiz.questionsCount) }}</span></li>
 					<li><strong class="num">{{ quiz.runsCount }}</strong><span>{{ tp('dash.plays', quiz.runsCount) }}</span></li>
-					<li><span>{{ t('dash.code') }}</span><strong class="num code selectable">{{ quiz.code }}</strong></li>
+					<li v-if="quiz.code"><span>{{ t('dash.code') }}</span><strong class="num code selectable">{{ quiz.code }}</strong></li>
 				</ul>
 
 				<section class="section">
@@ -202,7 +202,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 							<BaseButton variant="danger" @click="closing = quiz"><AppIcon name="stop" /> {{ t('dash.close') }}</BaseButton>
 						</template>
 						<BaseButton v-else variant="success" @click="openQuiz(quiz)"><AppIcon name="play" /> {{ quiz.runsCount ? t('dash.reopen') : t('dash.open') }}</BaseButton>
-						<BaseButton variant="secondary" @click="sharing = quiz"><AppIcon name="link" /> {{ t('dash.share') }}</BaseButton>
+						<BaseButton v-if="quiz.code" variant="secondary" @click="sharing = quiz"><AppIcon name="link" /> {{ t('dash.share') }}</BaseButton>
 						<BaseButton v-if="quiz.runsCount" variant="primary" :to="`/quizzes/${quiz.id}/results`"><AppIcon name="chart" /> {{ t('dash.results') }}</BaseButton>
 					</div>
 				</section>
@@ -217,7 +217,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 						><AppIcon name="pencil" />{{ t('dash.edit') }}</RouterLink>
 						<button v-if="!atQuizLimit" type="button" class="tool" @click="duplicateQuiz(quiz)"><AppIcon name="page" />{{ t('dash.duplicate') }}</button>
 						<button type="button" class="tool" @click="exportQuiz(quiz)"><AppIcon name="download" />{{ t('dash.export') }}</button>
-						<button type="button" class="tool" @click="recoding = quiz"><AppIcon name="refresh" />{{ t('dash.newCode') }}</button>
+						<button v-if="quiz.code" type="button" class="tool" @click="recoding = quiz"><AppIcon name="refresh" />{{ t('dash.newCode') }}</button>
 						<button type="button" class="tool danger" @click="deleting = quiz"><AppIcon name="trash" />{{ t('dash.delete') }}</button>
 					</div>
 				</section>
@@ -426,7 +426,7 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.4rem;
-	margin: 0 0 1rem;
+	margin: auto 0 1rem;
 	padding: 0;
 	list-style: none;
 	color: var(--text-muted);
@@ -442,7 +442,8 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 	background: var(--surface-2);
 }
 
-.facts li:last-child {
+/* Label first (code pill): mirror the padding so the label isn't pushed off-centre. */
+.facts li:has(> span:first-child) {
 	padding: 0.2rem 0.2rem 0.2rem 0.7rem;
 }
 
@@ -467,10 +468,6 @@ const copyPrompt = (): Promise<void> => run(() => navigator.clipboard.writeText(
 
 .section + .section {
 	margin-top: 0.75rem;
-}
-
-.section:first-of-type {
-	margin-top: auto;
 }
 
 .section-title {

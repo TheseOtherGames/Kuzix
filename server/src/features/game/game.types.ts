@@ -21,7 +21,7 @@ export interface PlayerPublic {
 export interface HostState {
 	phase: GamePhase;
 	paused: boolean;
-	code: string;
+	code: string | null;
 	title: string;
 	revealMode: RevealMode;
 	countdownSeconds: number;
@@ -46,7 +46,7 @@ export interface HostState {
 export interface PlayerState {
 	phase: GamePhase;
 	paused: boolean;
-	code: string;
+	code: string | null;
 	title: string;
 	questionsCount: number;
 	countdown: CountdownState | null;

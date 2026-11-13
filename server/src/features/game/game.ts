@@ -322,7 +322,8 @@ export class Game {
 				'UPDATE players p SET rank = r.rank FROM unnest($1::int[], $2::int[]) AS r(id, rank) WHERE p.id = r.id',
 				[[...ranks.keys()], [...ranks.values()]],
 			);
-			this.quiz.code = (await closeRun(this.quiz.id)) ?? this.quiz.code;
+			await closeRun(this.quiz.id);
+			this.quiz.code = null;
 		} catch (error) {
 			console.error('Failed to save game results', error);
 		}

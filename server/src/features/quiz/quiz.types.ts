@@ -30,7 +30,7 @@ export interface Question extends Omit<QuestionInput, 'answers'> {
 
 export interface Quiz {
 	id: number;
-	code: string;
+	code: string | null;
 	ownerId: number;
 	title: string;
 	revealMode: RevealMode;
@@ -44,7 +44,7 @@ export interface QuizDetail extends Quiz {
 
 export interface QuizSummary {
 	id: number;
-	code: string;
+	code: string | null;
 	title: string;
 	isOpen: boolean;
 	questionsCount: number;

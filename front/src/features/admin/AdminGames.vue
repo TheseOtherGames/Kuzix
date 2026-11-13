@@ -67,7 +67,7 @@ const closeGame = async (): Promise<void> => {
 				<tbody>
 					<tr v-for="game in games" :key="game.quizId">
 						<td class="title">{{ game.title }}</td>
-						<td class="code selectable">{{ game.code }}</td>
+						<td class="code selectable">{{ game.code ?? '—' }}</td>
 						<td><span class="badge accent">{{ t(`admin.phase.${game.phase}` as MessageKey) }}</span></td>
 						<td>
 							<span class="badge" :class="game.hostConnected ? 'good' : 'bad'">{{ t(game.hostConnected ? 'admin.host.on' : 'admin.host.off') }}</span>
