@@ -13,7 +13,7 @@ onMounted(async () => {
 	if (token) {
 		await login(token);
 		toast.success(t('auth.loggedIn'));
-		router.replace('/profile');
+		router.replace('/');
 	} else {
 		toast.error(params.get('error') ?? t('auth.loginFailed'));
 		router.replace('/login');

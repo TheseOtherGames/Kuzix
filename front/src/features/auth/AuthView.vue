@@ -17,7 +17,7 @@ const form = reactive({ email: '', password: '', username: '' });
 const loading = ref(false);
 const providers = ref<string[]>([]);
 
-const redirect = computed(() => (typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/') ? route.query.redirect : '/profile'));
+const redirect = computed(() => (typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/') ? route.query.redirect : '/'));
 
 onMounted(async () => {
 	try {

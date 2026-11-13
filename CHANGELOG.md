@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.3.4 - 2026-11-13
+- Back to the home page after logging in
 - Tooltips on navigation bar buttons
 
 ## 0.3.3 - 2026-11-13

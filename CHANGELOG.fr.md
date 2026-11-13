@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.3.4 - 2026-11-13
+- Retour à l'accueil après la connexion
 - Infobulles sur les boutons de la barre de navigation
 
 ## 0.3.3 - 2026-11-13
