@@ -182,6 +182,8 @@ export const fr: Record<MessageKey, string> = {
 	'host.ranking': 'Classement final',
 	'host.backDashboard': 'Retour au tableau de bord',
 	'host.share': 'Partager le lien',
+	'host.copyCode': 'Copier le code',
+	'host.codeCopied': 'Code copié',
 	'host.pause': 'Mettre en pause',
 	'host.resume': 'Reprendre la partie',
 	'host.pausedTitle': 'Partie en pause',

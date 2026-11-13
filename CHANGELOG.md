@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.3.4 - 2026-11-13
+- Copy button on the game code
 - Unknown game codes show an error on the home page
 - Quiz codes only exist while the quiz is open
 - Quiz card details lined up at the bottom

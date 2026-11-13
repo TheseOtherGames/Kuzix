@@ -145,6 +145,18 @@ const regenerateCode = async (): Promise<void> => {
 	}
 };
 
+const codeCopied = ref(false);
+const copyCode = async (): Promise<void> => {
+	try {
+		await navigator.clipboard.writeText(state.value?.code ?? '');
+		toast.success(t('host.codeCopied'));
+		codeCopied.value = true;
+		setTimeout(() => (codeCopied.value = false), 1500);
+	} catch (error) {
+		toast.error((error as Error).message);
+	}
+};
+
 const shareLink = async (): Promise<void> => {
 	try {
 		if (navigator.share) {
@@ -216,7 +228,10 @@ const shareLink = async (): Promise<void> => {
 							<BaseButton variant="ghost" @click="recodeOpen = true"><AppIcon name="refresh" /> {{ t('dash.newCode') }}</BaseButton>
 						</div>
 					</div>
-					<p class="code selectable">{{ state.code }}</p>
+					<p class="code">
+						<span class="selectable">{{ state.code }}</span>
+						<button type="button" :class="['copy-code', { done: codeCopied }]" :title="t('host.copyCode')" :aria-label="t('host.copyCode')" @click="copyCode"><AppIcon :name="codeCopied ? 'check' : 'clipboard'" /></button>
+					</p>
 				</section>
 
 				<section class="lobby-roster">
@@ -526,6 +541,9 @@ const shareLink = async (): Promise<void> => {
 }
 
 .code {
+	display: flex;
+	align-items: center;
+	gap: 0.15em;
 	margin: 0;
 	padding: 0.12em 0.4em;
 	border-radius: var(--radius);
@@ -537,6 +555,41 @@ const shareLink = async (): Promise<void> => {
 	font-weight: 700;
 	line-height: 1;
 	letter-spacing: 0.08em;
+}
+
+.copy-code {
+	--tile: color-mix(in srgb, var(--color-3) 80%, white);
+	display: grid;
+	place-items: center;
+	align-self: center;
+	margin-left: 0.25em;
+	padding: 0.35em;
+	border: 0.06em solid color-mix(in srgb, var(--color-3) 55%, black);
+	border-radius: var(--radius-sm);
+	background: var(--tile);
+	box-shadow: 0 0.12em 0 color-mix(in srgb, var(--color-3) 55%, black);
+	color: inherit;
+	font-size: 0.32em;
+	letter-spacing: 0;
+	cursor: pointer;
+	transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+}
+
+.copy-code:hover {
+	--tile: white;
+	transform: translateY(-0.04em) rotate(-4deg);
+	box-shadow: 0 0.16em 0 color-mix(in srgb, var(--color-3) 55%, black);
+}
+
+.copy-code:active {
+	transform: translateY(0.1em);
+	box-shadow: 0 0.02em 0 color-mix(in srgb, var(--color-3) 55%, black);
+}
+
+.copy-code.done {
+	--tile: color-mix(in srgb, var(--color-4) 70%, white);
+	border-color: color-mix(in srgb, var(--color-4) 55%, black);
+	box-shadow: 0 0.12em 0 color-mix(in srgb, var(--color-4) 55%, black);
 }
 
 .lobby-roster {

@@ -180,6 +180,8 @@ export const en = {
 	'host.ranking': 'Final ranking',
 	'host.backDashboard': 'Back to dashboard',
 	'host.share': 'Share link',
+	'host.copyCode': 'Copy code',
+	'host.codeCopied': 'Code copied',
 	'host.pause': 'Pause the game',
 	'host.resume': 'Resume the game',
 	'host.pausedTitle': 'Game paused',
