@@ -2,6 +2,9 @@
 
 ## 0.5.1 - 2026-11-13
 - [feat] New pages open scrolled to the top
+- [refactor] Front code reorganised into a clearer folder layout
+- [refactor] Pages split into smaller components
+- [refactor] Similar components merged into shared ones
 
 ## 0.5.0 - 2026-11-13
 - [feat] Results page shows full quiz, question and player stats

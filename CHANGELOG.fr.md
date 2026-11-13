@@ -2,6 +2,9 @@
 
 ## 0.5.1 - 2026-11-13
 - [feat] Les nouvelles pages s'ouvrent en haut
+- [refactor] Code du front réorganisé en dossiers plus clairs
+- [refactor] Pages découpées en composants plus petits
+- [refactor] Composants similaires fusionnés en composants partagés
 
 ## 0.5.0 - 2026-11-13
 - [feat] La page de résultats affiche toutes les stats du quiz, des questions et des joueurs
