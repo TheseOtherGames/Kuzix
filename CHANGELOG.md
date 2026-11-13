@@ -3,6 +3,7 @@
 ## 0.4.2 - 2026-11-13
 - [feat] Admin overview shows 30-day activity charts
 - [style] Game code boxes show random placeholder characters
+- [style] Results page back button matches the app style
 
 ## 0.4.1 - 2026-11-13
 - [feat] Play button explains why it is disabled

@@ -6,6 +6,7 @@ import BaseButton from '../../shared/ui/BaseButton.vue';
 import BaseCard from '../../shared/ui/BaseCard.vue';
 import BaseModal from '../../shared/ui/BaseModal.vue';
 import Leaderboard, { type LeaderboardEntry } from '../../shared/ui/Leaderboard.vue';
+import PillButton from '../../shared/ui/PillButton.vue';
 import PlayerReport from '../../shared/ui/PlayerReport.vue';
 import type { PlayerAnswerDetail, Quiz, Run } from './quiz.types';
 import { api } from '../../shared/api';
@@ -93,7 +94,9 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 	<div class="results">
 		<header class="top">
 			<div>
-				<BaseButton variant="ghost" size="sm" to="/dashboard">← {{ t('dash.title') }}</BaseButton>
+				<PillButton to="/dashboard" :label="t('dash.title')" class="back is-back">
+					<svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+				</PillButton>
 				<h1>{{ t('results.title', { title }) }}</h1>
 			</div>
 			<div class="top-actions">
@@ -145,6 +148,16 @@ const showPlayer = async (entry: LeaderboardEntry, playersCount: number): Promis
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
+}
+
+.back svg {
+	width: 1.15rem;
+	height: 1.15rem;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2.6;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 }
 
 .run-head {
