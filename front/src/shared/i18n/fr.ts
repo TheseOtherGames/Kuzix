@@ -31,6 +31,8 @@ export const fr: Record<MessageKey, string> = {
 	'header.myQuizzes': 'Mes quiz',
 	'header.theme': 'Thème : {theme}, cliquer pour changer',
 	'header.seeYou': 'À bientôt !',
+	'header.logoutTitle': 'Se déconnecter ?',
+	'header.logoutText': 'Vous devrez vous reconnecter pour lancer ou modifier vos quiz.',
 
 	'header.admin': 'Admin',
 

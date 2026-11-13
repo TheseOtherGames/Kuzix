@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AppIcon from '../shared/ui/AppIcon.vue';
 import AvatarIcon from '../shared/ui/AvatarIcon.vue';
+import BaseModal from '../shared/ui/BaseModal.vue';
 import { t } from '../shared/i18n/i18n';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { auth, logout } from '../features/auth/auth.store';
 import { cycleTheme, theme, THEME_ICONS } from '../shared/theme.store';
@@ -20,8 +22,10 @@ const LOGO_COLORS = [
 ];
 
 const router = useRouter();
+const logoutOpen = ref(false);
 
 const onLogout = (): void => {
+	logoutOpen.value = false;
 	logout();
 	toast.info(t('header.seeYou'));
 	router.push('/');
@@ -50,12 +54,19 @@ const onLogout = (): void => {
 			>
 				<AppIcon :name="THEME_ICONS[theme]" />
 			</button>
-			<button v-if="auth.user" type="button" class="round logout" :data-tip="t('common.logOut')" :aria-label="t('common.logOut')" @click="onLogout">
+			<button v-if="auth.user" type="button" class="round logout" :data-tip="t('common.logOut')" :aria-label="t('common.logOut')" @click="logoutOpen = true">
 				<AppIcon name="power" />
 			</button>
 			<BaseButton v-else to="/login" size="sm" :data-tip="t('common.logIn')">{{ t('common.logIn') }}</BaseButton>
 		</nav>
 	</TopBar>
+	<BaseModal :open="logoutOpen" :title="t('header.logoutTitle')" @close="logoutOpen = false">
+		<p>{{ t('header.logoutText') }}</p>
+		<template #actions>
+			<BaseButton variant="ghost" @click="logoutOpen = false">{{ t('common.cancel') }}</BaseButton>
+			<BaseButton variant="danger" @click="onLogout"><AppIcon name="power" /> {{ t('common.logOut') }}</BaseButton>
+		</template>
+	</BaseModal>
 </template>
 
 <style scoped>

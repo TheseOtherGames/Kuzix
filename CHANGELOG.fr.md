@@ -3,6 +3,7 @@
 ## 0.4.2 - 2026-11-13
 - [feat] La vue admin affiche des graphiques d'activité sur 30 jours
 - [feat] Nouvel avatar chien
+- [feat] La déconnexion demande une confirmation
 - [style] Les cases du code de partie affichent des caractères aléatoires
 - [style] Le bouton retour des résultats suit le style de l'app
 - [style] Le bouton de fermeture des fenêtres suit le style de l'app

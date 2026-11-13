@@ -29,6 +29,8 @@ export const en = {
 	'header.myQuizzes': 'My quizzes',
 	'header.theme': 'Theme: {theme}, click to change',
 	'header.seeYou': 'See you soon!',
+	'header.logoutTitle': 'Log out?',
+	'header.logoutText': 'You will need to log in again to host or edit your quizzes.',
 
 	'header.admin': 'Admin',
 
