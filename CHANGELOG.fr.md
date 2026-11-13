@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.5.2 - 2026-11-14
+- [feat] Téléchargement de toutes vos données depuis les paramètres du profil
+- [feat] Les mentions légales expliquent comment télécharger ou supprimer vos données
+
 ## 0.5.1 - 2026-11-13
 - [feat] Les nouvelles pages s'ouvrent en haut
 - [feat] Suppression du compte depuis les paramètres du profil

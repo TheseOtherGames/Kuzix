@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 - 2026-11-14
+- [feat] Download all your data from profile settings
+- [feat] Legal notice explains how to download or delete your data
+
 ## 0.5.1 - 2026-11-13
 - [feat] New pages open scrolled to the top
 - [feat] Delete your account from profile settings

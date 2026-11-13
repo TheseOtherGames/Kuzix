@@ -15,6 +15,7 @@ import type { PlayerAnswerDetail } from '@/interfaces/Quiz/QuizInterface';
 import type { PlayHistoryEntry, Profile, UserStats } from '@/interfaces/User/UserInterface';
 import { api } from '@/utils/API';
 import { auth, logout, updateProfile } from '@/utils/Auth';
+import { downloadFile } from '@/utils/Download';
 import { t } from '@/i18n';
 import { toast } from '@/utils/Toast';
 
@@ -31,6 +32,19 @@ const saving = ref(false);
 const router = useRouter();
 const confirmingDelete = ref(false);
 const deleting = ref(false);
+
+const exporting = ref(false);
+
+const exportData = async (): Promise<void> => {
+	exporting.value = true;
+	try {
+		downloadFile('my-data.json', JSON.stringify(await api<unknown>('/users/me/export'), null, '\t'), 'application/json');
+	} catch (error) {
+		toast.error((error as Error).message);
+	} finally {
+		exporting.value = false;
+	}
+};
 
 const deleteAccount = async (): Promise<void> => {
 	deleting.value = true;
@@ -160,7 +174,7 @@ const showGame = async (entry: PlayHistoryEntry): Promise<void> => {
 
 		<section v-else id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" class="settings-panel">
 			<SettingsCard class="narrow" />
-			<AccountCard class="narrow" @delete="confirmingDelete = true" />
+			<AccountCard class="narrow" :exporting="exporting" @export="exportData" @delete="confirmingDelete = true" />
 		</section>
 
 		<BaseModal :open="Boolean(selected)" :title="selected?.quizTitle ?? ''" wide @close="selected = null">

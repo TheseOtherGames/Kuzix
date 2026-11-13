@@ -5,7 +5,8 @@ import BaseCard from '@/views/components/utils/card/BaseCard.vue';
 import { auth, PROVIDER_LABELS } from '@/utils/Auth';
 import { t } from '@/i18n';
 
-const emit = defineEmits<{ delete: [] }>();
+defineProps<{ exporting: boolean }>();
+const emit = defineEmits<{ delete: []; export: [] }>();
 </script>
 
 <template>
@@ -16,7 +17,10 @@ const emit = defineEmits<{ delete: [] }>();
 			<strong>{{ t('profile.loginMethods') }}</strong>
 			{{ auth.user?.providers.map((provider) => provider === 'password' ? t('profile.passwordLogin') : PROVIDER_LABELS[provider] ?? provider).join(', ') }}
 		</p>
-		<BaseButton variant="tool-danger" class="delete" @click="emit('delete')"><AppIcon name="trash" /> {{ t('profile.deleteAccount') }}</BaseButton>
+		<div class="actions">
+			<BaseButton variant="tool" :loading="exporting" @click="emit('export')"><AppIcon name="download" /> {{ t('profile.exportData') }}</BaseButton>
+			<BaseButton variant="tool-danger" @click="emit('delete')"><AppIcon name="trash" /> {{ t('profile.deleteAccount') }}</BaseButton>
+		</div>
 	</BaseCard>
 </template>
 
@@ -28,7 +32,10 @@ const emit = defineEmits<{ delete: [] }>();
 	margin: 0.4rem 0 0;
 	overflow-wrap: anywhere;
 }
-.delete {
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
 	margin-top: 1rem;
 }
 </style>

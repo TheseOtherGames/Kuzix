@@ -1,8 +1,9 @@
 import { Router } from 'express';
+import type { PlayHistoryEntry } from './user.types';
 import { requireAuth } from '../auth/auth.middleware';
 import { assert, HttpError } from '../../core/httpError';
 import { abortGame } from '../game/game.registry';
-import { closeOwnerRuns } from '../quiz/quiz.service';
+import { closeOwnerRuns, listQuizzes } from '../quiz/quiz.service';
 import {claimPlayer,
 	cleanAvatar,
 	cleanUsername,
@@ -36,6 +37,39 @@ userRouter.delete('/me', async (req, res) => {
 	}
 	await deleteAccount(req.userId!);
 	res.status(204).end();
+});
+
+// Only what the player did: no ids, no other players, no quiz answer key.
+const exportGame = async ({ playerId, playersCount: _, ...game }: PlayHistoryEntry): Promise<object> => {
+	const answers = await getPlayerAnswers(playerId);
+
+	return {
+		...game,
+		answers: answers.map(({
+			question, answer, isCorrect, points, timeMs,
+		}) => ({
+			question,
+			answer,
+			isCorrect,
+			points,
+			timeMs,
+		})),
+	};
+};
+
+// Everything tied to the account, for the user's right of access (GDPR art. 15).
+userRouter.get('/me/export', async (req, res) => {
+	const userId = req.userId!;
+	const quizzes = await listQuizzes(userId);
+	const history = await getHistory(userId);
+	const { id: _, ...account } = (await findUserById(userId))!;
+	res.json({
+		exportedAt: new Date(),
+		account,
+		stats: await getStats(userId),
+		quizzes: quizzes.map(({ title, createdAt }) => ({ title, createdAt })),
+		games: await Promise.all(history.map(exportGame)),
+	});
 });
 
 userRouter.get('/me/stats', async (req, res) => {
