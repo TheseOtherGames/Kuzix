@@ -228,7 +228,7 @@ export const fr: Record<MessageKey, string> = {
 	'play.lobby.one': 'Regardez l\'écran de l\'animateur, la partie commence bientôt. {n} joueur ici.',
 	'play.lobby.other': 'Regardez l\'écran de l\'animateur, la partie commence bientôt. {n} joueurs ici.',
 	'play.pick': 'Choisissez votre réponse !',
-	'play.locked': 'Réponse verrouillée !',
+	'play.locked': 'Réponse reçue !',
 	'play.waitingOthers': 'En attente des autres…',
 	'play.correct': 'Bonne réponse !',
 	'play.tooSlow': 'Trop lent !',

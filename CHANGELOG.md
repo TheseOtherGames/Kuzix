@@ -1,6 +1,8 @@
 # Changelog
 
 ## 0.4.0 - 2026-11-13
+- Your chosen answer stays hidden until the reveal
+- Confirmation shown once your answer is received
 - Requests are rate limited to prevent spam
 - Repeated clicks no longer resend the same request
 - Game bar buttons use the navigation tooltip

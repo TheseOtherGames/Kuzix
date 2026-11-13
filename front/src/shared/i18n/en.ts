@@ -226,7 +226,7 @@ export const en = {
 	'play.lobby.one': 'Look at the host screen, the game starts soon. {n} player here.',
 	'play.lobby.other': 'Look at the host screen, the game starts soon. {n} players here.',
 	'play.pick': 'Pick your answer!',
-	'play.locked': 'Answer locked!',
+	'play.locked': 'Answer received!',
 	'play.waitingOthers': 'Waiting for the others…',
 	'play.correct': 'Correct!',
 	'play.tooSlow': 'Too slow!',

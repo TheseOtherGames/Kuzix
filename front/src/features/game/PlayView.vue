@@ -3,7 +3,6 @@ import { t, tp } from '../../shared/i18n/i18n';
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerGrid from './AnswerGrid.vue';
-import AnswerTile from './AnswerTile.vue';
 import CountdownNumber from './CountdownNumber.vue';
 import AppIcon from '../../shared/ui/AppIcon.vue';
 import BaseButton from '../../shared/ui/BaseButton.vue';
@@ -220,7 +219,7 @@ const answered = computed(() => state.value?.myAnswer !== null && state.value?.m
 		</section>
 
 		<section v-else-if="phase === 'question'" class="screen message">
-			<AnswerTile class="locked-tile" :index="state.myAnswer!" disabled />
+			<span class="big-avatar"><AppIcon name="check" /></span>
 			<h1>{{ t('play.locked') }}</h1>
 			<p class="muted">{{ t('play.waitingOthers') }}</p>
 		</section>
@@ -479,11 +478,6 @@ const answered = computed(() => state.value?.myAnswer !== null && state.value?.m
 
 .answering > :last-child {
 	flex: 1;
-}
-
-.locked-tile {
-	width: 8rem;
-	height: 8rem;
 }
 
 .points {
