@@ -8,7 +8,6 @@ import InfoTip from '../../shared/ui/InfoTip.vue';
 import type { MessageKey } from '../../shared/i18n/en';
 import { t } from '../../shared/i18n/i18n';
 
-
 defineProps<{
 	index: number;
 	total: number;

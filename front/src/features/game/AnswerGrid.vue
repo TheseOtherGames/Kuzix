@@ -17,11 +17,13 @@ const stateOf = (index: number): AnswerTileState => {
 		if (props.correct.includes(index)) {
 			return 'correct';
 		}
+
 		return props.selected === index ? 'wrong' : 'dimmed';
 	}
 	if (props.selected === undefined || props.selected === null) {
 		return 'idle';
 	}
+
 	return props.selected === index ? 'selected' : 'dimmed';
 };
 </script>

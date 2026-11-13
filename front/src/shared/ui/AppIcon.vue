@@ -18,6 +18,7 @@ const markup = computed(() => {
 	if (import.meta.env.DEV && !ICONS[props.name]) {
 		console.warn(`AppIcon: no icon named "${props.name}"`);
 	}
+
 	return ICONS[props.name] ?? '';
 });
 </script>

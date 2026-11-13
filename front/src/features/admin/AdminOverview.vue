@@ -13,11 +13,20 @@ const tiles = computed(() => {
 	if (!o) {
 		return [];
 	}
+
 	return [
-		{ icon: 'players', tint: 'var(--color-4)', label: t('admin.kpi.users'), value: o.users, sub: tp('admin.kpi.newUsers', o.newUsers7d), to: '/admin/users' },
-		{ icon: 'folder', tint: 'var(--color-6)', label: t('admin.kpi.quizzes'), value: o.quizzes, sub: tp('admin.kpi.open', o.openQuizzes), to: '/admin/quizzes' },
-		{ icon: 'trophy', tint: 'var(--color-3)', label: t('admin.kpi.games'), value: o.gamesPlayed, sub: tp('admin.kpi.players', o.players), to: '/admin/quizzes' },
-		{ icon: 'signal', tint: 'var(--color-1)', label: t('admin.kpi.live'), value: o.liveGames, sub: tp('admin.kpi.livePlayers', o.livePlayers), to: '/admin/games' },
+		{
+			icon: 'players', tint: 'var(--color-4)', label: t('admin.kpi.users'), value: o.users, sub: tp('admin.kpi.newUsers', o.newUsers7d), to: '/admin/users',
+		},
+		{
+			icon: 'folder', tint: 'var(--color-6)', label: t('admin.kpi.quizzes'), value: o.quizzes, sub: tp('admin.kpi.open', o.openQuizzes), to: '/admin/quizzes',
+		},
+		{
+			icon: 'trophy', tint: 'var(--color-3)', label: t('admin.kpi.games'), value: o.gamesPlayed, sub: tp('admin.kpi.players', o.players), to: '/admin/quizzes',
+		},
+		{
+			icon: 'signal', tint: 'var(--color-1)', label: t('admin.kpi.live'), value: o.liveGames, sub: tp('admin.kpi.livePlayers', o.livePlayers), to: '/admin/games',
+		},
 	];
 });
 

@@ -26,6 +26,7 @@ const loadGame = async (quiz: Quiz): Promise<Game | null> => {
 	}
 	const game = new Game(quiz, runId);
 	games.set(quiz.id, game);
+
 	return game;
 };
 
@@ -33,6 +34,7 @@ export const findGameByCode = async (raw: unknown): Promise<Game | null> => {
 	const code = String(raw).toLowerCase();
 	const quizId = /^[a-z0-9]{6}$/.test(code) ? await findQuizIdByCode(code) : null;
 	const quiz = quizId ? await getQuiz(quizId) : null;
+
 	return quiz ? loadGame(quiz) : null;
 };
 
@@ -45,6 +47,7 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 			const game = await loadGame(quiz);
 			assert(game, 'Open the quiz before hosting it', 409);
 			game.attachHost(ws);
+
 			return { game };
 		}
 		case 'join': {
@@ -53,22 +56,26 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 			const userId = message.token ? verifyToken(String(message.token)) : null;
 			assert(userId !== game.quiz.ownerId, 'You cannot join your own quiz, host it instead', 403);
 			const player = await game.addPlayer(ws, cleanUsername(message.nickname), cleanAvatar(message.avatar), userId);
+
 			return { game, player };
 		}
 		case 'rejoin': {
 			const found = findPlayerByToken(String(message.playerToken));
 			assert(found, 'Your game session has expired', 410);
 			found.game.attachPlayer(found.player, ws);
+
 			return found;
 		}
 		case 'next': {
 			assert(session && !session.player && session.game.host === ws, 'Only the host can do that', 403);
 			session.game.next();
+
 			return session;
 		}
 		case 'pause': {
 			assert(session && !session.player && session.game.host === ws, 'Only the host can do that', 403);
 			session.game.setPaused(message.paused === true);
+
 			return session;
 		}
 		case 'settings': {
@@ -76,32 +83,38 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 			assert(message.revealMode === 'question' || message.revealMode === 'end', 'Invalid reveal mode');
 			assert(Number.isInteger(message.countdown) && message.countdown >= 0 && message.countdown <= MAX_COUNTDOWN, 'Invalid countdown');
 			session.game.setSettings(message.revealMode, message.countdown);
+
 			return session;
 		}
 		case 'stop': {
 			assert(session && !session.player && session.game.host === ws, 'Only the host can do that', 403);
 			await session.game.stop();
+
 			return null;
 		}
 		case 'cancel-question': {
 			assert(session && !session.player && session.game.host === ws, 'Only the host can do that', 403);
 			session.game.cancelQuestion();
+
 			return session;
 		}
 		case 'profile': {
 			assert(session?.player, 'Join the game first', 403);
 			session.game.updateProfile(session.player, cleanUsername(message.nickname), cleanAvatar(message.avatar));
+
 			return session;
 		}
 		case 'kick': {
 			assert(session && !session.player && session.game.host === ws, 'Only the host can do that', 403);
 			session.game.kick(Number(message.playerId));
+
 			return session;
 		}
 		case 'answer': {
 			if (session?.player) {
 				session.game.answer(session.player, message.index);
 			}
+
 			return session;
 		}
 		default:

@@ -1,6 +1,6 @@
 import type { Game, GamePlayer } from './game';
 
-// ponytail: in-memory games, a server restart drops live games (runs stay open in DB and restart from the lobby).
+// In-memory games, a server restart drops live games (runs stay open in DB and restart from the lobby).
 // Keyed by quiz id: the code changes (regenerated at each session end or on demand), the id never does.
 export const games = new Map<number, Game>();
 
@@ -16,5 +16,6 @@ export const findPlayerByToken = (token: string): { game: Game; player: GamePlay
 			return { game, player };
 		}
 	}
+
 	return null;
 };

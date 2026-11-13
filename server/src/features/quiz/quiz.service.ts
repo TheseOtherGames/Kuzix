@@ -45,6 +45,7 @@ export const parseQuizInput = (body: unknown, maxQuestions: number): QuizInput =
 			assert(answer && isString(answer.text, 120), `${label}: every answer needs a text (max 120 characters)`);
 		});
 		assert(question.answers.some((answer) => answer.isCorrect === true), `${label}: at least one answer must be correct`);
+
 		return {
 			text: question.text.trim(),
 			timeLimit: question.timeLimit,
@@ -52,44 +53,66 @@ export const parseQuizInput = (body: unknown, maxQuestions: number): QuizInput =
 			answers: question.answers.map((answer) => ({ text: answer.text.trim(), isCorrect: answer.isCorrect === true })),
 		};
 	});
-	return { title: input.title.trim(), revealMode: input.revealMode, countdown, questions };
+
+	return {
+		title: input.title.trim(), revealMode: input.revealMode, countdown, questions,
+	};
 };
 
 const insertQuestions = async (client: pg.PoolClient, quizId: number, input: QuizInput): Promise<void> => {
 	for (const [position, question] of input.questions.entries()) {
 		const { rows } = await client.query<{ id: number }>(
 			'INSERT INTO questions (quiz_id, position, text, time_limit, difficulty) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-			[quizId, position, question.text, question.timeLimit, question.difficulty],
+			[
+				quizId,
+				position,
+				question.text,
+				question.timeLimit,
+				question.difficulty,
+			],
 		);
 		for (const [answerPosition, answer] of question.answers.entries()) {
 			await client.query(
 				'INSERT INTO answers (question_id, position, text, is_correct) VALUES ($1, $2, $3, $4)',
-				[rows[0].id, answerPosition, answer.text, answer.isCorrect],
+				[
+					rows[0].id,
+					answerPosition,
+					answer.text,
+					answer.isCorrect,
+				],
 			);
 		}
 	}
 };
 
-// ponytail: titles are made unique in app code, not by a constraint; two concurrent saves can still collide (cosmetic only).
+// Titles are made unique in app code, not by a constraint; two concurrent saves can still collide (cosmetic only).
 const freeTitle = async (ownerId: number, title: string, excludeQuizId: number | null = null): Promise<string> => {
 	const { rows } = await pool.query<{ title: string }>(
 		'SELECT title FROM quizzes WHERE owner_id = $1 AND deleted_at IS NULL AND id IS DISTINCT FROM $2',
 		[ownerId, excludeQuizId],
 	);
+
 	return uniqueTitle(title, rows.map((row) => row.title));
 };
 
 export const createQuiz = async (ownerId: number, input: QuizInput): Promise<number> => {
-	// ponytail: count-then-insert can race past the limit by one on parallel requests; fine for a plan cap.
+	// Count-then-insert can race past the limit by one on parallel requests; fine for a plan cap.
 	const { rows: [{ count }] } = await pool.query<{ count: number }>('SELECT count(*)::int AS count FROM quizzes WHERE owner_id = $1', [ownerId]);
 	assert(count < (await findUserById(ownerId))!.limits.maxQuizzes, 'Quiz limit reached for your plan');
 	const title = await freeTitle(ownerId, input.title);
+
 	return withTransaction(async (client) => {
 		const { rows } = await client.query<{ id: number }>(
 			'INSERT INTO quizzes (owner_id, title, reveal_mode, countdown) VALUES ($1, $2, $3, $4) RETURNING id',
-			[ownerId, title, input.revealMode, input.countdown],
+			[
+				ownerId,
+				title,
+				input.revealMode,
+				input.countdown,
+			],
 		);
 		await insertQuestions(client, rows[0].id, input);
+
 		return rows[0].id;
 	});
 };
@@ -99,6 +122,7 @@ export const hasAnswers = async (quizId: number): Promise<boolean> => {
 		'SELECT 1 FROM player_answers pa JOIN questions q ON q.id = pa.question_id WHERE q.quiz_id = $1 LIMIT 1',
 		[quizId],
 	);
+
 	return Boolean(rowCount);
 };
 
@@ -106,10 +130,15 @@ export const hasAnswers = async (quizId: number): Promise<boolean> => {
 export const updateQuiz = async (quiz: Quiz, input: QuizInput): Promise<void> => {
 	const quizId = quiz.id;
 	const title = await freeTitle(quiz.ownerId, input.title, quizId);
-	// ponytail: check-then-update, an open racing the save is not blocked; lock the quiz row if that ever matters.
+	// Check-then-update, an open racing the save is not blocked; lock the quiz row if that ever matters.
 	assert(!(await getOpenRunId(quizId)), 'Close this quiz before editing it', 409);
 	await withTransaction(async (client) => {
-		await client.query('UPDATE quizzes SET title = $2, reveal_mode = $3, countdown = $4 WHERE id = $1', [quizId, title, input.revealMode, input.countdown]);
+		await client.query('UPDATE quizzes SET title = $2, reveal_mode = $3, countdown = $4 WHERE id = $1', [
+			quizId,
+			title,
+			input.revealMode,
+			input.countdown,
+		]);
 		await client.query('DELETE FROM player_answers WHERE question_id IN (SELECT id FROM questions WHERE quiz_id = $1)', [quizId]);
 		await client.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
 		await insertQuestions(client, quizId, input);
@@ -134,6 +163,7 @@ export const getQuiz = async (quizId: number): Promise<Quiz | null> => {
 		WHERE q.quiz_id = $1 ORDER BY a.position`,
 		[quizId],
 	);
+
 	return {
 		...rows[0],
 		questions: questions.rows.map((question) => ({
@@ -156,6 +186,7 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 		ORDER BY q.created_at DESC`,
 		[ownerId],
 	);
+
 	return rows;
 };
 
@@ -176,14 +207,16 @@ export const openRun = async (quizId: number): Promise<void> => {
 		if (isUniqueViolation(error)) {
 			throw new HttpError(409, 'This quiz is already open');
 		}
+
 		throw error;
 	}
-	// ponytail: not in the insert's transaction (a unique violation would abort it); a crash between leaves an open quiz without code, closing it again fixes it.
+	// Not in the insert's transaction (a unique violation would abort it); a crash between leaves an open quiz without code, closing it again fixes it.
 	await assignNewCode(quizId);
 };
 
 export const getOpenRunId = async (quizId: number): Promise<number | null> => {
 	const { rows } = await pool.query<{ id: number }>('SELECT id FROM runs WHERE quiz_id = $1 AND ended_at IS NULL', [quizId]);
+
 	return rows[0]?.id ?? null;
 };
 
@@ -193,6 +226,7 @@ export const assignNewCode = async (quizId: number): Promise<string> => {
 		try {
 			const code = generateCode();
 			await pool.query('UPDATE quizzes SET code = $2 WHERE id = $1', [quizId, code]);
+
 			return code;
 		} catch (error) {
 			if (!isUniqueViolation(error)) {
@@ -200,6 +234,7 @@ export const assignNewCode = async (quizId: number): Promise<string> => {
 			}
 		}
 	}
+
 	throw new Error('Could not generate a free quiz code');
 };
 
@@ -238,6 +273,7 @@ export const listRuns = async (quizId: number): Promise<Run[]> => {
 		WHERE r.quiz_id = $1 ORDER BY p.score DESC`,
 		[quizId],
 	);
+
 	return runs.rows.map((run) => ({
 		...run,
 		players: players.rows.filter((player) => player.runId === run.id).map(({ runId, ...player }) => player),
@@ -249,10 +285,12 @@ export const isPlayerInQuiz = async (playerId: number, quizId: number): Promise<
 		'SELECT 1 FROM players p JOIN runs r ON r.id = p.run_id WHERE p.id = $1 AND r.quiz_id = $2 AND r.cleared_at IS NULL',
 		[playerId, quizId],
 	);
+
 	return Boolean(rowCount);
 };
 
 export const findQuizIdByCode = async (code: string): Promise<number | null> => {
 	const { rows } = await pool.query<{ id: number }>('SELECT id FROM quizzes WHERE code = $1 AND deleted_at IS NULL', [code]);
+
 	return rows[0]?.id ?? null;
 };

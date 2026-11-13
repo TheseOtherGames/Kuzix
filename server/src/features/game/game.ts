@@ -67,11 +67,20 @@ export class Game {
 		const token = randomToken();
 		const { rows } = await pool.query<{ id: number }>(
 			'INSERT INTO players (run_id, user_id, token, nickname, avatar) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-			[this.runId, userId, token, nickname, avatar],
+			[
+				this.runId,
+				userId,
+				token,
+				nickname,
+				avatar,
+			],
 		);
-		const player: GamePlayer = { id: rows[0].id, token, nickname, avatar, score: 0, ws, answers: new Map() };
+		const player: GamePlayer = {
+			id: rows[0].id, token, nickname, avatar, score: 0, ws, answers: new Map(),
+		};
 		this.players.set(player.id, player);
 		this.broadcast();
+
 		return player;
 	}
 
@@ -87,6 +96,7 @@ export class Game {
 		if (this.host === ws) {
 			this.host = null;
 			this.broadcast();
+
 			return;
 		}
 		const player = [...this.players.values()].find((candidate) => candidate.ws === ws);
@@ -135,6 +145,7 @@ export class Game {
 		}
 		if (this.index + 1 >= this.quiz.questions.length) {
 			void this.finish();
+
 			return;
 		}
 		this.index++;
@@ -143,6 +154,7 @@ export class Game {
 			this.countdownEndsAt = Date.now() + this.countdownSeconds * 1000;
 			this.timer = setTimeout(() => this.startQuestion(), this.countdownSeconds * 1000);
 			this.broadcast();
+
 			return;
 		}
 		this.startQuestion();
@@ -175,7 +187,13 @@ export class Game {
 				INSERT INTO player_answers (player_id, question_id, answer_id, time_ms, points) VALUES ($1, $2, $3, $4, $5)
 			)
 			UPDATE players SET score = score + $5 WHERE id = $1`,
-			[player.id, this.question.id, answer.id, Date.now() - this.questionStartedAt, points],
+			[
+				player.id,
+				this.question.id,
+				answer.id,
+				Date.now() - this.questionStartedAt,
+				points,
+			],
 		);
 		if (!this.closeQuestionIfAllAnswered()) {
 			this.sendHost();
@@ -260,6 +278,7 @@ export class Game {
 		if (this.phase !== 'countdown') {
 			return null;
 		}
+
 		return { index: this.index, remainingMs: this.paused ? this.pausedRemainingMs : Math.max(0, this.countdownEndsAt - Date.now()) };
 	}
 
@@ -284,8 +303,10 @@ export class Game {
 		const connected = [...this.players.values()].filter((player) => player.ws);
 		if (!this.paused && this.phase === 'question' && connected.every((player) => player.answers.has(this.index))) {
 			this.closeQuestion();
+
 			return true;
 		}
+
 		return false;
 	}
 
@@ -339,6 +360,7 @@ export class Game {
 	private ranks(): Map<number, number> {
 		const players = [...this.players.values()];
 		const ranks = computeRanks(players.map((player) => player.score));
+
 		return new Map(players.map((player, i) => [player.id, ranks[i]]));
 	}
 
@@ -346,6 +368,7 @@ export class Game {
 		if (this.paused) {
 			return this.pausedRemainingMs;
 		}
+
 		return Math.max(0, this.questionStartedAt + this.question.timeLimit * 1000 - Date.now());
 	}
 
@@ -356,6 +379,7 @@ export class Game {
 	private hostState(): HostState {
 		const ranks = this.ranks();
 		const question = this.inQuestion() ? this.question : null;
+
 		return {
 			phase: this.phase,
 			paused: this.paused,
@@ -398,6 +422,7 @@ export class Game {
 		const showScores = this.revealMode === 'question' || this.phase === 'end';
 		const question = this.inQuestion() ? this.question : null;
 		const myAnswer = question ? player.answers.get(this.index) : undefined;
+
 		return {
 			phase: this.phase,
 			paused: this.paused,
@@ -429,7 +454,7 @@ export class Game {
 		};
 	}
 
-	// ponytail: O(n) per player, so O(n²) per broadcast; fine for classroom-sized rooms.
+	// O(n) per player, so O(n²) per broadcast; fine for classroom-sized rooms.
 	private aheadOf(player: GamePlayer): PlayerState['ahead'] {
 		let closest: GamePlayer | null = null;
 		for (const other of this.players.values()) {
@@ -437,6 +462,7 @@ export class Game {
 				closest = other;
 			}
 		}
+
 		return closest && { nickname: closest.nickname, avatar: closest.avatar, gap: closest.score - player.score };
 	}
 
@@ -448,7 +474,7 @@ export class Game {
 		send(player.ws, { type: 'player-state', state: this.playerState(player) });
 	}
 
-	// ponytail: full snapshots on every change, switch to diffs if rooms grow past a few hundred players.
+	// Full snapshots on every change, switch to diffs if rooms grow past a few hundred players.
 	private broadcast(): void {
 		this.sendHost();
 		this.players.forEach((player) => this.sendPlayer(player));

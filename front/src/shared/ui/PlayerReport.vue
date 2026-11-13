@@ -18,6 +18,7 @@ const summary = computed(() => {
 	const answered = props.answers.filter((entry) => entry.timeMs !== null);
 	const correct = props.answers.filter((entry) => entry.isCorrect).length;
 	const totalMs = answered.reduce((sum, entry) => sum + (entry.timeMs ?? 0), 0);
+
 	return {
 		correct,
 		accuracy: props.answers.length ? Math.round((correct / props.answers.length) * 100) : 0,
@@ -31,6 +32,7 @@ const rankLabel = computed(() => {
 	if (!rank) {
 		return '–';
 	}
+
 	return props.playersCount ? t('report.rankOf', { rank, n: props.playersCount }) : t('report.rank', { rank });
 });
 
@@ -38,6 +40,7 @@ const state = (entry: PlayerAnswerDetail): 'good' | 'bad' | 'none' => {
 	if (entry.timeMs === null) {
 		return 'none';
 	}
+
 	return entry.isCorrect ? 'good' : 'bad';
 };
 

@@ -6,8 +6,7 @@ import NameTag from './NameTag.vue';
 import { t } from '../i18n/i18n';
 import type { MessageKey } from '../i18n/en';
 import type { Profile } from '../../features/auth/user.types';
-import {
-	AVATAR_BASES,
+import {AVATAR_BASES,
 	AVATAR_CATEGORIES,
 	AVATAR_FACES,
 	AVATAR_HATS,
@@ -19,8 +18,7 @@ import {
 	parseAvatar,
 	randomAvatar,
 	type AvatarCategory,
-	type AvatarValue,
-} from '../avatars';
+	type AvatarValue} from '../avatars';
 
 type Step = 'base' | 'hat' | 'face' | 'item' | 'tag';
 
@@ -34,13 +32,19 @@ const STEPS: { value: Step; icon: string; color: string }[] = [
 	{ value: 'item', icon: 'wand', color: 'var(--color-5)' },
 	{ value: 'tag', icon: 'tag', color: 'var(--color-3)' },
 ];
-const CATEGORY_ICONS: Record<AvatarCategory, string> = { animals: 'paw', food: 'donut', sea: 'puffer', creatures: 'monster' };
-const CATEGORY_COLORS: Record<AvatarCategory, string> = { animals: 'var(--color-4)', food: 'var(--color-1)', sea: 'var(--color-2)', creatures: 'var(--color-5)' };
+const CATEGORY_ICONS: Record<AvatarCategory, string> = {
+	animals: 'paw', food: 'donut', sea: 'puffer', creatures: 'monster',
+};
+const CATEGORY_COLORS: Record<AvatarCategory, string> = {
+	animals: 'var(--color-4)', food: 'var(--color-1)', sea: 'var(--color-2)', creatures: 'var(--color-5)',
+};
 
 // Unique per instance: the form can be on the page twice (join form + edit popup).
 const uid = Math.random().toString(36).slice(2, 8);
 
-const current = computed<AvatarValue>(() => parseAvatar(model.value.avatar) ?? { base: '', hat: '', face: '', color: '', style: '', item: '', shape: '' });
+const current = computed<AvatarValue>(() => parseAvatar(model.value.avatar) ?? {
+	base: '', hat: '', face: '', color: '', style: '', item: '', shape: '',
+});
 // Old emoji avatars have no base: options are previewed (and saved) on the first character.
 const now = computed<AvatarValue>(() => ({ ...current.value, base: current.value.base || AVATAR_BASES[0].id }));
 const step = ref<Step>('base');
@@ -74,14 +78,17 @@ const groups = computed(() => {
 		}));
 	}
 	const slot = step.value;
-	return [{
-		category: null,
-		options: ['', ...{ hat: AVATAR_HATS, face: AVATAR_FACES, item: AVATAR_ITEMS }[slot].map((part) => part.id)].map((id) => ({
-			id,
-			value: formatAvatar({ ...now.value, [slot]: id }),
-			selected: current.value.base !== '' && current.value[slot] === id,
-		})),
-	}];
+
+	return [
+		{
+			category: null,
+			options: ['', ...{ hat: AVATAR_HATS, face: AVATAR_FACES, item: AVATAR_ITEMS }[slot].map((part) => part.id)].map((id) => ({
+				id,
+				value: formatAvatar({ ...now.value, [slot]: id }),
+				selected: current.value.base !== '' && current.value[slot] === id,
+			})),
+		},
+	];
 });
 
 const nextStep = computed(() => STEPS[STEPS.findIndex((entry) => entry.value === step.value) + 1]);

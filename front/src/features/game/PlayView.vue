@@ -44,7 +44,10 @@ const greeting = (): ClientMessage => {
 	if (playerToken) {
 		return { type: 'rejoin', playerToken };
 	}
-	return { type: 'join', code, nickname: profile.value.nickname, avatar: profile.value.avatar, token: auth.token ?? undefined };
+
+	return {
+		type: 'join', code, nickname: profile.value.nickname, avatar: profile.value.avatar, token: auth.token ?? undefined,
+	};
 };
 
 const leave = (): void => {
@@ -88,6 +91,7 @@ const onError = (text: string): void => {
 		savingLook.value = false;
 		justSaved.value = false;
 		toast.error(text);
+
 		return;
 	}
 	const wasRejoin = sessionStorage.getItem(tokenKey) !== null;
@@ -95,6 +99,7 @@ const onError = (text: string): void => {
 	if (wasRejoin && state.value) {
 		// Our seat is gone (server restarted, game reloaded): take a new one silently with the same profile.
 		socket?.send(greeting());
+
 		return;
 	}
 	toast.error(text);
@@ -296,12 +301,6 @@ const answered = computed(() => state.value?.myAnswer !== null && state.value?.m
 	flex-direction: column;
 	min-height: 100dvh;
 }
-
-
-
-
-
-
 
 .pause-icon {
 	display: grid;

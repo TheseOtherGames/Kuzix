@@ -15,6 +15,7 @@ const max = computed(() => Math.max(1, ...props.counts));
 
 const bars = computed(() => props.counts.map((count, index) => {
 	const pct = total.value ? Math.round((count / total.value) * 100) : 0;
+
 	return {
 		index,
 		count,

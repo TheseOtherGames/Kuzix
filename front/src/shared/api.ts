@@ -28,6 +28,7 @@ export const api = <T = void>(path: string, method = 'GET', body?: unknown): Pro
 		() => pending.delete(key),
 		() => (method === 'GET' ? setTimeout(() => pending.delete(key), FAILED_GET_REUSE_MS) : pending.delete(key)),
 	);
+
 	return request;
 };
 
@@ -53,7 +54,9 @@ const send = async <T>(path: string, method: string, body?: unknown): Promise<T>
 		if (response.status === 403 && data.error === 'This account has been banned') {
 			logout();
 		}
+
 		throw new ApiError(response.status, data.error ?? t('common.requestFailed', { status: response.status }));
 	}
+
 	return response.status === 204 ? (undefined as T) : response.json();
 };

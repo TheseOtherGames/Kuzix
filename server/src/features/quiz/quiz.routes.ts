@@ -3,8 +3,7 @@ import type { QuizDetail } from './quiz.types';
 import { requireAuth } from '../auth/auth.middleware';
 import { requireQuizOwner } from './quiz.middleware';
 import { assert, HttpError } from '../../core/httpError';
-import {
-	assignNewCode,
+import {assignNewCode,
 	clearStats,
 	closeRun,
 	createQuiz,
@@ -17,8 +16,7 @@ import {
 	listRuns,
 	openRun,
 	parseQuizInput,
-	updateQuiz,
-} from './quiz.service';
+	updateQuiz} from './quiz.service';
 import { findUserById, getPlayerAnswers } from '../user/user.service';
 import { abortGame, games } from '../game/game.registry';
 

@@ -7,7 +7,14 @@ import { ISSUE_URL, RELEASES } from './changelog';
 defineProps<{ open: boolean }>();
 const emit = defineEmits<{ close: [] }>();
 
-const COLORS = ['var(--color-5)', 'var(--color-2)', 'var(--color-4)', 'var(--color-6)', 'var(--color-1)', 'var(--color-3)'];
+const COLORS = [
+	'var(--color-5)',
+	'var(--color-2)',
+	'var(--color-4)',
+	'var(--color-6)',
+	'var(--color-1)',
+	'var(--color-3)',
+];
 </script>
 
 <template>

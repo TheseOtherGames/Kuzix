@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { HttpError } from './httpError';
 
 // Fixed window per client IP. Live gameplay goes through the WebSocket, so this never limits a game in progress.
-// ponytail: in-memory, per process; move to a shared store if the server ever runs on several instances.
+// In-memory, per process; move to a shared store if the server ever runs on several instances.
 export const rateLimit = (max: number, windowMs: number) => {
 	const hits = new Map<string, { count: number; resetAt: number }>();
 	setInterval(() => {
@@ -25,6 +25,7 @@ export const rateLimit = (max: number, windowMs: number) => {
 		hit.count += 1;
 		if (hit.count > max) {
 			res.setHeader('Retry-After', Math.ceil((hit.resetAt - now) / 1000));
+
 			throw new HttpError(429, 'Too many requests, please slow down');
 		}
 		next();

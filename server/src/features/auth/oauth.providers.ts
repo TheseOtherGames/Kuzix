@@ -8,6 +8,7 @@ const getJson = async <T>(url: string, accessToken: string): Promise<T> => {
 	if (!response.ok) {
 		throw new Error(`OAuth profile request failed: ${response.status}`);
 	}
+
 	return response.json() as Promise<T>;
 };
 
@@ -21,6 +22,7 @@ const google: OAuthProvider = {
 			'https://openidconnect.googleapis.com/v1/userinfo',
 			accessToken,
 		);
+
 		return {
 			id: data.sub,
 			email: data.email_verified ? data.email ?? null : null,
@@ -41,6 +43,7 @@ const github: OAuthProvider = {
 			accessToken,
 		);
 		const primary = emails.find((entry) => entry.primary && entry.verified);
+
 		return {
 			id: String(user.id),
 			email: primary?.email ?? null,
@@ -54,6 +57,7 @@ const providers: Record<string, OAuthProvider> = { google, github };
 
 export const getProvider = (name: string): OAuthProvider | null => {
 	const provider = providers[name];
+
 	return provider?.clientId ? provider : null;
 };
 
@@ -77,5 +81,6 @@ export const exchangeCode = async (provider: OAuthProvider, code: string, redire
 	if (!data.access_token) {
 		throw new Error('OAuth token exchange failed');
 	}
+
 	return data.access_token;
 };

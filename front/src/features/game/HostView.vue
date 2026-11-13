@@ -71,6 +71,7 @@ const nextLabel = computed(() => {
 	if (state.value?.phase === 'lobby') {
 		return t('host.start');
 	}
+
 	return isLastQuestion.value ? t('host.final') : t('host.next');
 });
 
@@ -161,6 +162,7 @@ const shareLink = async (): Promise<void> => {
 	try {
 		if (navigator.share) {
 			await navigator.share({ title: state.value?.title, url: joinLink.value });
+
 			return;
 		}
 		await navigator.clipboard.writeText(joinLink.value);

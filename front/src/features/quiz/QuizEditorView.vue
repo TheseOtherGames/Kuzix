@@ -31,7 +31,9 @@ const newQuestion = (): QuestionDraft => ({
 	answers: Array.from({ length: DEFAULT_ANSWERS }, (_, i) => ({ text: '', isCorrect: i === 0 })),
 });
 
-const quiz = ref<QuizDraft>({ title: '', revealMode: 'question', countdown: 3, questions: [newQuestion()] });
+const quiz = ref<QuizDraft>({
+	title: '', revealMode: 'question', countdown: 3, questions: [newQuestion()],
+});
 
 // Unsaved-changes workflow: compare against a JSON snapshot of the last loaded/saved state.
 const savedState = ref(JSON.stringify(quiz.value));
@@ -49,6 +51,7 @@ onBeforeRouteLeave((to) => {
 		return true;
 	}
 	pendingLeave.value = to;
+
 	return false;
 });
 
@@ -58,6 +61,7 @@ const leave = (withSave: boolean): void => {
 	if (withSave) {
 		afterSave = to;
 		save();
+
 		return;
 	}
 	undo();
@@ -80,6 +84,7 @@ const idOf = (question: QuestionDraft): number => {
 	if (!questionIds.has(raw)) {
 		questionIds.set(raw, nextQuestionId++);
 	}
+
 	return questionIds.get(raw)!;
 };
 
@@ -90,7 +95,9 @@ onMounted(async () => {
 	try {
 		const loaded = await api<Quiz>(`/quizzes/${quizId}`);
 		nextQuestionId = 0;
-		quiz.value = { title: loaded.title, revealMode: loaded.revealMode, countdown: loaded.countdown, questions: loaded.questions };
+		quiz.value = {
+			title: loaded.title, revealMode: loaded.revealMode, countdown: loaded.countdown, questions: loaded.questions,
+		};
 		hasAnswers.value = loaded.hasAnswers;
 		savedState.value = JSON.stringify(quiz.value);
 	} catch (error) {
@@ -134,10 +141,12 @@ const save = async (confirmed = false): Promise<void> => {
 	if (missing !== -1) {
 		toast.error(t('editor.missingCorrect', { n: missing + 1 }));
 		afterSave = '/dashboard';
+
 		return;
 	}
 	if (hasAnswers.value && !confirmed) {
 		warning.value = true;
+
 		return;
 	}
 	warning.value = false;

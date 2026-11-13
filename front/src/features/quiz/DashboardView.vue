@@ -33,16 +33,20 @@ const EXAMPLE: QuizDraft = {
 	title: 'Quiz title',
 	revealMode: 'question',
 	countdown: 3,
-	questions: [{
-		text: 'Question text?',
-		timeLimit: 20,
-		difficulty: 2,
-		answers: [{ text: 'Right answer', isCorrect: true }, { text: 'Wrong answer', isCorrect: false }],
-	}],
+	questions: [
+		{
+			text: 'Question text?',
+			timeLimit: 20,
+			difficulty: 2,
+			answers: [{ text: 'Right answer', isCorrect: true }, { text: 'Wrong answer', isCorrect: false }],
+		},
+	],
 };
 
 // Prompt builder: the form fills the {params}, the rules stay in sync with the server's parseQuizInput.
-const ai = reactive({ topic: '', count: 10, answers: 4, correctMin: 1, correctMax: 1, time: 20, difficulty: 0, language: locale.value, notes: '' });
+const ai = reactive({
+	topic: '', count: 10, answers: 4, correctMin: 1, correctMax: 1, time: 20, difficulty: 0, language: locale.value, notes: '',
+});
 const clamp = (value: number, min: number, max: number, fallback: number): number =>
 	Number.isFinite(value) ? Math.min(max, Math.max(min, Math.round(value))) : fallback;
 const aiPrompt = computed(() => {
@@ -61,6 +65,7 @@ const aiPrompt = computed(() => {
 		language: t(`dash.ai.lang.${ai.language}` as MessageKey),
 	});
 	const notes = ai.notes.trim() ? `\n${t('dash.ai.notesLine', { notes: ai.notes.trim() })}` : '';
+
 	return `${prompt}${notes}\n\n${JSON.stringify(EXAMPLE, null, 2)}`;
 });
 
@@ -124,7 +129,9 @@ const exportQuiz = (summary: QuizSummary): Promise<void> => run(async () => {
 		title: quiz.title,
 		revealMode: quiz.revealMode,
 		countdown: quiz.countdown,
-		questions: quiz.questions.map(({ text, timeLimit, difficulty, answers }) => ({
+		questions: quiz.questions.map(({
+			text, timeLimit, difficulty, answers,
+		}) => ({
 			text,
 			timeLimit,
 			difficulty,
@@ -154,11 +161,13 @@ const pickFile = (event: Event): Promise<void> => {
 	const input = event.target as HTMLInputElement;
 	const file = input.files?.[0];
 	input.value = '';
+
 	return importQuiz(file);
 };
 
 const dropFile = (event: DragEvent): Promise<void> => {
 	dragging.value = false;
+
 	return importQuiz(event.dataTransfer?.files[0]);
 };
 

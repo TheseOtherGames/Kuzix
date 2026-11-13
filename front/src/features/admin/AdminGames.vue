@@ -21,7 +21,7 @@ const load = async (): Promise<void> => {
 	}
 };
 
-// ponytail: polling, a socket feed if admins ever need real-time.
+// Polling, a socket feed if admins ever need real-time.
 const interval = setInterval(load, 5000);
 onMounted(load);
 onBeforeUnmount(() => clearInterval(interval));

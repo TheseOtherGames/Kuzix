@@ -4,10 +4,18 @@ import type { MessageKey } from '../../shared/i18n/en';
 import { t } from '../../shared/i18n/i18n';
 
 const SECTIONS: { to: string; label: MessageKey; icon: string; tint: string }[] = [
-	{ to: '/admin', label: 'admin.overview', icon: 'chart', tint: 'var(--color-2)' },
-	{ to: '/admin/users', label: 'admin.users', icon: 'players', tint: 'var(--color-4)' },
-	{ to: '/admin/quizzes', label: 'admin.quizzes', icon: 'folder', tint: 'var(--color-6)' },
-	{ to: '/admin/games', label: 'admin.games', icon: 'signal', tint: 'var(--color-1)' },
+	{
+		to: '/admin', label: 'admin.overview', icon: 'chart', tint: 'var(--color-2)',
+	},
+	{
+		to: '/admin/users', label: 'admin.users', icon: 'players', tint: 'var(--color-4)',
+	},
+	{
+		to: '/admin/quizzes', label: 'admin.quizzes', icon: 'folder', tint: 'var(--color-6)',
+	},
+	{
+		to: '/admin/games', label: 'admin.games', icon: 'signal', tint: 'var(--color-1)',
+	},
 ];
 </script>
 

@@ -11,16 +11,19 @@ const STATE_COOKIE = 'oauth_state';
 const cleanEmail = (value: unknown): string => {
 	const email = typeof value === 'string' ? value.trim().toLowerCase() : '';
 	assert(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254, 'Invalid email');
+
 	return email;
 };
 
 const cleanPassword = (value: unknown): string => {
 	assert(typeof value === 'string' && value.length >= 8 && value.length <= 200, 'Password must be at least 8 characters');
+
 	return value;
 };
 
 const readCookie = (header: string | undefined, name: string): string | null => {
 	const entry = header?.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`));
+
 	return entry ? decodeURIComponent(entry.slice(name.length + 1)) : null;
 };
 
@@ -39,6 +42,7 @@ authRouter.post('/register', async (req, res) => {
 		if (isUniqueViolation(error)) {
 			throw new HttpError(409, 'An account already exists with this email');
 		}
+
 		throw error;
 	}
 });

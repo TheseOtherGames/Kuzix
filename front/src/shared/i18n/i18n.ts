@@ -9,10 +9,7 @@ type PluralBase = MessageKey extends infer K ? (K extends `${infer B}.one` ? B :
 const STORAGE_KEY = 'kuzix-locale';
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = { en, fr };
 
-export const LOCALES: { value: Locale; label: string; flag: string }[] = [
-	{ value: 'en', label: 'English', flag: 'flag-gb' },
-	{ value: 'fr', label: 'Français', flag: 'flag-fr' },
-];
+export const LOCALES: { value: Locale; label: string; flag: string }[] = [{ value: 'en', label: 'English', flag: 'flag-gb' }, { value: 'fr', label: 'Français', flag: 'flag-fr' }];
 
 const stored = localStorage.getItem(STORAGE_KEY);
 export const locale = ref<Locale>(stored === 'en' || stored === 'fr' ? stored : navigator.language.startsWith('fr') ? 'fr' : 'en');
@@ -29,6 +26,7 @@ export const t = (key: MessageKey, params: Params = {}): string => {
 // French puts 0 in "one", English in "other": Intl.PluralRules knows that.
 export const tp = (base: PluralBase, n: number, params: Params = {}): string => {
 	const form = new Intl.PluralRules(locale.value).select(n) === 'one' ? 'one' : 'other';
+
 	return t(`${base}.${form}` as MessageKey, { n, ...params });
 };
 
@@ -41,5 +39,6 @@ export const translateServerError = (message: string): string => {
 	if (question) {
 		return `${t('q.title', { n: question[1] })} : ${frServerErrors[question[2]] ?? question[2]}`;
 	}
+
 	return frServerErrors[message] ?? message;
 };

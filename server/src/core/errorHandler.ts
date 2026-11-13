@@ -8,11 +8,13 @@ export const notFound = (_req: Request, res: Response): void => {
 export const errorHandler = (error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
 	if (error instanceof HttpError) {
 		res.status(error.status).json({ error: error.message });
+
 		return;
 	}
 	const status = (error as { status?: number }).status;
 	if (status && status >= 400 && status < 500) {
 		res.status(status).json({ error: 'Invalid request' });
+
 		return;
 	}
 	console.error(error);

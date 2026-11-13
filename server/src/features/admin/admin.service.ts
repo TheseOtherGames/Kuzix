@@ -4,7 +4,7 @@ import { abortGame, games } from '../game/game.registry';
 import { closeRun } from '../quiz/quiz.service';
 import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminUser, AdminUserDetail } from './admin.types';
 
-// ponytail: lists are capped at 200 rows with a text search, add paging when that stops being enough.
+// Lists are capped at 200 rows with a text search, add paging when that stops being enough.
 const LIST_LIMIT = 200;
 
 export const getOverview = async (): Promise<AdminOverview> => {
@@ -18,6 +18,7 @@ export const getOverview = async (): Promise<AdminOverview> => {
 			(SELECT count(*)::int FROM players) AS players`,
 	);
 	const live = [...games.values()];
+
 	return { ...rows[0], liveGames: live.length, livePlayers: live.reduce((sum, game) => sum + game.players.size, 0) };
 };
 
@@ -35,6 +36,7 @@ export const listUsers = async (search: string): Promise<AdminUser[]> => {
 		LIMIT ${LIST_LIMIT}`,
 		[search],
 	);
+
 	return rows;
 };
 
@@ -60,6 +62,7 @@ export const getUserDetail = async (userId: number): Promise<AdminUserDetail> =>
 		[userId],
 	);
 	assert(rows[0], 'Account not found', 404);
+
 	return rows[0];
 };
 
@@ -98,6 +101,7 @@ export const listQuizzes = async (search: string): Promise<AdminQuiz[]> => {
 		LIMIT ${LIST_LIMIT}`,
 		[search],
 	);
+
 	return rows;
 };
 

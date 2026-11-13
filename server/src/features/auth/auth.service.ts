@@ -8,12 +8,14 @@ const scryptAsync = promisify(scrypt) as (password: string, salt: Buffer, length
 export const hashPassword = async (password: string): Promise<string> => {
 	const salt = randomBytes(16);
 	const hash = await scryptAsync(password, salt, 64);
+
 	return `${salt.toString('hex')}:${hash.toString('hex')}`;
 };
 
 export const verifyPassword = async (password: string, stored: string): Promise<boolean> => {
 	const [salt, hash] = stored.split(':');
 	const candidate = await scryptAsync(password, Buffer.from(salt, 'hex'), 64);
+
 	return timingSafeEqual(candidate, Buffer.from(hash, 'hex'));
 };
 
@@ -27,6 +29,7 @@ export const verifyToken = (token: string): number | null => {
 		if (typeof payload === 'object' && payload.sub) {
 			return Number(payload.sub);
 		}
+
 		return null;
 	} catch {
 		return null;

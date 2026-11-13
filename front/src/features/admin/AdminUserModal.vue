@@ -42,10 +42,18 @@ watch(() => props.userId, (id) => {
 }, { immediate: true });
 
 const CONFIRM: Record<Action, { title: Parameters<typeof t>[0]; text: Parameters<typeof t>[0]; button: Parameters<typeof t>[0]; variant: 'primary' | 'danger' | 'success' }> = {
-	grant: { title: 'admin.grantTitle', text: 'admin.grantText', button: 'admin.makeAdmin', variant: 'primary' },
-	revoke: { title: 'admin.revokeTitle', text: 'admin.revokeText', button: 'admin.removeAdmin', variant: 'danger' },
-	ban: { title: 'admin.banTitle', text: 'admin.banText', button: 'admin.ban', variant: 'danger' },
-	unban: { title: 'admin.unbanTitle', text: 'admin.unbanText', button: 'admin.unban', variant: 'success' },
+	grant: {
+		title: 'admin.grantTitle', text: 'admin.grantText', button: 'admin.makeAdmin', variant: 'primary',
+	},
+	revoke: {
+		title: 'admin.revokeTitle', text: 'admin.revokeText', button: 'admin.removeAdmin', variant: 'danger',
+	},
+	ban: {
+		title: 'admin.banTitle', text: 'admin.banText', button: 'admin.ban', variant: 'danger',
+	},
+	unban: {
+		title: 'admin.unbanTitle', text: 'admin.unbanText', button: 'admin.unban', variant: 'success',
+	},
 };
 
 const run = async (): Promise<void> => {

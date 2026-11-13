@@ -19,17 +19,20 @@ const toUser = <T extends UserRow>(row: T): T & User => {
 export const cleanUsername = (value: unknown): string => {
 	const username = typeof value === 'string' ? value.trim() : '';
 	assert(username.length >= 1 && username.length <= 24, 'Username must be 1 to 24 characters');
+
 	return username;
 };
 
 export const cleanAvatar = (value: unknown): string => {
 	const avatar = typeof value === 'string' ? value.trim() : '';
 	assert(avatar.length >= 1 && avatar.length <= 64, 'Invalid avatar');
+
 	return avatar;
 };
 
 export const findUserById = async (id: number): Promise<User | null> => {
 	const { rows } = await pool.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE id = $1`, [id]);
+
 	return rows[0] ? toUser(rows[0]) : null;
 };
 
@@ -38,6 +41,7 @@ export const findUserWithPassword = async (email: string): Promise<(User & { pas
 		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash", banned_at IS NOT NULL AS banned FROM users WHERE email = $1`,
 		[email],
 	);
+
 	return rows[0] ? toUser(rows[0]) : null;
 };
 
@@ -46,6 +50,7 @@ export const createUser = async (email: string, passwordHash: string, username: 
 		`INSERT INTO users (email, password_hash, username) VALUES ($1, $2, $3) RETURNING ${USER_COLUMNS}`,
 		[email, passwordHash, username],
 	);
+
 	return toUser(rows[0]);
 };
 
@@ -75,6 +80,7 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 			'INSERT INTO user_identities (provider, provider_user_id, user_id) VALUES ($1, $2, $3)',
 			[provider, profile.id, user.id],
 		);
+
 		return toUser(user);
 	});
 };
@@ -84,6 +90,7 @@ export const updateProfile = async (id: number, username: string, avatar: string
 		`UPDATE users SET username = $2, avatar = $3 WHERE id = $1 RETURNING ${USER_COLUMNS}`,
 		[id, username, avatar],
 	);
+
 	return toUser(rows[0]);
 };
 
@@ -109,6 +116,7 @@ export const getHistory = async (userId: number): Promise<PlayHistoryEntry[]> =>
 		ORDER BY p.joined_at DESC`,
 		[userId],
 	);
+
 	return rows;
 };
 
@@ -126,6 +134,7 @@ export const getStats = async (userId: number): Promise<UserStats> => {
 		WHERE p.user_id = $1`,
 		[userId],
 	);
+
 	return rows[0];
 };
 
@@ -146,15 +155,18 @@ export const getPlayerAnswers = async (playerId: number): Promise<PlayerAnswerDe
 		ORDER BY qu.position`,
 		[playerId, POINTS_PER_DIFFICULTY],
 	);
+
 	return rows;
 };
 
 export const isPlayerOwnedBy = async (playerId: number, userId: number): Promise<boolean> => {
 	const { rowCount } = await pool.query('SELECT 1 FROM players WHERE id = $1 AND user_id = $2', [playerId, userId]);
+
 	return Boolean(rowCount);
 };
 
 export const isBanned = async (userId: number): Promise<boolean> => {
 	const { rowCount } = await pool.query('SELECT 1 FROM users WHERE id = $1 AND banned_at IS NOT NULL', [userId]);
+
 	return Boolean(rowCount);
 };

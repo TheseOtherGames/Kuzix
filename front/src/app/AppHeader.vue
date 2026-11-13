@@ -10,7 +10,14 @@ import BaseButton from '../shared/ui/BaseButton.vue';
 import PillButton from '../shared/ui/PillButton.vue';
 import TopBar from '../shared/ui/TopBar.vue';
 
-const LOGO_COLORS = ['var(--color-1)', 'var(--color-2)', 'var(--color-3)', 'var(--color-4)', 'var(--color-5)', 'var(--color-6)'];
+const LOGO_COLORS = [
+	'var(--color-1)',
+	'var(--color-2)',
+	'var(--color-3)',
+	'var(--color-4)',
+	'var(--color-5)',
+	'var(--color-6)',
+];
 
 const router = useRouter();
 

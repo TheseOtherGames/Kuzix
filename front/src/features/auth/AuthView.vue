@@ -136,7 +136,7 @@ const submit = async (): Promise<void> => {
 	gap: 0.75rem;
 }
 
-/* ponytail: brand colours are fixed by Google/GitHub guidelines, so they stay hex instead of palette tokens */
+/* Brand colours are fixed by Google/GitHub guidelines, so they stay hex instead of palette tokens */
 .providers .provider {
 	padding-left: 0.4rem;
 	justify-content: flex-start;

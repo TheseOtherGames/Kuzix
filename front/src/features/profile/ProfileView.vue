@@ -21,24 +21,26 @@ import { toast } from '../../shared/toast.store';
 
 type Tab = 'profile' | 'statistics' | 'settings';
 
-const TABS: { value: Tab; key: 'profile.tabProfile' | 'profile.tabStats' | 'profile.tabSettings'; icon: string }[] = [
-	{ value: 'profile', key: 'profile.tabProfile', icon: 'smile' },
-	{ value: 'statistics', key: 'profile.tabStats', icon: 'chart' },
-	{ value: 'settings', key: 'profile.tabSettings', icon: 'gear' },
-];
-const THEMES: { value: Theme; icon: string }[] = [
-	{ value: 'system', icon: 'monitor' },
-	{ value: 'dark', icon: 'moon' },
-	{ value: 'light', icon: 'sun' },
-];
+const TABS: { value: Tab; key: 'profile.tabProfile' | 'profile.tabStats' | 'profile.tabSettings'; icon: string }[] = [{ value: 'profile', key: 'profile.tabProfile', icon: 'smile' }, { value: 'statistics', key: 'profile.tabStats', icon: 'chart' }, { value: 'settings', key: 'profile.tabSettings', icon: 'gear' }];
+const THEMES: { value: Theme; icon: string }[] = [{ value: 'system', icon: 'monitor' }, { value: 'dark', icon: 'moon' }, { value: 'light', icon: 'sun' }];
 
 const settingGroups = computed(() => [
 	{
-		id: 'locale', icon: 'globe', tint: 'var(--color-2)', model: locale, title: t('settings.language'), info: t('settings.languageInfo'),
+		id: 'locale',
+		icon: 'globe',
+		tint: 'var(--color-2)',
+		model: locale,
+		title: t('settings.language'),
+		info: t('settings.languageInfo'),
 		options: LOCALES.map((option) => ({ value: option.value, icon: option.flag, label: option.label })),
 	},
 	{
-		id: 'theme', icon: 'palette', tint: 'var(--color-5)', model: theme, title: t('settings.theme'), info: t('settings.themeInfo'),
+		id: 'theme',
+		icon: 'palette',
+		tint: 'var(--color-5)',
+		model: theme,
+		title: t('settings.theme'),
+		info: t('settings.themeInfo'),
 		options: THEMES.map((option) => ({ value: option.value, icon: option.icon, label: t(`theme.${option.value}`) })),
 	},
 ]);
@@ -66,6 +68,7 @@ onBeforeRouteLeave((to) => {
 		return true;
 	}
 	pendingLeave.value = to;
+
 	return false;
 });
 
@@ -98,6 +101,7 @@ const statTiles = computed(() => {
 		return [];
 	}
 	const accuracy = stats.value.answered ? Math.round((stats.value.correct / stats.value.answered) * 100) : 0;
+
 	return [
 		{ label: t('profile.gamesPlayed'), value: stats.value.gamesPlayed },
 		{ label: t('profile.totalPoints'), value: stats.value.totalScore },
@@ -108,10 +112,7 @@ const statTiles = computed(() => {
 
 onMounted(async () => {
 	try {
-		[stats.value, history.value] = await Promise.all([
-			api<UserStats>('/users/me/stats'),
-			api<PlayHistoryEntry[]>('/users/me/history'),
-		]);
+		[stats.value, history.value] = await Promise.all([api<UserStats>('/users/me/stats'), api<PlayHistoryEntry[]>('/users/me/history')]);
 	} catch (error) {
 		toast.error((error as Error).message);
 	}
@@ -127,9 +128,11 @@ const save = async (): Promise<boolean> => {
 		setTimeout(() => {
 			justSaved.value = false;
 		}, 2500);
+
 		return true;
 	} catch (error) {
 		toast.error((error as Error).message);
+
 		return false;
 	} finally {
 		saving.value = false;

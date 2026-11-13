@@ -15,6 +15,7 @@ const searchOf = (value: unknown): string => (typeof value === 'string' ? value.
 const idOf = (value: string | string[]): number => {
 	const id = Number(value);
 	assert(Number.isInteger(id) && id > 0, 'Invalid id');
+
 	return id;
 };
 

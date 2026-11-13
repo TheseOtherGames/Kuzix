@@ -49,7 +49,10 @@ router.beforeEach((to) => {
 	// UX only: the server checks admin access on every /api/admin call.
 	// Same page as a wrong URL (URL kept), so /admin doesn't reveal it exists.
 	if (to.meta.requiresAdmin && !auth.user?.isAdmin) {
-		return { name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, query: to.query, hash: to.hash };
+		return {
+			name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, query: to.query, hash: to.hash,
+		};
 	}
+
 	return true;
 });

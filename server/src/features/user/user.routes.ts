@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { requireAuth } from '../auth/auth.middleware';
 import { assert, HttpError } from '../../core/httpError';
-import {
-	claimPlayer,
+import {claimPlayer,
 	cleanAvatar,
 	cleanUsername,
 	findUserById,
@@ -10,8 +9,7 @@ import {
 	getPlayerAnswers,
 	getStats,
 	isPlayerOwnedBy,
-	updateProfile,
-} from './user.service';
+	updateProfile} from './user.service';
 
 export const userRouter = Router();
 

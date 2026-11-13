@@ -35,6 +35,7 @@ const color = computed(() => {
 	if (progress.value > 0.5) {
 		return 'var(--color-4)';
 	}
+
 	return progress.value > 0.2 ? 'var(--color-3)' : 'var(--color-1)';
 });
 </script>

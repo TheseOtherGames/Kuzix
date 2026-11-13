@@ -7,6 +7,7 @@ export const BANNED_MESSAGE = 'This account has been banned';
 
 const readBearer = (req: Request): number | null => {
 	const header = req.headers.authorization;
+
 	return header?.startsWith('Bearer ') ? verifyToken(header.slice(7)) : null;
 };
 

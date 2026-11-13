@@ -30,6 +30,7 @@ const onInput = (index: number, event: Event): void => {
 	if (!typed) {
 		chars.value[index] = '';
 		input.value = '';
+
 		return;
 	}
 	[...typed].forEach((char, offset) => (chars.value[index + offset] = char));
@@ -58,9 +59,10 @@ const join = async (): Promise<void> => {
 	try {
 		await api(`/games/${cleanCode.value}`);
 	} catch (error) {
-		// ponytail: only a 404 stops here, other failures let the play page report the real error.
+		// Only a 404 stops here, other failures let the play page report the real error.
 		if (error instanceof ApiError && error.status === 404) {
 			toast.error(t('play.unknownCode'));
+
 			return;
 		}
 	}

@@ -49,12 +49,21 @@ onMounted(async () => {
 // Quotes every cell and defuses spreadsheet formulas, since nicknames come from players.
 const csvCell = (value: string | number | boolean | null): string => {
 	const text = String(value ?? '');
+
 	return `"${(/^[=+\-@]/.test(text) ? `'${text}` : text).replaceAll('"', '""')}"`;
 };
 
 // No run = every session; a run = only that session's players.
 const exportStats = (only?: Run): void => {
-	const header = [t('csv.game'), t('csv.started'), t('csv.ended'), t('csv.rank'), t('csv.nickname'), t('csv.registered'), t('csv.score')];
+	const header = [
+		t('csv.game'),
+		t('csv.started'),
+		t('csv.ended'),
+		t('csv.rank'),
+		t('csv.nickname'),
+		t('csv.registered'),
+		t('csv.score'),
+	];
 	const rows = runs.value.flatMap((run, i) => (only && run !== only ? [] : run.players).map((player) => [
 		runs.value.length - i,
 		run.startedAt,

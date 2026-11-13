@@ -11,6 +11,26 @@ test('computePoints scales with difficulty and time', () => {
 });
 
 test('computeRanks shares ranks on ties', () => {
-	assert.deepEqual(computeRanks([100, 300, 300, 0]), [3, 1, 1, 4]);
-	assert.deepEqual(computeRanks([10, 20, 20, 30]), [4, 2, 2, 1]);
+	assert.deepEqual(computeRanks([
+		100,
+		300,
+		300,
+		0,
+	]), [
+		3,
+		1,
+		1,
+		4,
+	]);
+	assert.deepEqual(computeRanks([
+		10,
+		20,
+		20,
+		30,
+	]), [
+		4,
+		2,
+		2,
+		1,
+	]);
 });
