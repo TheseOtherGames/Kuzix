@@ -127,6 +127,13 @@ export const en = {
 	'changelog.open': "What's new",
 	'changelog.title': "What's new in Kuzix",
 	'changelog.latest': 'Latest',
+	'changelog.type.feat': 'New',
+	'changelog.type.fix': 'Fixes',
+	'changelog.type.security': 'Security',
+	'changelog.type.perf': 'Speed',
+	'changelog.type.style': 'Design',
+	'changelog.issue': 'Open issue #{n}',
+	'changelog.type.refactor': 'Under the hood',
 
 	'theme.system': 'System',
 	'theme.dark': 'Dark',

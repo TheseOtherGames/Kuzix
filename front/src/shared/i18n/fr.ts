@@ -129,6 +129,13 @@ export const fr: Record<MessageKey, string> = {
 	'changelog.open': 'Nouveautés',
 	'changelog.title': 'Les nouveautés de Kuzix',
 	'changelog.latest': 'Dernière',
+	'changelog.type.feat': 'Nouveau',
+	'changelog.type.fix': 'Correctifs',
+	'changelog.type.security': 'Sécurité',
+	'changelog.type.perf': 'Rapidité',
+	'changelog.type.style': 'Design',
+	'changelog.issue': 'Ouvrir le ticket #{n}',
+	'changelog.type.refactor': 'Coulisses',
 
 	'theme.system': 'Système',
 	'theme.dark': 'Sombre',

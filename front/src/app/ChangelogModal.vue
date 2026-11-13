@@ -2,7 +2,7 @@
 import { locale, t } from '../shared/i18n/i18n';
 import AppIcon from '../shared/ui/AppIcon.vue';
 import BaseModal from '../shared/ui/BaseModal.vue';
-import { RELEASES } from './changelog';
+import { ISSUE_URL, RELEASES } from './changelog';
 
 defineProps<{ open: boolean }>();
 const emit = defineEmits<{ close: [] }>();
@@ -20,9 +20,15 @@ const COLORS = ['var(--color-5)', 'var(--color-2)', 'var(--color-4)', 'var(--col
 					<span v-if="i === 0" class="latest">{{ t('changelog.latest') }}</span>
 					<time v-if="release.date" class="date" :datetime="release.date">{{ new Date(`${release.date}T00:00`).toLocaleDateString(locale) }}</time>
 				</header>
-				<ul class="changes">
-					<li v-for="change in release.changes" :key="change">{{ change }}</li>
-				</ul>
+				<section v-for="section in release.sections" :key="section.type" class="section" :class="section.type">
+					<h3 class="section-title">{{ t(`changelog.type.${section.type}`) }}</h3>
+					<ul class="changes">
+						<li v-for="change in section.changes" :key="change.text">
+							{{ change.text }}
+							<a v-if="change.issue" class="issue" :href="`${ISSUE_URL}${change.issue}`" target="_blank" rel="noopener noreferrer" :title="t('changelog.issue', { n: change.issue })">#{{ change.issue }}</a>
+						</li>
+					</ul>
+				</section>
 			</li>
 		</ol>
 	</BaseModal>
@@ -94,10 +100,48 @@ const COLORS = ['var(--color-5)', 'var(--color-2)', 'var(--color-4)', 'var(--col
 	font-size: 0.85rem;
 }
 
+.section {
+	--badge: var(--color-5);
+	margin-top: 0.85rem;
+}
+
+.section.fix {
+	--badge: var(--color-4);
+}
+
+.section.security {
+	--badge: var(--color-1);
+}
+
+.section.perf {
+	--badge: var(--color-3);
+}
+
+.section.style {
+	--badge: var(--color-2);
+}
+
+.section.refactor {
+	--badge: var(--color-6);
+}
+
+.section-title {
+	display: inline-block;
+	margin: 0;
+	padding: 0.1rem 0.6rem;
+	border: 1.5px solid var(--badge);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--badge) 22%, var(--surface));
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
 .changes {
 	display: grid;
 	gap: 0.35rem;
-	margin: 0.75rem 0 0;
+	margin: 0.5rem 0 0;
 	padding: 0;
 	list-style: none;
 }
@@ -116,7 +160,26 @@ const COLORS = ['var(--color-5)', 'var(--color-2)', 'var(--color-4)', 'var(--col
 	width: 0.45rem;
 	height: 0.45rem;
 	border-radius: 50%;
-	background: var(--tint);
+	background: var(--badge);
+}
+
+.issue {
+	margin-left: 0.35rem;
+	padding: 0 0.4rem;
+	border-radius: 0.4rem;
+	background: color-mix(in srgb, var(--badge) 18%, var(--surface));
+	color: var(--text);
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.issue:hover,
+.issue:focus-visible {
+	background: var(--badge);
+	color: var(--on-accent);
 }
 
 @keyframes pop {
