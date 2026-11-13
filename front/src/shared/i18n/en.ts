@@ -132,6 +132,13 @@ export const en = {
 	'theme.dark': 'Dark',
 	'theme.light': 'Light',
 
+	'seo.homeTitle': 'Kuzix - Quiz your friends, live!',
+	'seo.homeDescription': 'Kuzix is a free real-time multiplayer quiz game. Create a quiz, host it on the big screen, and players join from their phone with a game code.',
+	'seo.loginTitle': 'Log in - Kuzix',
+	'seo.loginDescription': 'Log in to Kuzix to create, host and track your live quizzes.',
+	'seo.registerTitle': 'Sign up - Kuzix',
+	'seo.registerDescription': 'Create a free Kuzix account to build quizzes, host live games and keep your scores.',
+
 	'home.title': 'Quiz your friends, live!',
 	'home.subtitle': 'Enter a game code to jump in. No account needed.',
 	'home.codeLabel': 'Game code',

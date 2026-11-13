@@ -8,7 +8,7 @@ const PRIVATE_PREFIXES = ['/api/', '/auth/', '/dashboard', '/quizzes/', '/host/'
 
 const seoFiles = (siteUrl: string): Plugin => ({
 	name: 'kuzix-seo-files',
-	apply: 'build',
+	transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', siteUrl),
 	generateBundle() {
 		const today = new Date().toISOString().slice(0, 10);
 		const files: Record<string, string> = {

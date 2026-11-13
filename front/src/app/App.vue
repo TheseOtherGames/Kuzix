@@ -2,10 +2,36 @@
 import AppHeader from './AppHeader.vue';
 import ToastContainer from '../shared/ui/ToastContainer.vue';
 import { LOCALES, locale, t } from '../shared/i18n/i18n';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import AppIcon from '../shared/ui/AppIcon.vue';
 import ChangelogModal from './ChangelogModal.vue';
 import { CURRENT_VERSION } from './changelog';
+
+const route = useRoute();
+
+const setMeta = (selector: string, attr: string, value: string): void => {
+	document.head.querySelector(selector)?.setAttribute(attr, value);
+};
+
+// index.html holds the default tags (and the build-time site URL); this keeps them in sync with the route and language.
+watchEffect(() => {
+	const seo = route.meta.seo;
+	const title = seo ? t(seo.title) : 'Kuzix';
+	const url = location.origin + route.path;
+	document.title = title;
+	setMeta('meta[property="og:title"]', 'content', title);
+	setMeta('meta[name="twitter:title"]', 'content', title);
+	if (seo) {
+		for (const selector of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {
+			setMeta(selector, 'content', t(seo.description));
+		}
+	}
+	setMeta('meta[property="og:url"]', 'content', url);
+	setMeta('link[rel="canonical"]', 'href', url);
+	setMeta('meta[name="robots"]', 'content', seo ? 'index, follow, max-image-preview:large' : 'noindex');
+	setMeta('meta[property="og:locale"]', 'content', locale.value === 'fr' ? 'fr_FR' : 'en_US');
+});
 
 const SEEN_KEY = 'kuzix-seen-version';
 const changelogOpen = ref(false);

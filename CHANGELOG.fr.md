@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.3.3 - 2026-11-13
+- Aperçus de liens et meilleur référencement
 - Fenêtres en plein écran sur mobile
 - Nouveau logo et icône d’onglet
 

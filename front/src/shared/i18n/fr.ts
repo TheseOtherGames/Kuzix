@@ -134,6 +134,13 @@ export const fr: Record<MessageKey, string> = {
 	'theme.dark': 'Sombre',
 	'theme.light': 'Clair',
 
+	'seo.homeTitle': 'Kuzix - Défiez vos amis, en direct !',
+	'seo.homeDescription': 'Kuzix est un jeu de quiz multijoueur gratuit en temps réel. Créez un quiz, lancez-le sur grand écran, et les joueurs rejoignent depuis leur téléphone avec un code.',
+	'seo.loginTitle': 'Connexion - Kuzix',
+	'seo.loginDescription': 'Connectez-vous à Kuzix pour créer, animer et suivre vos quiz en direct.',
+	'seo.registerTitle': 'Inscription - Kuzix',
+	'seo.registerDescription': 'Créez un compte Kuzix gratuit pour concevoir des quiz, animer des parties en direct et garder vos scores.',
+
 	'home.title': 'Défiez vos amis, en direct !',
 	'home.subtitle': 'Entrez un code de partie pour jouer. Pas besoin de compte.',
 	'home.codeLabel': 'Code de la partie',

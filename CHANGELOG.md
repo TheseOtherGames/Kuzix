@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.3.3 - 2026-11-13
+- Link previews and better search engine listing
 - Fullscreen windows on mobile
 - New logo and browser tab icon
 

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { auth } from '../features/auth/auth.store';
+import type { MessageKey } from '../shared/i18n/en';
 
 declare module 'vue-router' {
 	interface RouteMeta {
@@ -7,15 +8,17 @@ declare module 'vue-router' {
 		requiresAdmin?: boolean;
 		immersive?: boolean;
 		mode?: 'login' | 'register';
+		// Indexable page: its <title> and meta description. Pages without it get noindex (see App.vue).
+		seo?: { title: MessageKey; description: MessageKey };
 	}
 }
 
 export const router = createRouter({
 	history: createWebHistory(),
 	routes: [
-		{ path: '/', component: () => import('../features/home/HomeView.vue') },
-		{ path: '/login', component: () => import('../features/auth/AuthView.vue'), meta: { mode: 'login' } },
-		{ path: '/register', component: () => import('../features/auth/AuthView.vue'), meta: { mode: 'register' } },
+		{ path: '/', component: () => import('../features/home/HomeView.vue'), meta: { seo: { title: 'seo.homeTitle', description: 'seo.homeDescription' } } },
+		{ path: '/login', component: () => import('../features/auth/AuthView.vue'), meta: { mode: 'login', seo: { title: 'seo.loginTitle', description: 'seo.loginDescription' } } },
+		{ path: '/register', component: () => import('../features/auth/AuthView.vue'), meta: { mode: 'register', seo: { title: 'seo.registerTitle', description: 'seo.registerDescription' } } },
 		{ path: '/auth/callback', component: () => import('../features/auth/AuthCallbackView.vue') },
 		{ path: '/dashboard', component: () => import('../features/quiz/DashboardView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/new', component: () => import('../features/quiz/QuizEditorView.vue'), meta: { requiresAuth: true } },
