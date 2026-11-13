@@ -15,6 +15,8 @@ declare module 'vue-router' {
 
 export const router = createRouter({
 	history: createWebHistory(),
+	// Back/forward restores the old position; new pages start at the top.
+	scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
 	routes: [
 		{ path: '/', component: () => import('@/features/home/HomeView.vue'), meta: { seo: { title: 'seo.homeTitle', description: 'seo.homeDescription' } } },
 		{ path: '/login', component: () => import('@/features/auth/AuthView.vue'), meta: { mode: 'login', seo: { title: 'seo.loginTitle', description: 'seo.loginDescription' } } },

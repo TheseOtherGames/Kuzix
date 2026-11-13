@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.5.1 - 2026-11-13
+- [feat] Les nouvelles pages s'ouvrent en haut
+
 ## 0.5.0 - 2026-11-13
 - [feat] La page de résultats affiche toutes les stats du quiz, des questions et des joueurs
 - [feat] Les résultats s'ouvrent sur la dernière session, avec un choix de session

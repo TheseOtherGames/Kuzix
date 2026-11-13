@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1 - 2026-11-13
+- [feat] New pages open scrolled to the top
+
 ## 0.5.0 - 2026-11-13
 - [feat] Results page shows full quiz, question and player stats
 - [feat] Results open on the latest session, with a session picker
