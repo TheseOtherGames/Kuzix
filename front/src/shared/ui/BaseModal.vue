@@ -62,7 +62,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .modal {
 	width: min(100%, 28rem);
-	max-height: calc(100vh - 2rem);
+	max-height: calc(100dvh - 2rem);
 	overflow: auto;
 	padding: 1.5rem;
 	border-radius: var(--radius);
@@ -100,6 +100,48 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 	margin: 1.5rem -1.5rem -1.5rem;
 	padding: 1rem 1.5rem 1.5rem;
 	background: var(--surface);
+}
+
+/* Mobile: fullscreen on the dynamic viewport (dvh skips the browser bars), only the body scrolls. */
+@media (max-width: 640px) {
+	.backdrop {
+		padding: 0;
+	}
+
+	.modal,
+	.modal.wide {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100dvh;
+		max-height: 100dvh;
+		overflow: hidden;
+		padding: 0;
+		border-radius: 0;
+	}
+
+	.header {
+		padding: calc(1rem + env(safe-area-inset-top)) 1.25rem 0.75rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.body {
+		flex: 1;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+	}
+
+	.actions {
+		position: static;
+		margin: 0;
+		padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+		border-top: 1px solid var(--border);
+	}
+
+	.body:has(+ .actions) {
+		padding-bottom: 1rem;
+	}
 }
 
 .modal-enter-active,
