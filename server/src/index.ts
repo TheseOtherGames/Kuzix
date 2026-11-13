@@ -4,6 +4,7 @@ import express from 'express';
 import { config } from './core/config';
 import { migrate } from './core/db/pool';
 import { errorHandler, notFound } from './core/errorHandler';
+import { rateLimit } from './core/rateLimit';
 import { authRouter } from './features/auth/auth.routes';
 import { quizRouter } from './features/quiz/quiz.routes';
 import { userRouter } from './features/user/user.routes';
@@ -11,7 +12,12 @@ import { adminRouter } from './features/admin/admin.routes';
 import { attachGameServer, findGameByCode } from './features/game/game.server';
 
 const app = express();
+// Behind nginx: take the client IP from X-Forwarded-For, but only when the proxy is local.
+app.set('trust proxy', 'loopback');
 app.use(express.json({ limit: '1mb' }));
+// Generous per-IP limits: a whole classroom can share one IP. Gameplay itself is on the WebSocket.
+app.use('/api', rateLimit(600, 60_000));
+app.use(['/api/auth/login', '/api/auth/register'], rateLimit(30, 60_000));
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/quizzes', quizRouter);

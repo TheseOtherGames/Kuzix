@@ -1,6 +1,8 @@
 # Changelog
 
 ## 0.4.0 - 2026-11-13
+- Requests are rate limited to prevent spam
+- Repeated clicks no longer resend the same request
 - Game bar buttons use the navigation tooltip
 - Every button shows a tooltip title on hover
 - Copy button on the game code

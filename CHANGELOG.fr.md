@@ -1,6 +1,8 @@
 # Journal des modifications
 
 ## 0.4.0 - 2026-11-13
+- Les requêtes sont limitées pour éviter le spam
+- Les clics répétés ne renvoient plus la même requête
 - Les boutons de la barre de jeu utilisent l'infobulle de navigation
 - Chaque bouton affiche un titre au survol
 - Bouton pour copier le code de la partie

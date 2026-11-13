@@ -625,6 +625,7 @@ export const frServerErrors: Record<string, string> = {
 	'Game not found': 'Partie introuvable',
 	'Invalid game': 'Partie invalide',
 	'Invalid avatar': 'Avatar invalide',
+	'Too many requests, please slow down': 'Trop de requêtes, veuillez patienter',
 	'Invalid email': 'E-mail invalide',
 	'Invalid email or password': 'E-mail ou mot de passe incorrect',
 	'Invalid login state': 'Connexion invalide, réessayez',
