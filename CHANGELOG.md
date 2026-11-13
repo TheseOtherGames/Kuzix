@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2 - 2026-11-13
+- [style] Game code boxes show random placeholder characters
+
 ## 0.4.1 - 2026-11-13
 - [feat] Play button explains why it is disabled
 - [feat] Every button shows its name on hover

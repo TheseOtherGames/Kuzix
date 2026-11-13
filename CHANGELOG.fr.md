@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.4.2 - 2026-11-13
+- [style] Les cases du code de partie affichent des caractères aléatoires
+
 ## 0.4.1 - 2026-11-13
 - [feat] Le bouton Jouer explique pourquoi il est désactivé
 - [feat] Chaque bouton affiche son nom au survol

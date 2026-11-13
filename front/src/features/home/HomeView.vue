@@ -14,6 +14,7 @@ const router = useRouter();
 const CODE_LENGTH = 6;
 const chars = ref<string[]>(Array(CODE_LENGTH).fill(''));
 const boxes = ref<HTMLInputElement[]>([]);
+const placeholder = Array.from({ length: CODE_LENGTH }, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 36)]);
 
 const cleanCode = computed(() => chars.value.join(''));
 
@@ -89,7 +90,7 @@ const join = async (): Promise<void> => {
 						autocomplete="off"
 						autocapitalize="off"
 						spellcheck="false"
-						:placeholder="'abc123'[i]"
+						:placeholder="placeholder[i]"
 						:aria-label="`${t('home.codeLabel')} ${i + 1}/${CODE_LENGTH}`"
 						@input="onInput(i, $event)"
 						@keydown="onKeydown(i, $event)"
