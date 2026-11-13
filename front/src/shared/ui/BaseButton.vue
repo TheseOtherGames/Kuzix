@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getCurrentInstance, onMounted, onUpdated, useAttrs } from 'vue';
 import { RouterLink, type RouteLocationRaw } from 'vue-router';
 
 withDefaults(defineProps<{
@@ -15,6 +16,17 @@ withDefaults(defineProps<{
 	size: 'md',
 	type: 'button',
 });
+
+// Every button gets a hover title: an explicit `title` (or `data-tip` tooltip) wins, otherwise the button's own text.
+const attrs = useAttrs();
+const instance = getCurrentInstance();
+function syncTitle() {
+	if (attrs.title || attrs['data-tip']) return;
+	const el = instance?.proxy?.$el as HTMLElement | undefined;
+	if (el) el.title = el.textContent?.trim() ?? '';
+}
+onMounted(syncTitle);
+onUpdated(syncTitle);
 </script>
 
 <template>

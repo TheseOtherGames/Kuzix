@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.3.4 - 2026-11-13
+- Chaque bouton affiche un titre au survol
 - Bouton pour copier le code de la partie
 - Un code de partie inconnu affiche une erreur sur l'accueil
 - Les codes de quiz n'existent que quand le quiz est ouvert
