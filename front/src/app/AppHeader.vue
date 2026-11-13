@@ -24,6 +24,7 @@ const onLogout = (): void => {
 <template>
 	<TopBar>
 		<RouterLink to="/" class="logo" :aria-label="t('header.home')">
+			<AppIcon name="logo" class="logo-mark" />
 			<span v-for="(letter, i) in 'Kuzix'" :key="i" :style="{ color: LOGO_COLORS[i % LOGO_COLORS.length] }">{{ letter }}</span>
 		</RouterLink>
 		<nav class="nav">
@@ -53,6 +54,8 @@ const onLogout = (): void => {
 <style scoped>
 .logo {
 	position: relative;
+	display: inline-flex;
+	align-items: center;
 	flex-shrink: 0;
 	font-size: 1.6rem;
 	font-weight: 700;
@@ -77,6 +80,18 @@ const onLogout = (): void => {
 	text-transform: uppercase;
 	text-shadow: none;
 	transform: rotate(-8deg);
+}
+
+.logo .logo-mark {
+	width: 1.5em;
+	height: 1.5em;
+	margin-right: 0.3rem;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.2));
+	transition: transform 0.2s;
+}
+
+.logo:hover .logo-mark {
+	transform: rotate(-10deg) scale(1.1);
 }
 
 .logo span {

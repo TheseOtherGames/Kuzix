@@ -19,6 +19,8 @@
 	--text-muted: #9ba7bf;
 	--border: rgba(255, 255, 255, 0.09);
 	--focus-ring: var(--color-3);
+	/* Logo sticker outline (bubble + sparkle of shared/icons/logo.svg). Cream so it reads on dark. */
+	--logo-outline: #fff4ea;
 	/* UI accent (active, selected, primary). Purple in dark, peach in light. */
 	--accent: #8a45f5;
 	--on-accent: #ffffff;
@@ -52,6 +54,7 @@
 	--text: #1e2230;
 	--text-muted: #565b69;
 	--border: rgba(30, 34, 48, 0.12);
+	--logo-outline: #a3204a;
 	--focus-ring: #1a5fc4;
 	--accent: #ffa07a;
 	--on-accent: #3b1a0c;

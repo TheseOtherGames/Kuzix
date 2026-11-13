@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 - 2026-11-13
+- Fullscreen windows on mobile
+- New logo and browser tab icon
+
 ## 0.3.2 - 2026-11-12
 - Character counter on nickname fields
 - "Beta" badge on the logo

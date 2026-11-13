@@ -1,0 +1,13 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<!-- Favicon cut of shared/icons/logo.svg: bubble fills the frame, short tail, bigger K, no sparkle (unreadable at 16px). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<style>
+		:root { --logo-outline: #a3204a; }
+		@media (prefers-color-scheme: dark) { :root { --logo-outline: #fff4ea; } }
+	</style>
+	<path d="M19 3h62a16 16 0 0 1 16 16v45a16 16 0 0 1-16 16H46L25 97l3-17h-9A16 16 0 0 1 3 64V19A16 16 0 0 1 19 3z" fill="#ff3d71" style="stroke:var(--logo-outline,#a3204a)" stroke-width="6" stroke-linejoin="round"/>
+	<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path d="M32 20V63M68 20L34 41L69 63" stroke="#a3204a" stroke-width="22"/>
+		<path d="M32 20V63M68 20L34 41L69 63" stroke="#fff" stroke-width="13"/>
+	</g>
+</svg>

@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.3.3 - 2026-11-13
+- Fenêtres en plein écran sur mobile
+- Nouveau logo et icône d’onglet
+
 ## 0.3.2 - 2026-11-12
 - Compteur de caractères sur les champs de pseudo
 - Badge « bêta » sur le logo
