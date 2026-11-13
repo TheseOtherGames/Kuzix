@@ -1,6 +1,7 @@
 # Journal des modifications
 
 ## 0.3.4 - 2026-11-13
+- Bouton admin déplacé en fin de barre de navigation
 - Retour à l'accueil après la connexion
 - Infobulles sur les boutons de la barre de navigation
 

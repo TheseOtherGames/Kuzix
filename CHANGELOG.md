@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.3.4 - 2026-11-13
+- Admin button moved to the end of the navigation bar
 - Back to the home page after logging in
 - Tooltips on navigation bar buttons
 

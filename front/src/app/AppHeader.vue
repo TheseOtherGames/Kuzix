@@ -29,9 +29,9 @@ const onLogout = (): void => {
 		</RouterLink>
 		<nav class="nav">
 			<template v-if="auth.user">
-				<PillButton v-if="auth.user.isAdmin" to="/admin" :label="t('header.admin')"><AppIcon name="crown" /></PillButton>
 				<PillButton to="/dashboard" :label="t('header.myQuizzes')"><AppIcon name="folder" /></PillButton>
 				<PillButton to="/profile" :label="auth.user.username"><AvatarIcon :value="auth.user.avatar" /></PillButton>
+				<PillButton v-if="auth.user.isAdmin" to="/admin" :label="t('header.admin')"><AppIcon name="crown" /></PillButton>
 			</template>
 			<span class="divider" aria-hidden="true"></span>
 			<button
