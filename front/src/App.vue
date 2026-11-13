@@ -50,26 +50,33 @@ const openChangelog = (): void => {
 		<RouterView />
 	</main>
 	<footer v-if="!$route.meta.immersive" class="footer">
-		<span>© {{ new Date().getFullYear() }} Kuzix - {{ t('footer.by') }} <a class="studio" href="https://github.com/theseothergames" target="_blank" rel="noopener noreferrer">TheseOtherGames</a></span>
-		<RouterLink to="/brand" class="studio">{{ t('footer.brand') }}</RouterLink>
-		<RouterLink to="/terms" class="studio">{{ t('footer.terms') }}</RouterLink>
-		<RouterLink to="/legal" class="studio">{{ t('footer.legal') }}</RouterLink>
-		<span class="langs" role="group" :aria-label="t('footer.language')">
-			<button
-				v-for="option in LOCALES"
-				:key="option.value"
-				type="button"
-				:lang="option.value"
-				:title="option.label"
-				:aria-pressed="locale === option.value"
-				@click="locale = option.value"
-			>
-				{{ option.value.toUpperCase() }}
+		<p class="credit">
+			<AppIcon name="logo" class="mark" />
+			<span>© {{ new Date().getFullYear() }} Kuzix · {{ t('footer.by') }} <a class="studio" href="https://github.com/theseothergames" target="_blank" rel="noopener noreferrer">TheseOtherGames</a></span>
+		</p>
+		<nav class="links">
+			<RouterLink to="/brand">{{ t('footer.brand') }}</RouterLink>
+			<RouterLink to="/terms">{{ t('footer.terms') }}</RouterLink>
+			<RouterLink to="/legal">{{ t('footer.legal') }}</RouterLink>
+		</nav>
+		<div class="controls">
+			<span class="langs" role="group" :aria-label="t('footer.language')">
+				<button
+					v-for="option in LOCALES"
+					:key="option.value"
+					type="button"
+					:lang="option.value"
+					:title="option.label"
+					:aria-pressed="locale === option.value"
+					@click="locale = option.value"
+				>
+					{{ option.value.toUpperCase() }}
+				</button>
+			</span>
+			<button type="button" class="version" :class="{ unseen }" :title="t('changelog.open')" :aria-label="t('changelog.open')" @click="openChangelog">
+				<AppIcon name="sparkles" />v{{ CURRENT_VERSION }}
 			</button>
-		</span>
-		<button type="button" class="version" :class="{ unseen }" :title="t('changelog.open')" :aria-label="t('changelog.open')" @click="openChangelog">
-			<AppIcon name="sparkles" />v{{ CURRENT_VERSION }}
-		</button>
+		</div>
 	</footer>
 	<ChangelogModal :open="changelogOpen" @close="changelogOpen = false" />
 	<ToastContainer />
@@ -83,17 +90,29 @@ const openChangelog = (): void => {
 }
 
 .footer {
-	margin-top: auto;
-	padding: 1.25rem clamp(1rem, 3vw, 2rem);
+	width: min(100%, 72rem);
+	margin: auto auto 0;
+	padding: 1.5rem clamp(1rem, 3vw, 2rem);
 	border-top: 1px solid var(--border);
 	color: var(--text-muted);
 	font-size: 0.9rem;
-	text-align: center;
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
-	justify-content: center;
-	gap: 0.5rem 1rem;
+	gap: 1rem;
+}
+
+.credit {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.mark {
+	width: 1.75rem;
+	height: 1.75rem;
+	flex-shrink: 0;
 }
 
 .studio {
@@ -104,6 +123,43 @@ const openChangelog = (): void => {
 
 .studio:hover {
 	text-decoration: underline;
+}
+
+.links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.25rem;
+}
+
+.links a {
+	padding: 0.25rem 0.7rem;
+	border-radius: 999px;
+	color: var(--text-muted);
+	text-decoration: none;
+	font-weight: 600;
+	transition: background 0.15s, color 0.15s;
+}
+
+.links a:hover,
+.links a.router-link-active {
+	background: var(--surface-2);
+	color: var(--accent-text);
+}
+
+.controls {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+@media (max-width: 760px) {
+	.footer {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+	}
 }
 
 .langs {

@@ -1,11 +1,10 @@
 # Changelog
 
-## 0.5.2 - 2026-11-13
-- [feat] Terms of use and legal notice pages, linked in the footer
-
 ## 0.5.1 - 2026-11-13
 - [feat] New pages open scrolled to the top
 - [feat] Delete your account from profile settings
+- [feat] Terms of use and legal notice pages, linked in the footer
+- [style] Footer redesigned into brand, links and settings groups
 - [refactor] Front code reorganised into a clearer folder layout
 - [refactor] Pages split into smaller components
 - [refactor] Similar components merged into shared ones
