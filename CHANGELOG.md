@@ -2,6 +2,7 @@
 
 ## 0.5.1 - 2026-11-13
 - [feat] New pages open scrolled to the top
+- [feat] Delete your account from profile settings
 - [refactor] Front code reorganised into a clearer folder layout
 - [refactor] Pages split into smaller components
 - [refactor] Similar components merged into shared ones

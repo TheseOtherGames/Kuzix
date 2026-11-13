@@ -165,6 +165,19 @@ export const isPlayerOwnedBy = async (playerId: number, userId: number): Promise
 	return Boolean(rowCount);
 };
 
+export const DELETED_USERNAME = 'Deleted user';
+
+// Anonymises instead of deleting the row: quizzes, runs and players keep pointing at it.
+export const deleteAccount = async (userId: number): Promise<void> => {
+	await withTransaction(async (client) => {
+		await client.query('DELETE FROM user_identities WHERE user_id = $1', [userId]);
+		await client.query(
+			`UPDATE users SET email = NULL, password_hash = NULL, username = $2, deleted_at = now() WHERE id = $1`,
+			[userId, DELETED_USERNAME],
+		);
+	});
+};
+
 export const isBanned = async (userId: number): Promise<boolean> => {
 	const { rowCount } = await pool.query('SELECT 1 FROM users WHERE id = $1 AND banned_at IS NOT NULL', [userId]);
 

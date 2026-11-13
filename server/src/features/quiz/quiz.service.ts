@@ -247,6 +247,20 @@ export const closeRun = async (quizId: number): Promise<void> => {
 	});
 };
 
+// Returns the closed quiz ids so the caller can abort their live games.
+export const closeOwnerRuns = async (ownerId: number): Promise<number[]> => {
+	const { rows } = await pool.query<{ quizId: number }>(
+		`SELECT DISTINCT r.quiz_id AS "quizId" FROM runs r JOIN quizzes q ON q.id = r.quiz_id
+		WHERE q.owner_id = $1 AND r.ended_at IS NULL`,
+		[ownerId],
+	);
+	for (const { quizId } of rows) {
+		await closeRun(quizId);
+	}
+
+	return rows.map((row) => row.quizId);
+};
+
 export const deleteQuiz = async (quizId: number): Promise<void> => {
 	await withTransaction(async (client) => {
 		await client.query('UPDATE runs SET ended_at = now() WHERE quiz_id = $1 AND ended_at IS NULL', [quizId]);

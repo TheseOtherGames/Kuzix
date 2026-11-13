@@ -2,6 +2,7 @@
 
 ## 0.5.1 - 2026-11-13
 - [feat] Les nouvelles pages s'ouvrent en haut
+- [feat] Suppression du compte depuis les paramètres du profil
 - [refactor] Code du front réorganisé en dossiers plus clairs
 - [refactor] Pages découpées en composants plus petits
 - [refactor] Composants similaires fusionnés en composants partagés

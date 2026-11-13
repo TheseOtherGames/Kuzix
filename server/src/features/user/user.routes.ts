@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import { requireAuth } from '../auth/auth.middleware';
 import { assert, HttpError } from '../../core/httpError';
+import { abortGame } from '../game/game.registry';
+import { closeOwnerRuns } from '../quiz/quiz.service';
 import {claimPlayer,
 	cleanAvatar,
 	cleanUsername,
+	deleteAccount,
 	findUserById,
 	getHistory,
 	getPlayerAnswers,
@@ -25,6 +28,14 @@ userRouter.get('/me', async (req, res) => {
 
 userRouter.patch('/me', async (req, res) => {
 	res.json(await updateProfile(req.userId!, cleanUsername(req.body?.username), cleanAvatar(req.body?.avatar)));
+});
+
+userRouter.delete('/me', async (req, res) => {
+	for (const quizId of await closeOwnerRuns(req.userId!)) {
+		abortGame(quizId);
+	}
+	await deleteAccount(req.userId!);
+	res.status(204).end();
 });
 
 userRouter.get('/me/stats', async (req, res) => {

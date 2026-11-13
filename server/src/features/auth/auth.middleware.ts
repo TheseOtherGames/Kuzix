@@ -18,7 +18,7 @@ export const requireAuth = async (req: Request, _res: Response, next: NextFuncti
 		throw new HttpError(401, 'Authentication required');
 	}
 	const { rows } = await pool.query<{ banned: boolean; isAdmin: boolean }>(
-		'SELECT banned_at IS NOT NULL AS banned, is_admin AS "isAdmin" FROM users WHERE id = $1',
+		'SELECT banned_at IS NOT NULL AS banned, is_admin AS "isAdmin" FROM users WHERE id = $1 AND deleted_at IS NULL',
 		[userId],
 	);
 	if (!rows[0]) {

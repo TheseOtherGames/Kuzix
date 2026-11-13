@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import AppIcon from '@/views/components/utils/image/AppIcon.vue';
+import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import BaseCard from '@/views/components/utils/card/BaseCard.vue';
 import { auth, PROVIDER_LABELS } from '@/utils/Auth';
 import { t } from '@/i18n';
+
+const emit = defineEmits<{ delete: [] }>();
 </script>
 
 <template>
@@ -12,6 +16,7 @@ import { t } from '@/i18n';
 			<strong>{{ t('profile.loginMethods') }}</strong>
 			{{ auth.user?.providers.map((provider) => provider === 'password' ? t('profile.passwordLogin') : PROVIDER_LABELS[provider] ?? provider).join(', ') }}
 		</p>
+		<BaseButton variant="tool-danger" class="delete" @click="emit('delete')"><AppIcon name="trash" /> {{ t('profile.deleteAccount') }}</BaseButton>
 	</BaseCard>
 </template>
 
@@ -22,5 +27,8 @@ import { t } from '@/i18n';
 	gap: 0.5rem;
 	margin: 0.4rem 0 0;
 	overflow-wrap: anywhere;
+}
+.delete {
+	margin-top: 1rem;
 }
 </style>

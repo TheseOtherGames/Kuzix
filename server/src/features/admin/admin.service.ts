@@ -1,7 +1,7 @@
 import { pool } from '../../core/db/pool';
 import { assert } from '../../core/httpError';
 import { abortGame, games } from '../game/game.registry';
-import { closeRun } from '../quiz/quiz.service';
+import { closeOwnerRuns, closeRun } from '../quiz/quiz.service';
 import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminUser, AdminUserDetail } from './admin.types';
 
 // Lists are capped at 200 rows with a text search, add paging when that stops being enough.
@@ -80,13 +80,7 @@ export const banUser = async (actorId: number, userId: number, reason: string | 
 	assert(actorId !== userId, 'You cannot ban yourself');
 	const { rowCount } = await pool.query('UPDATE users SET banned_at = now(), ban_reason = $2 WHERE id = $1', [userId, reason]);
 	assert(rowCount, 'Account not found', 404);
-	const { rows } = await pool.query<{ quizId: number }>(
-		`SELECT DISTINCT r.quiz_id AS "quizId" FROM runs r JOIN quizzes q ON q.id = r.quiz_id
-		WHERE q.owner_id = $1 AND r.ended_at IS NULL`,
-		[userId],
-	);
-	for (const { quizId } of rows) {
-		await closeRun(quizId);
+	for (const quizId of await closeOwnerRuns(userId)) {
 		abortGame(quizId);
 	}
 };

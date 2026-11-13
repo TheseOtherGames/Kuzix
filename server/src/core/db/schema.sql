@@ -17,6 +17,9 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT fal
 ALTER TABLE users ADD COLUMN IF NOT EXISTS banned_at TIMESTAMPTZ;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT;
 
+-- Account deleted by its owner: email, username and logins are wiped, quizzes and game history stay.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+
 CREATE TABLE IF NOT EXISTS user_identities (
 	provider TEXT NOT NULL,
 	provider_user_id TEXT NOT NULL,

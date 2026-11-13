@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave, useRoute, useRouter, type RouteLocationNormalized } from 'vue-router';
 import BaseModal from '@/views/components/utils/modal/BaseModal.vue';
+import ConfirmModal from '@/views/components/utils/modal/ConfirmModal.vue';
 import LeaveModal from '@/views/components/utils/modal/LeaveModal.vue';
 import PlayerReport from '@/views/components/game/PlayerReport.vue';
 import ProfileTabs from '@/views/components/profile/ProfileTabs.vue';
@@ -13,7 +14,7 @@ import AccountCard from '@/views/components/profile/AccountCard.vue';
 import type { PlayerAnswerDetail } from '@/interfaces/Quiz/QuizInterface';
 import type { PlayHistoryEntry, Profile, UserStats } from '@/interfaces/User/UserInterface';
 import { api } from '@/utils/API';
-import { auth, updateProfile } from '@/utils/Auth';
+import { auth, logout, updateProfile } from '@/utils/Auth';
 import { t } from '@/i18n';
 import { toast } from '@/utils/Toast';
 
@@ -28,6 +29,23 @@ const setTab = (value: Tab): Promise<unknown> => router.push(value === 'profile'
 const profile = ref<Profile>({ nickname: auth.user!.username, avatar: auth.user!.avatar });
 const saving = ref(false);
 const router = useRouter();
+const confirmingDelete = ref(false);
+const deleting = ref(false);
+
+const deleteAccount = async (): Promise<void> => {
+	deleting.value = true;
+	try {
+		await api('/users/me', 'DELETE');
+		logout();
+		toast.success(t('profile.accountDeleted'));
+		await router.push('/');
+	} catch (error) {
+		toast.error((error as Error).message);
+	} finally {
+		deleting.value = false;
+		confirmingDelete.value = false;
+	}
+};
 
 // Unsaved-changes workflow: the bar, the tab dot and the leave guard all read `dirty`.
 // No user (logged out / session expired) = nothing to save, so never block leaving.
@@ -142,12 +160,16 @@ const showGame = async (entry: PlayHistoryEntry): Promise<void> => {
 
 		<section v-else id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" class="settings-panel">
 			<SettingsCard class="narrow" />
-			<AccountCard class="narrow" />
+			<AccountCard class="narrow" @delete="confirmingDelete = true" />
 		</section>
 
 		<BaseModal :open="Boolean(selected)" :title="selected?.quizTitle ?? ''" wide @close="selected = null">
 			<PlayerReport v-if="selected" :player="selected" :players-count="selected.playersCount" :answers="answers" />
 		</BaseModal>
+
+		<ConfirmModal :open="confirmingDelete" :title="t('profile.deleteTitle')" :confirm-label="t('profile.deleteAccount')" icon="trash" :loading="deleting" @close="confirmingDelete = false" @confirm="deleteAccount">
+			<p>{{ t('profile.deleteText') }}</p>
+		</ConfirmModal>
 
 		<LeaveModal :open="pendingLeave !== null" :text="t('pf.leaveText')" :saving="saving" wide @stay="pendingLeave = null" @discard="leave(false)" @save="leave(true)" />
 	</div>
