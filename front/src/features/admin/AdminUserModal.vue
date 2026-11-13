@@ -181,6 +181,7 @@ const run = async (): Promise<void> => {
 
 .who-text {
 	display: grid;
+	justify-items: start;
 	gap: 0.5rem;
 	min-width: 0;
 	font-size: 1.15rem;

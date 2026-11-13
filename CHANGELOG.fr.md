@@ -8,6 +8,7 @@
 - [feat] Les nouveautés sont classées par type, avec liens vers les tickets
 - [style] Code de partie saisi dans six cases
 - [style] Le titre des fenêtres reste visible au défilement
+- [style] Le badge de pseudo admin épouse le pseudo
 
 ## 0.4.0 - 2026-11-13
 - [feat] La réponse choisie reste cachée jusqu’à la révélation

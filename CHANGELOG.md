@@ -8,6 +8,7 @@
 - [feat] What's new groups changes by type, with issue links
 - [style] Game code entered in six separate boxes
 - [style] Modal title stays visible while scrolling
+- [style] Admin name tag fits the name
 
 ## 0.4.0 - 2026-11-13
 - [feat] Your chosen answer stays hidden until the reveal
