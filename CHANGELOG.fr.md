@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.5.2 - 2026-11-13
+- [feat] Pages CGU et mentions légales, liées dans le pied de page
+
 ## 0.5.1 - 2026-11-13
 - [feat] Les nouvelles pages s'ouvrent en haut
 - [feat] Suppression du compte depuis les paramètres du profil

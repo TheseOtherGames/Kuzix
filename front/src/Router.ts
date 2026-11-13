@@ -22,6 +22,12 @@ export const router = createRouter({
 		{ path: '/login', component: () => import('@/views/pages/AuthView.vue'), meta: { mode: 'login', seo: { title: 'seo.loginTitle', description: 'seo.loginDescription' } } },
 		{ path: '/register', component: () => import('@/views/pages/AuthView.vue'), meta: { mode: 'register', seo: { title: 'seo.registerTitle', description: 'seo.registerDescription' } } },
 		{ path: '/brand', component: () => import('@/views/pages/BrandView.vue'), meta: { seo: { title: 'seo.brandTitle', description: 'seo.brandDescription' } } },
+		{
+			path: '/terms', component: () => import('@/views/pages/LegalView.vue'), props: { page: 'terms' }, meta: { seo: { title: 'seo.termsTitle', description: 'seo.termsDescription' } },
+		},
+		{
+			path: '/legal', component: () => import('@/views/pages/LegalView.vue'), props: { page: 'legal' }, meta: { seo: { title: 'seo.legalTitle', description: 'seo.legalDescription' } },
+		},
 		{ path: '/auth/callback', component: () => import('@/views/pages/AuthCallbackView.vue') },
 		{ path: '/dashboard', component: () => import('@/views/pages/DashboardView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/new', component: () => import('@/views/pages/QuizEditorView.vue'), meta: { requiresAuth: true } },

@@ -5,7 +5,6 @@
 // The name tag look rides in the avatar string so it reaches every screen with no new column or protocol field;
 // split it out if it ever needs to be queried on its own.
 // Unknown strings (old emoji avatars) are shown as text.
-// How to draw new parts: .claude/skills/avatar-art/SKILL.md
 
 export type AvatarCategory = 'animals' | 'food' | 'creatures' | 'sea';
 export type AvatarSlot = 'hat' | 'face' | 'item';

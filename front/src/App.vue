@@ -52,6 +52,8 @@ const openChangelog = (): void => {
 	<footer v-if="!$route.meta.immersive" class="footer">
 		<span>© {{ new Date().getFullYear() }} Kuzix - {{ t('footer.by') }} <a class="studio" href="https://github.com/theseothergames" target="_blank" rel="noopener noreferrer">TheseOtherGames</a></span>
 		<RouterLink to="/brand" class="studio">{{ t('footer.brand') }}</RouterLink>
+		<RouterLink to="/terms" class="studio">{{ t('footer.terms') }}</RouterLink>
+		<RouterLink to="/legal" class="studio">{{ t('footer.legal') }}</RouterLink>
 		<span class="langs" role="group" :aria-label="t('footer.language')">
 			<button
 				v-for="option in LOCALES"
