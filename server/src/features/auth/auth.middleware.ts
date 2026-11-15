@@ -5,7 +5,8 @@ import { verifyToken } from './auth.service';
 
 export const BANNED_MESSAGE = 'This account has been banned';
 
-const readBearer = (req: Request): number | null => {
+// Token only, no DB check: fine for display hints on public routes, never for access control.
+export const readBearer = (req: Request): number | null => {
 	const header = req.headers.authorization;
 
 	return header?.startsWith('Bearer ') ? verifyToken(header.slice(7)) : null;

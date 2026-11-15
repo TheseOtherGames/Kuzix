@@ -11,13 +11,14 @@ defineProps<{
 	confirmLabel: string;
 	icon?: string;
 	loading?: boolean;
+	wide?: boolean;
 }>();
 
 const emit = defineEmits<{ close: []; confirm: [] }>();
 </script>
 
 <template>
-	<BaseModal :open="open" :title="title" @close="emit('close')">
+	<BaseModal :open="open" :title="title" :wide="wide" @close="emit('close')">
 		<slot />
 		<template #actions>
 			<BaseButton variant="ghost" @click="emit('close')">{{ t('common.cancel') }}</BaseButton>

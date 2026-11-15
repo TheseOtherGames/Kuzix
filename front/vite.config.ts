@@ -8,6 +8,7 @@ const PUBLIC_ROUTES = [
 	'/login',
 	'/register',
 	'/brand',
+	'/library',
 ];
 const PRIVATE_PREFIXES = [
 	'/api/',
@@ -46,6 +47,7 @@ Sitemap: ${siteUrl}/sitemap.xml
 - [Log in](${siteUrl}/login): access your quizzes
 - [Sign up](${siteUrl}/register): create an account to build and host quizzes
 - [Brand kit](${siteUrl}/brand): logos, colours and style guide
+- [Library](${siteUrl}/library): public quizzes anyone can copy and play
 
 ## Features
 

@@ -1,3 +1,5 @@
+import type { Moderation } from '../quiz/quiz.types';
+
 export interface AdminOverview {
 	users: number;
 	newUsers7d: number;
@@ -5,6 +7,7 @@ export interface AdminOverview {
 	openQuizzes: number;
 	gamesPlayed: number;
 	players: number;
+	openReports: number;
 	liveGames: number;
 	livePlayers: number;
 	activity: { day: string; users: number; players: number }[];
@@ -29,6 +32,18 @@ export interface AdminUserDetail extends AdminUser {
 	hasPassword: boolean;
 	providers: string[];
 	quizList: { id: number; title: string; questions: number; isOpen: boolean; deleted: boolean }[];
+	notes: AdminUserNote[];
+}
+
+// A warning or ban one of the user's quizzes received.
+export interface AdminUserNote {
+	id: number;
+	kind: Moderation;
+	quizId: number;
+	quizTitle: string;
+	reason: string | null;
+	admin: string;
+	createdAt: string;
 }
 
 export interface AdminQuiz {
@@ -42,6 +57,9 @@ export interface AdminQuiz {
 	isOpen: boolean;
 	deleted: boolean;
 	createdAt: string;
+	isPublic: boolean;
+	moderation: Moderation | null;
+	moderationReason: string | null;
 }
 
 export interface AdminLiveGame {
@@ -52,4 +70,22 @@ export interface AdminLiveGame {
 	hostConnected: boolean;
 	players: number;
 	connected: number;
+}
+
+export interface AdminReport {
+	id: number;
+	quizId: number;
+	quizTitle: string;
+	ownerId: number;
+	owner: string;
+	reporterId: number;
+	reporter: string;
+	reason: string;
+	createdAt: string;
+	// Set once dismissed or the quiz was moderated.
+	resolvedAt: string | null;
+	resolvedBy: string | null;
+	moderation: Moderation | null;
+	isPublic: boolean;
+	deleted: boolean;
 }

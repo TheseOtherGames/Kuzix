@@ -1,5 +1,17 @@
 # Journal des modifications
 
+## 0.6.0 - 2026-11-15
+- [feat] Bibliothèque de quiz publics : parcourir, prévisualiser et copier les quiz partagés par la communauté
+- [feat] Publiez vos quiz dans la bibliothèque, avec une confirmation pour publier ou dépublier
+- [feat] Les copies indiquent quand elles ne sont plus à jour : voyez le contenu de la nouvelle version, puis récupérez-la
+- [feat] Signalez un quiz de la bibliothèque aux modérateurs ; votre signalement reste visible jusqu'à son traitement
+- [feat] Section admin Signalements : examiner, ignorer, avertir ou bannir les quiz signalés
+- [feat] Les admins peuvent avertir ou bannir un quiz, avec un historique conservé sur le compte du créateur
+- [feat] Les admins peuvent voir l'aperçu de n'importe quel quiz en cliquant sur son titre
+- [feat] L'export de données inclut vos signalements
+- [style] Cartes de la bibliothèque colorées, avec stickers de formes, l'avatar et l'étiquette de nom de l'auteur
+- [refactor] Les quiz sont référencés par un identifiant court aléatoire
+
 ## 0.5.2 - 2026-11-14
 - [feat] Téléchargement de toutes vos données depuis les paramètres du profil
 - [feat] Les mentions légales expliquent comment télécharger ou supprimer vos données

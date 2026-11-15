@@ -80,7 +80,7 @@ export interface PlayerState {
 }
 
 export type ClientMessage =
-	| { type: 'host'; quizId: number; token: string }
+	| { type: 'host'; quizUid: string; token: string }
 	| { type: 'join'; code: string; nickname: string; avatar: string; token?: string }
 	| { type: 'rejoin'; playerToken: string }
 	| { type: 'next' }

@@ -28,6 +28,9 @@ const tiles = computed(() => {
 		{
 			icon: 'signal', tint: 'var(--color-1)', label: t('admin.kpi.live'), value: stats.liveGames, sub: tp('admin.kpi.livePlayers', stats.livePlayers), to: '/admin/games',
 		},
+		{
+			icon: 'flag', tint: 'var(--color-5)', label: t('admin.reports.title'), value: stats.openReports, sub: t('admin.kpi.toReview'), to: '/admin/reports',
+		},
 	];
 });
 

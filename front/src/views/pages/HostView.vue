@@ -32,7 +32,7 @@ const kickTarget = ref<PlayerPublic | null>(null);
 let pausedByPopup = false;
 
 const socket = new GameSocket(
-	() => ({ type: 'host', quizId: Number(route.params.id), token: auth.token ?? '' }),
+	() => ({ type: 'host', quizUid: String(route.params.id), token: auth.token ?? '' }),
 	(message) => {
 		if (message.type === 'host-state') {
 			state.value = message.state;

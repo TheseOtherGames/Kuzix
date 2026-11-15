@@ -39,6 +39,7 @@ const onLogout = (): void => {
 			<span v-for="(letter, letterIndex) in 'Kuzix'" :key="letterIndex" :style="{ color: LOGO_COLORS[letterIndex % LOGO_COLORS.length] }">{{ letter }}</span>
 		</RouterLink>
 		<nav class="nav">
+			<PillButton to="/library" :label="t('library.title')"><AppIcon name="search" /></PillButton>
 			<template v-if="auth.user">
 				<PillButton to="/dashboard" :label="t('header.myQuizzes')"><AppIcon name="folder" /></PillButton>
 				<PillButton to="/profile" :label="auth.user.username"><AvatarIcon :value="auth.user.avatar" /></PillButton>

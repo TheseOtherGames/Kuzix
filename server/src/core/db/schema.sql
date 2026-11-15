@@ -47,6 +47,20 @@ ALTER TABLE quizzes ALTER COLUMN code DROP NOT NULL;
 UPDATE quizzes q SET code = NULL
 WHERE code IS NOT NULL AND NOT EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL);
 
+-- Stable public reference (URLs, API); the integer id stays internal.
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS uid TEXT NOT NULL DEFAULT substr(md5(gen_random_uuid()::text), 1, 10);
+CREATE UNIQUE INDEX IF NOT EXISTS quizzes_uid ON quizzes (uid);
+
+-- Library: a public quiz can be copied by anyone; a copy remembers its source and the source version it holds.
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS source_id INTEGER REFERENCES quizzes(id);
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS synced_at TIMESTAMPTZ;
+
+-- Admin moderation: a warned quiz stays usable, a banned one leaves the library and cannot be opened.
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS moderation TEXT CHECK (moderation IN ('warned', 'banned'));
+ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS moderation_reason TEXT;
+
 CREATE TABLE IF NOT EXISTS questions (
 	id SERIAL PRIMARY KEY,
 	quiz_id INTEGER NOT NULL REFERENCES quizzes(id),
@@ -99,3 +113,26 @@ CREATE TABLE IF NOT EXISTS player_answers (
 	points INTEGER NOT NULL,
 	PRIMARY KEY (player_id, question_id)
 );
+
+-- Moderation history on the owner: one row per quiz warning or ban, kept when the quiz is cleared.
+CREATE TABLE IF NOT EXISTS user_notes (
+	id SERIAL PRIMARY KEY,
+	user_id INTEGER NOT NULL REFERENCES users(id),
+	quiz_id INTEGER NOT NULL REFERENCES quizzes(id),
+	admin_id INTEGER NOT NULL REFERENCES users(id),
+	kind TEXT NOT NULL CHECK (kind IN ('warned', 'banned')),
+	reason TEXT,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Library reports: a user flags a public quiz, admins review them. One open report per user and quiz.
+CREATE TABLE IF NOT EXISTS quiz_reports (
+	id SERIAL PRIMARY KEY,
+	quiz_id INTEGER NOT NULL REFERENCES quizzes(id),
+	reporter_id INTEGER NOT NULL REFERENCES users(id),
+	reason TEXT NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	resolved_at TIMESTAMPTZ,
+	resolved_by INTEGER REFERENCES users(id)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS quiz_reports_open ON quiz_reports (quiz_id, reporter_id) WHERE resolved_at IS NULL;

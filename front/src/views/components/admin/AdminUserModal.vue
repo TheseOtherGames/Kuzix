@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AdminQuizTitle from '@/views/components/admin/AdminQuizTitle.vue';
 import { computed, ref, watch } from 'vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
@@ -135,13 +136,25 @@ const run = async (): Promise<void> => {
 
 			<ul v-if="user.quizList.length" class="quizzes">
 				<li v-for="quiz in user.quizList" :key="quiz.id" :class="{ deleted: quiz.deleted }">
-					<span class="quiz-title">{{ quiz.title }}</span>
+					<AdminQuizTitle class="quiz-title" :id="quiz.id" :title="quiz.title" />
 					<span class="muted">{{ quiz.questions }} {{ tp('dash.questions', quiz.questions) }}</span>
 					<span v-if="quiz.deleted" class="badge bad">{{ t('admin.status.deleted') }}</span>
 					<span v-else-if="quiz.isOpen" class="badge good">{{ t('admin.status.open') }}</span>
 				</li>
 			</ul>
 			<p v-else class="muted">{{ t('admin.info.noQuiz') }}</p>
+
+			<section v-if="user.notes.length" class="notes">
+				<h3>{{ t('admin.notes') }}</h3>
+				<ul>
+					<li v-for="note in user.notes" :key="note.id">
+						<span class="badge bad">{{ t(`admin.mod.${note.kind}`) }}</span>
+						<AdminQuizTitle class="quiz-title" :id="note.quizId" :title="note.quizTitle" />
+						<span class="muted">{{ formatDate(note.createdAt) }} · {{ note.admin }}</span>
+						<p v-if="note.reason" class="selectable">{{ note.reason }}</p>
+					</li>
+				</ul>
+			</section>
 		</div>
 
 		<template #actions>
@@ -320,6 +333,35 @@ const run = async (): Promise<void> => {
 .muted {
 	margin: 0;
 	color: var(--text-muted);
+}
+
+.notes h3 {
+	margin: 0 0 0.5rem;
+	font-size: 0.95rem;
+}
+
+.notes ul {
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.notes li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.3rem 0.6rem;
+	padding: 0.5rem 0.8rem;
+	border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+	border-radius: var(--radius-sm);
+}
+
+.notes p {
+	flex-basis: 100%;
+	margin: 0;
+	white-space: pre-wrap;
 }
 
 .reason {

@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
+import AdminQuizTitle from '@/views/components/admin/AdminQuizTitle.vue';
 import BaseModal from '@/views/components/utils/modal/BaseModal.vue';
 import type { AdminLiveGame } from '@/interfaces/Admin/AdminInterface';
 import type { MessageKey } from '@/locales/en';
@@ -66,7 +67,7 @@ const closeGame = async (): Promise<void> => {
 				</thead>
 				<tbody>
 					<tr v-for="game in games" :key="game.quizId">
-						<td class="title">{{ game.title }}</td>
+						<td class="title"><AdminQuizTitle :id="game.quizId" :title="game.title" /></td>
 						<td class="code selectable">{{ game.code ?? '—' }}</td>
 						<td><span class="badge accent">{{ t(`admin.phase.${game.phase}` as MessageKey) }}</span></td>
 						<td>

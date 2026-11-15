@@ -102,6 +102,36 @@ import AdminDrawer from '@/views/components/admin/AdminDrawer.vue';
 	color: var(--text-muted);
 }
 
+/* Row actions (Quizzes moderation, Reports): flex on an inner div, a flex <td> stops being a table cell. */
+.page :deep(.mod) {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.page :deep(.mod-action) {
+	padding: 0.15rem 0.5rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: none;
+	color: var(--text-muted);
+	font: inherit;
+	font-size: 0.8rem;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: border-color 0.15s, color 0.15s;
+}
+
+.page :deep(.mod-action:hover) {
+	border-color: var(--accent-line);
+	color: var(--accent-text);
+}
+
+.page :deep(.mod-action.danger:hover) {
+	border-color: var(--danger);
+	color: var(--danger);
+}
+
 .page :deep(.admin-empty) {
 	margin: 0;
 	padding: 2rem 1rem;

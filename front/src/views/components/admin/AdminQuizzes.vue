@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import AdminQuizTitle from '@/views/components/admin/AdminQuizTitle.vue';
 import AdminUserModal from '@/views/components/admin/AdminUserModal.vue';
+import AdminModerationModal, { type ModerationTarget } from '@/views/components/admin/AdminModerationModal.vue';
 import type { AdminQuiz } from '@/interfaces/Admin/AdminInterface';
 import { api } from '@/utils/API';
 import { locale, t } from '@/i18n';
@@ -12,6 +14,7 @@ const LIST_LIMIT = 200;
 const quizzes = ref<AdminQuiz[] | null>(null);
 const search = ref('');
 const openId = ref<number | null>(null);
+const moderating = ref<ModerationTarget | null>(null);
 
 const load = async (): Promise<void> => {
 	try {
@@ -50,12 +53,13 @@ onMounted(load);
 						<th class="num">{{ t('admin.col.questions') }}</th>
 						<th class="num">{{ t('admin.col.sessions') }}</th>
 						<th>{{ t('admin.col.status') }}</th>
+						<th>{{ t('admin.col.moderation') }}</th>
 						<th>{{ t('admin.col.created') }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="quiz in quizzes" :key="quiz.id" :class="{ deleted: quiz.deleted }">
-						<td class="title">{{ quiz.title }}</td>
+						<td class="title"><AdminQuizTitle :id="quiz.id" :title="quiz.title" /></td>
 						<td>
 							<button type="button" class="owner" :aria-label="t('admin.openUser', { name: quiz.owner })" @click="openId = quiz.ownerId">{{ quiz.owner }}</button>
 						</td>
@@ -66,6 +70,17 @@ onMounted(load);
 							<span v-if="quiz.deleted" class="badge bad">{{ t('admin.status.deleted') }}</span>
 							<span v-else-if="quiz.isOpen" class="badge good">{{ t('admin.status.open') }}</span>
 							<span v-else class="badge">{{ t('admin.status.idle') }}</span>
+							<span v-if="quiz.isPublic" class="badge accent">{{ t('admin.status.public') }}</span>
+						</td>
+						<td>
+							<div class="mod">
+								<span v-if="quiz.moderation" class="badge bad" :data-tip="quiz.moderationReason ?? undefined">{{ t(`admin.mod.${quiz.moderation}`) }}</span>
+								<template v-if="!quiz.deleted">
+									<button v-if="quiz.moderation" type="button" class="mod-action" @click="moderating = { quiz, kind: null }">{{ t('admin.mod.clear') }}</button>
+									<button v-if="!quiz.moderation" type="button" class="mod-action" @click="moderating = { quiz, kind: 'warned' }">{{ t('admin.mod.warn') }}</button>
+									<button v-if="quiz.moderation !== 'banned'" type="button" class="mod-action danger" @click="moderating = { quiz, kind: 'banned' }">{{ t('admin.mod.ban') }}</button>
+								</template>
+							</div>
 						</td>
 						<td class="muted">{{ new Date(quiz.createdAt).toLocaleDateString(locale) }}</td>
 					</tr>
@@ -75,6 +90,7 @@ onMounted(load);
 	</div>
 	<p v-if="quizzes?.length === LIST_LIMIT" class="muted capped">{{ t('admin.capped', { n: LIST_LIMIT }) }}</p>
 	<AdminUserModal :user-id="openId" @close="openId = null" @changed="load" />
+	<AdminModerationModal :target="moderating" @close="moderating = null" @done="moderating = null; load()" />
 </template>
 
 <style scoped>

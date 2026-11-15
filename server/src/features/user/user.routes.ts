@@ -3,7 +3,7 @@ import type { PlayHistoryEntry } from './user.types';
 import { requireAuth } from '../auth/auth.middleware';
 import { assert, HttpError } from '../../core/httpError';
 import { abortGame } from '../game/game.registry';
-import { closeOwnerRuns, listQuizzes } from '../quiz/quiz.service';
+import { closeOwnerRuns, listOwnReports, listQuizzes } from '../quiz/quiz.service';
 import {claimPlayer,
 	cleanAvatar,
 	cleanUsername,
@@ -69,6 +69,7 @@ userRouter.get('/me/export', async (req, res) => {
 		stats: await getStats(userId),
 		quizzes: quizzes.map(({ title, createdAt }) => ({ title, createdAt })),
 		games: await Promise.all(history.map(exportGame)),
+		reports: await listOwnReports(userId),
 	});
 });
 

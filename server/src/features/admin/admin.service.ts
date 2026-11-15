@@ -2,7 +2,8 @@ import { pool } from '../../core/db/pool';
 import { assert } from '../../core/httpError';
 import { abortGame, games } from '../game/game.registry';
 import { closeOwnerRuns, closeRun } from '../quiz/quiz.service';
-import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminUser, AdminUserDetail } from './admin.types';
+import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminReport, AdminUser, AdminUserDetail } from './admin.types';
+import type { Moderation } from '../quiz/quiz.types';
 
 // Lists are capped at 200 rows with a text search, add paging when that stops being enough.
 const LIST_LIMIT = 200;
@@ -15,7 +16,8 @@ export const getOverview = async (): Promise<AdminOverview> => {
 			(SELECT count(*)::int FROM quizzes WHERE deleted_at IS NULL) AS quizzes,
 			(SELECT count(*)::int FROM runs WHERE ended_at IS NULL) AS "openQuizzes",
 			(SELECT count(*)::int FROM runs r WHERE EXISTS (SELECT 1 FROM players p WHERE p.run_id = r.id)) AS "gamesPlayed",
-			(SELECT count(*)::int FROM players) AS players`,
+			(SELECT count(*)::int FROM players) AS players,
+			(SELECT count(*)::int FROM quiz_reports WHERE resolved_at IS NULL) AS "openReports"`,
 	);
 	// Last 30 days, one row per day (empty days included) for the dashboard charts.
 	const { rows: activity } = await pool.query<AdminOverview['activity'][number]>(
@@ -65,7 +67,12 @@ export const getUserDetail = async (userId: number): Promise<AdminUserDetail> =>
 					(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = q.id) AS questions,
 					EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL) AS "isOpen"
 				FROM quizzes q WHERE q.owner_id = u.id
-			) x), '[]') AS "quizList"
+			) x), '[]') AS "quizList",
+			coalesce((SELECT json_agg(n ORDER BY n."createdAt" DESC) FROM (
+				SELECT un.id, un.kind, un.quiz_id AS "quizId", q.title AS "quizTitle", un.reason, a.username AS admin, un.created_at AS "createdAt"
+				FROM user_notes un JOIN quizzes q ON q.id = un.quiz_id JOIN users a ON a.id = un.admin_id
+				WHERE un.user_id = u.id
+			) n), '[]') AS notes
 		FROM users u
 		WHERE u.id = $1`,
 		[userId],
@@ -93,7 +100,7 @@ export const unbanUser = async (userId: number): Promise<void> => {
 export const listQuizzes = async (search: string): Promise<AdminQuiz[]> => {
 	const { rows } = await pool.query<AdminQuiz>(
 		`SELECT q.id, q.title, q.code, q.owner_id AS "ownerId", u.username AS owner, q.created_at AS "createdAt",
-			q.deleted_at IS NOT NULL AS deleted,
+			q.deleted_at IS NOT NULL AS deleted, q.is_public AS "isPublic", q.moderation, q.moderation_reason AS "moderationReason",
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = q.id) AS questions,
 			(SELECT count(*)::int FROM runs r WHERE r.quiz_id = q.id) AS runs,
 			EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL) AS "isOpen"
@@ -118,4 +125,60 @@ export const listLiveGames = (): AdminLiveGame[] => {
 		players: game.players.size,
 		connected: [...game.players.values()].filter((player) => player.ws).length,
 	}));
+};
+
+// Every warning or ban is also noted on the owner, so repeat offenders show up in their account.
+// A ban takes the quiz out of the library and ends its live game; copies already made are left alone.
+export const moderateQuiz = async (adminId: number, quizId: number, kind: Moderation, reason: string | null): Promise<void> => {
+	const { rows } = await pool.query<{ ownerId: number }>(
+		`UPDATE quizzes SET moderation = $2, moderation_reason = $3, is_public = is_public AND $2 <> 'banned'
+		WHERE id = $1 RETURNING owner_id AS "ownerId"`,
+		[quizId, kind, reason],
+	);
+	assert(rows[0], 'Quiz not found', 404);
+	await pool.query('INSERT INTO user_notes (user_id, quiz_id, admin_id, kind, reason) VALUES ($1, $2, $3, $4, $5)', [
+		rows[0].ownerId,
+		quizId,
+		adminId,
+		kind,
+		reason,
+	]);
+	// Acting on the quiz answers every open report about it.
+	await pool.query('UPDATE quiz_reports SET resolved_at = now(), resolved_by = $2 WHERE quiz_id = $1 AND resolved_at IS NULL', [quizId, adminId]);
+	if (kind === 'banned') {
+		await closeRun(quizId);
+		abortGame(quizId);
+	}
+};
+
+// Lifts the quiz flag only; the note stays in the owner's history.
+export const clearModeration = async (quizId: number): Promise<void> => {
+	const { rowCount } = await pool.query('UPDATE quizzes SET moderation = NULL, moderation_reason = NULL WHERE id = $1', [quizId]);
+	assert(rowCount, 'Quiz not found', 404);
+};
+
+// Open reports oldest first (a queue); resolved ones newest first (history).
+export const listReports = async (resolved: boolean): Promise<AdminReport[]> => {
+	const { rows } = await pool.query<AdminReport>(
+		`SELECT r.id, r.quiz_id AS "quizId", q.title AS "quizTitle", q.owner_id AS "ownerId", o.username AS owner,
+			r.reporter_id AS "reporterId", u.username AS reporter, r.reason, r.created_at AS "createdAt",
+			r.resolved_at AS "resolvedAt", a.username AS "resolvedBy",
+			q.moderation, q.is_public AS "isPublic", q.deleted_at IS NOT NULL AS deleted
+		FROM quiz_reports r
+		JOIN quizzes q ON q.id = r.quiz_id
+		JOIN users o ON o.id = q.owner_id
+		JOIN users u ON u.id = r.reporter_id
+		LEFT JOIN users a ON a.id = r.resolved_by
+		WHERE (r.resolved_at IS NOT NULL) = $1
+		ORDER BY CASE WHEN $1 THEN r.resolved_at END DESC, r.created_at
+		LIMIT ${LIST_LIMIT}`,
+		[resolved],
+	);
+
+	return rows;
+};
+
+export const dismissReport = async (adminId: number, reportId: number): Promise<void> => {
+	const { rowCount } = await pool.query('UPDATE quiz_reports SET resolved_at = now(), resolved_by = $2 WHERE id = $1 AND resolved_at IS NULL', [reportId, adminId]);
+	assert(rowCount, 'Report not found', 404);
 };

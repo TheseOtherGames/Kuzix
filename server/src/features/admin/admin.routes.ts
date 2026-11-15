@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { requireAuth } from '../auth/auth.middleware';
 import { assert } from '../../core/httpError';
 import { abortGame } from '../game/game.registry';
-import { closeRun } from '../quiz/quiz.service';
+import { closeRun, getQuiz, toPreview } from '../quiz/quiz.service';
 import { requireAdmin } from './admin.middleware';
-import { banUser, getOverview, getUserDetail, listLiveGames, listQuizzes, listUsers, setAdmin, unbanUser } from './admin.service';
+import { banUser, clearModeration, dismissReport, getOverview, getUserDetail, listLiveGames, listQuizzes, listReports, listUsers, moderateQuiz, setAdmin, unbanUser } from './admin.service';
 
 export const adminRouter = Router();
 
@@ -31,10 +31,15 @@ adminRouter.get('/users/:id', async (req, res) => {
 	res.json(await getUserDetail(idOf(req.params.id)));
 });
 
+const reasonOf = (body: { reason?: unknown } | undefined): string | null => {
+	const reason = body?.reason;
+	assert(reason === undefined || reason === null || (typeof reason === 'string' && reason.length <= 300), 'Reason must be at most 300 characters');
+
+	return (reason as string | null | undefined)?.trim() || null;
+};
+
 adminRouter.post('/users/:id/ban', async (req, res) => {
-	const reason = req.body?.reason;
-	assert(reason === undefined || reason === null || (typeof reason === 'string' && reason.length <= 300), 'Ban reason must be at most 300 characters');
-	await banUser(req.userId!, idOf(req.params.id), reason?.trim() || null);
+	await banUser(req.userId!, idOf(req.params.id), reasonOf(req.body));
 	res.status(204).end();
 });
 
@@ -62,5 +67,33 @@ adminRouter.post('/quizzes/:id/close', async (req, res) => {
 	const quizId = idOf(req.params.id);
 	await closeRun(quizId);
 	abortGame(quizId);
+	res.status(204).end();
+});
+
+// Any quiz, deleted ones included, with its correct answers: what a moderator needs to judge it.
+adminRouter.get('/quizzes/:id', async (req, res) => {
+	const quiz = await getQuiz(idOf(req.params.id), true);
+	assert(quiz, 'Quiz not found', 404);
+	res.json(await toPreview(quiz, true));
+});
+
+adminRouter.post('/quizzes/:id/moderation', async (req, res) => {
+	const kind = req.body?.kind;
+	assert(kind === 'warned' || kind === 'banned', 'Invalid moderation');
+	await moderateQuiz(req.userId!, idOf(req.params.id), kind, reasonOf(req.body));
+	res.status(204).end();
+});
+
+adminRouter.delete('/quizzes/:id/moderation', async (req, res) => {
+	await clearModeration(idOf(req.params.id));
+	res.status(204).end();
+});
+
+adminRouter.get('/reports', async (req, res) => {
+	res.json(await listReports(req.query.status === 'resolved'));
+});
+
+adminRouter.post('/reports/:id/dismiss', async (req, res) => {
+	await dismissReport(req.userId!, idOf(req.params.id));
 	res.status(204).end();
 });

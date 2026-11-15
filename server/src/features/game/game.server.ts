@@ -4,7 +4,7 @@ import type { ClientMessage } from './game.types';
 import type { Quiz } from '../quiz/quiz.types';
 import { verifyToken } from '../auth/auth.service';
 import { assert, HttpError } from '../../core/httpError';
-import { findQuizIdByCode, getOpenRunId, getQuiz, MAX_COUNTDOWN } from '../quiz/quiz.service';
+import { findQuizIdByCode, findQuizIdByUid, getOpenRunId, getQuiz, MAX_COUNTDOWN } from '../quiz/quiz.service';
 import { cleanAvatar, cleanUsername } from '../user/user.service';
 import { Game, send, type GamePlayer } from './game';
 import { findPlayerByToken, games } from './game.registry';
@@ -42,7 +42,8 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 	switch (message.type) {
 		case 'host': {
 			const userId = verifyToken(String(message.token));
-			const quiz = Number.isInteger(message.quizId) ? await getQuiz(message.quizId) : null;
+			const quizId = await findQuizIdByUid(message.quizUid);
+			const quiz = quizId ? await getQuiz(quizId) : null;
 			assert(quiz && userId === quiz.ownerId, 'Quiz not found', 404);
 			const game = await loadGame(quiz);
 			assert(game, 'Open the quiz before hosting it', 409);

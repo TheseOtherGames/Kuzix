@@ -19,20 +19,58 @@ export interface QuizDraft {
 	questions: QuestionDraft[];
 }
 
+export type Moderation = 'warned' | 'banned';
+
 export interface Quiz extends QuizDraft {
-	id: number;
+	uid: string;
 	code: string | null;
 	hasAnswers: boolean;
 }
 
 export interface QuizSummary {
-	id: number;
+	uid: string;
 	code: string | null;
 	title: string;
 	isOpen: boolean;
 	questionsCount: number;
 	runsCount: number;
 	createdAt: string;
+	isPublic: boolean;
+	moderation: Moderation | null;
+	moderationReason: string | null;
+	// Set on a copy of a library quiz.
+	source: QuizSource | null;
+}
+
+export interface QuizSource {
+	uid: string;
+	title: string;
+	owner: string;
+	// False once the source is unpublished, deleted or banned: nothing to pull any more.
+	available: boolean;
+	updateAvailable: boolean;
+}
+
+// Library preview hides the correct answers; the admin preview adds `correct` (answer indexes).
+export interface QuizPreview {
+	uid: string;
+	title: string;
+	owner: string;
+	questions: { text: string; timeLimit: number; difficulty: number; answers: string[]; correct?: number[] }[];
+}
+
+export interface PublicQuiz {
+	uid: string;
+	title: string;
+	owner: string;
+	ownerAvatar: string;
+	questionsCount: number;
+	copies: number;
+	updatedAt: string;
+	moderation: Moderation | null;
+	isOwn: boolean;
+	// The viewer has an open (not yet reviewed) report on it.
+	reported: boolean;
 }
 
 export interface RunPlayer {

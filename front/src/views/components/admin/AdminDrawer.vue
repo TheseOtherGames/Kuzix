@@ -16,6 +16,9 @@ const SECTIONS: { to: string; label: MessageKey; icon: string; tint: string }[] 
 	{
 		to: '/admin/games', label: 'admin.games', icon: 'signal', tint: 'var(--color-1)',
 	},
+	{
+		to: '/admin/reports', label: 'admin.reports.title', icon: 'flag', tint: 'var(--color-5)',
+	},
 ];
 </script>
 

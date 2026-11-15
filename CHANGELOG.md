@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 - 2026-11-15
+- [feat] Public quiz library: browse, preview and copy quizzes shared by the community
+- [feat] Publish your quizzes to the library, with a confirmation to publish or unpublish
+- [feat] Copies show when they are out of date: see what the new version contains, then get the update
+- [feat] Report a library quiz to the moderators; your report stays visible until it is reviewed
+- [feat] Admin Reports section: review, dismiss, warn or ban reported quizzes
+- [feat] Admins can warn or ban a quiz, with the history kept on the owner's account
+- [feat] Admins can preview any quiz by clicking its title
+- [feat] Data export includes the reports you sent
+- [style] Colourful library cards with shape stickers and the author's avatar and name tag
+- [refactor] Quizzes are referenced by a short random id
+
 ## 0.5.2 - 2026-11-14
 - [feat] Download all your data from profile settings
 - [feat] Legal notice explains how to download or delete your data

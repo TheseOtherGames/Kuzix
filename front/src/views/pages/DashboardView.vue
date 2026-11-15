@@ -8,6 +8,7 @@ import BaseCard from '@/views/components/utils/card/BaseCard.vue';
 import ConfirmModal from '@/views/components/utils/modal/ConfirmModal.vue';
 import QuizCard from '@/views/components/dashboard/QuizCard.vue';
 import ShareModal from '@/views/components/dashboard/ShareModal.vue';
+import QuizPreviewList from '@/views/components/library/QuizPreviewList.vue';
 import ImportModal from '@/views/components/dashboard/ImportModal.vue';
 import type { Quiz, QuizDraft, QuizSummary } from '@/interfaces/Quiz/QuizInterface';
 import { api } from '@/utils/API';
@@ -24,6 +25,8 @@ const sharing = ref<QuizSummary | null>(null);
 const closing = ref<QuizSummary | null>(null);
 const deleting = ref<QuizSummary | null>(null);
 const recoding = ref<QuizSummary | null>(null);
+const publishing = ref<QuizSummary | null>(null);
+const pulling = ref<QuizSummary | null>(null);
 const importing = ref(false);
 const atQuizLimit = computed(() => quizzes.value.length >= (auth.user?.limits.maxQuizzes ?? 0));
 
@@ -51,36 +54,48 @@ const run = async (action: () => Promise<void>, success?: string): Promise<void>
 };
 
 const openQuiz = (quiz: QuizSummary): Promise<void> => run(async () => {
-	await api(`/quizzes/${quiz.id}/open`, 'POST');
-	router.push(`/host/${quiz.id}`);
+	await api(`/quizzes/${quiz.uid}/open`, 'POST');
+	router.push(`/host/${quiz.uid}`);
 }, t('dash.opened'));
 
 const closeQuiz = (): Promise<void> => run(async () => {
-	await api(`/quizzes/${closing.value!.id}/close`, 'POST');
+	await api(`/quizzes/${closing.value!.uid}/close`, 'POST');
 	closing.value = null;
 	await load();
 }, t('dash.closed'));
 
 const duplicateQuiz = (quiz: QuizSummary): Promise<void> => run(async () => {
-	await api(`/quizzes/${quiz.id}/duplicate`, 'POST');
+	await api(`/quizzes/${quiz.uid}/duplicate`, 'POST');
 	await load();
 }, t('dash.duplicated'));
 
 const regenerateCode = (): Promise<void> => run(async () => {
-	const { code } = await api<{ code: string }>(`/quizzes/${recoding.value!.id}/code`, 'POST');
+	const { code } = await api<{ code: string }>(`/quizzes/${recoding.value!.uid}/code`, 'POST');
 	recoding.value = null;
 	await load();
 	toast.success(t('dash.newCodeDone', { code }));
 });
 
+const setPublic = (quiz: QuizSummary, isPublic: boolean): Promise<void> => run(async () => {
+	await api(`/quizzes/${quiz.uid}/public`, 'PUT', { isPublic });
+	publishing.value = null;
+	await load();
+}, t(isPublic ? 'dash.published' : 'dash.unpublished'));
+
+const pullQuiz = (): Promise<void> => run(async () => {
+	await api(`/quizzes/${pulling.value!.uid}/pull`, 'POST');
+	pulling.value = null;
+	await load();
+}, t('dash.pulled'));
+
 const deleteQuiz = (): Promise<void> => run(async () => {
-	await api(`/quizzes/${deleting.value!.id}`, 'DELETE');
+	await api(`/quizzes/${deleting.value!.uid}`, 'DELETE');
 	deleting.value = null;
 	await load();
 }, t('dash.deleted'));
 
 const exportQuiz = (summary: QuizSummary): Promise<void> => run(async () => {
-	const quiz = await api<Quiz>(`/quizzes/${summary.id}`);
+	const quiz = await api<Quiz>(`/quizzes/${summary.uid}`);
 	const draft: QuizDraft = {
 		title: quiz.title,
 		revealMode: quiz.revealMode,
@@ -108,9 +123,9 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 	} catch {
 		throw new Error(t('dash.badFile'));
 	}
-	const { id } = await api<{ id: number }>('/quizzes', 'POST', draft);
+	const { uid } = await api<{ uid: string }>('/quizzes', 'POST', draft);
 	toast.success(t('dash.imported'));
-	router.push(`/quizzes/${id}/edit`);
+	router.push(`/quizzes/${uid}/edit`);
 });
 </script>
 
@@ -133,7 +148,7 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 		<div class="grid">
 			<QuizCard
 				v-for="(quiz, quizIndex) in quizzes"
-				:key="quiz.id"
+				:key="quiz.uid"
 				:quiz="quiz"
 				:accent="ANSWER_COLORS[quizIndex % ANSWER_COLORS.length]"
 				:can-duplicate="!atQuizLimit"
@@ -144,6 +159,8 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 				@export="exportQuiz(quiz)"
 				@recode="recoding = quiz"
 				@delete="deleting = quiz"
+				@publish="publishing = quiz"
+				@pull="pulling = quiz"
 			/>
 		</div>
 
@@ -157,6 +174,31 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 		<ConfirmModal :open="Boolean(recoding)" :title="t('dash.newCodeTitle')" :confirm-label="t('dash.newCodeConfirm')" icon="refresh" @close="recoding = null" @confirm="regenerateCode">
 			<p>{{ t('dash.newCodeText', { code: recoding?.code ?? '' }) }}</p>
 			<p class="muted">{{ t('dash.newCodeAuto') }}</p>
+		</ConfirmModal>
+
+		<ConfirmModal
+			:open="Boolean(publishing)"
+			:title="t(publishing?.isPublic ? 'dash.unpublishTitle' : 'dash.publishTitle')"
+			:confirm-label="t(publishing?.isPublic ? 'dash.unpublish' : 'dash.publish')"
+			icon="globe"
+			@close="publishing = null"
+			@confirm="setPublic(publishing!, !publishing!.isPublic)"
+		>
+			<template v-if="publishing?.isPublic">
+				<p>{{ t('dash.unpublishText', { title: publishing.title }) }}</p>
+				<p class="muted">{{ t('dash.unpublishHint') }}</p>
+			</template>
+			<template v-else>
+				<p>{{ t('dash.publishText', { title: publishing?.title ?? '' }) }}</p>
+				<p class="muted">{{ t('dash.publishHint') }}</p>
+			</template>
+		</ConfirmModal>
+
+		<ConfirmModal :open="Boolean(pulling)" :title="t('dash.pullTitle')" :confirm-label="t('dash.pull')" icon="refresh" wide @close="pulling = null" @confirm="pullQuiz">
+			<p>{{ t('dash.pullText', { title: pulling?.source?.title ?? '' }) }}</p>
+			<p v-if="pulling?.runsCount" class="muted">{{ t('dash.pullStats') }}</p>
+			<h3 class="preview-title">{{ t('dash.pullPreview') }}</h3>
+			<QuizPreviewList v-if="pulling?.source" :url="`/quizzes/public/${pulling.source.uid}`" />
 		</ConfirmModal>
 
 		<ConfirmModal :open="Boolean(deleting)" :title="t('dash.deleteTitle')" :confirm-label="t('dash.deleteConfirm')" @close="deleting = null" @confirm="deleteQuiz">
@@ -193,6 +235,11 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 	background: color-mix(in srgb, var(--accent) 30%, var(--surface));
 	color: var(--text);
 	text-align: center;
+}
+
+.preview-title {
+	margin: 1rem 0 0.5rem;
+	font-size: 1rem;
 }
 
 .grid {

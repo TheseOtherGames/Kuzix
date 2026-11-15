@@ -28,6 +28,7 @@ export const router = createRouter({
 		{
 			path: '/legal', component: () => import('@/views/pages/LegalView.vue'), props: { page: 'legal' }, meta: { seo: { title: 'seo.legalTitle', description: 'seo.legalDescription' } },
 		},
+		{ path: '/library', component: () => import('@/views/pages/LibraryView.vue'), meta: { seo: { title: 'seo.libraryTitle', description: 'seo.libraryDescription' } } },
 		{ path: '/auth/callback', component: () => import('@/views/pages/AuthCallbackView.vue') },
 		{ path: '/dashboard', component: () => import('@/views/pages/DashboardView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/new', component: () => import('@/views/pages/QuizEditorView.vue'), meta: { requiresAuth: true } },
@@ -45,6 +46,7 @@ export const router = createRouter({
 				{ path: 'users', component: () => import('@/views/components/admin/AdminUsers.vue') },
 				{ path: 'quizzes', component: () => import('@/views/components/admin/AdminQuizzes.vue') },
 				{ path: 'games', component: () => import('@/views/components/admin/AdminGames.vue') },
+				{ path: 'reports', component: () => import('@/views/components/admin/AdminReports.vue') },
 			],
 		},
 		{ path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/pages/NotFoundView.vue') },
