@@ -1,19 +1,10 @@
 # Journal des modifications
 
 ## 0.6.1 - 2026-11-17
-- [feat] Nouvel avatar loup
-- [feat] Nouvel avatar sushi
-- [feat] Nouveaux avatars chauve-souris et tortue
-- [feat] Nouveaux avatars aigle, corbeau et phénix
-- [feat] Nouveaux avatars phoque, poisson-clown, hippocampe et étoile de mer
-- [feat] Nouveaux avatars tacos, ananas, nouilles et kebab
+- [feat] Nouveaux avatars : loup, sushi, chauve-souris, tortue, aigle, corbeau, phénix, phoque, poisson-clown, hippocampe, étoile de mer, tacos, ananas, nouilles, kebab, petit pois, chêne et tatou
 - [feat] Nouvelle catégorie d’avatars Plantes avec le cactus et 10 nouvelles plantes
-- [feat] Nouveaux avatars petit pois, chêne et tatou
 - [feat] 45 nouveaux chapeaux, accessoires de visage et objets
-- [style] Le choix d’avatar affiche une famille de personnages à la fois
-- [style] Chapeaux, accessoires de visage et objets sont aussi rangés par sections
-- [style] Noms de familles de personnages plus courts et plus parlants
-- [style] Suppression de l’accessoire barbe
+- [style] Le choix d’avatar est rangé par sections (une famille de personnages à la fois, chapeaux, accessoires de visage et objets aussi) avec des noms de familles plus courts et plus parlants
 - [style] Avatar pieuvre redessiné
 
 ## 0.6.0 - 2026-11-15

@@ -1,19 +1,10 @@
 # Changelog
 
 ## 0.6.1 - 2026-11-17
-- [feat] New wolf avatar
-- [feat] New sushi avatar
-- [feat] New bat and turtle avatars
-- [feat] New eagle, crow and phoenix avatars
-- [feat] New seal, clownfish, seahorse and starfish avatars
-- [feat] New French tacos, pineapple, noodles and kebab avatars
+- [feat] New avatars: wolf, sushi, bat, turtle, eagle, crow, phoenix, seal, clownfish, seahorse, starfish, French tacos, pineapple, noodles, kebab, pea pod, oak tree and armadillo
 - [feat] New Plants avatar category with cactus and 10 new plants
-- [feat] New pea pod, oak tree and armadillo avatars
 - [feat] 45 new hats, face accessories and items
-- [style] Avatar picker shows one character family at a time
-- [style] Hats, face accessories and items are sorted into sections too
-- [style] Shorter, catchier character family names
-- [style] Removed the beard face accessory
+- [style] Avatar picker sorted into sections (one character family at a time, hats, face accessories and items too) with shorter, catchier family names
 - [style] Redrawn octopus avatar
 
 ## 0.6.0 - 2026-11-15
