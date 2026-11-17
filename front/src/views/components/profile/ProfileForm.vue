@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import NameTag from '@/views/components/utils/badge/NameTag.vue';
@@ -20,6 +20,8 @@ import {AVATAR_BASES,
 	parseAvatar,
 	randomAvatar,
 	type AvatarCategory,
+	type AvatarPart,
+	type AvatarSlot,
 	type AvatarValue} from '@/utils/Avatars';
 
 type Step = 'base' | 'hat' | 'face' | 'item' | 'tag';
@@ -41,6 +43,134 @@ const CATEGORY_COLORS: Record<AvatarCategory, string> = {
 	animals: 'var(--color-4)', food: 'var(--color-1)', sea: 'var(--color-2)', plants: 'var(--color-3)', creatures: 'var(--color-5)',
 };
 
+interface Section {
+	id: string;
+	icon: string;
+	color: string;
+	ids: string[];
+}
+
+// Accessory sections, listed by hand (parts have no sub-folder). A new part not listed here lands in the last section.
+const PART_SECTIONS: Record<AvatarSlot, Section[]> = {
+	hat: [
+		{
+			id: 'casual',
+			icon: 'smile',
+			color: 'var(--color-2)',
+			ids: [
+				'beanie',
+				'cap',
+				'bow',
+				'flower',
+				'phones',
+				'prop',
+			],
+		},
+		{
+			id: 'costume',
+			icon: 'wand',
+			color: 'var(--color-5)',
+			ids: [
+				'chef',
+				'cowboy',
+				'pirate',
+				'viking',
+				'wizard',
+				'grad',
+			],
+		},
+		{
+			id: 'fancy',
+			icon: 'crown',
+			color: 'var(--color-1)',
+			ids: [
+				'crown',
+				'tophat',
+				'party',
+				'santa',
+				'halo',
+				'horns',
+			],
+		},
+	],
+	face: [
+		{
+			id: 'glasses',
+			icon: 'shades',
+			color: 'var(--color-2)',
+			ids: [
+				'shades',
+				'specs',
+				'retro',
+				'goggles',
+				'monocle',
+				'visor',
+			],
+		},
+		{
+			id: 'fun',
+			icon: 'sparkles',
+			color: 'var(--color-1)',
+			ids: [
+				'hearts',
+				'stars',
+				'bubble',
+				'nose',
+				'stache',
+			],
+		},
+		{
+			id: 'disguise', icon: 'monster', color: 'var(--color-4)', ids: ['mask', 'patch', 'plaster'],
+		},
+	],
+	item: [
+		{
+			id: 'arts',
+			icon: 'palette',
+			color: 'var(--color-3)',
+			ids: [
+				'brush',
+				'pencil',
+				'book',
+				'guitar',
+				'mic',
+				'lens',
+			],
+		},
+		{
+			id: 'adventure',
+			icon: 'flag',
+			color: 'var(--color-5)',
+			ids: [
+				'sword',
+				'shield',
+				'wand',
+				'flag',
+			],
+		},
+		{
+			id: 'treats', icon: 'party', color: 'var(--color-1)', ids: ['balloon', 'lolly', 'trophy'],
+		},
+	],
+};
+const PARTS: Record<AvatarSlot, AvatarPart[]> = { hat: AVATAR_HATS, face: AVATAR_FACES, item: AVATAR_ITEMS };
+
+const SECTIONS: Record<Exclude<Step, 'tag'>, Section[]> = {
+	base: AVATAR_CATEGORIES.map((category) => ({
+		id: category,
+		icon: CATEGORY_ICONS[category],
+		color: CATEGORY_COLORS[category],
+		ids: AVATAR_BASES.filter((base) => base.category === category).map((base) => base.id),
+	})),
+	...Object.fromEntries((Object.keys(PART_SECTIONS) as AvatarSlot[]).map((slot) => {
+		const sections = PART_SECTIONS[slot].map((section) => ({ ...section, ids: section.ids.filter((id) => PARTS[slot].some((part) => part.id === id)) }));
+		const listed = sections.flatMap((section) => section.ids);
+		sections.at(-1)!.ids.push(...PARTS[slot].map((part) => part.id).filter((id) => !listed.includes(id)));
+
+		return [slot, sections];
+	})) as Record<AvatarSlot, Section[]>,
+};
+
 // Unique per instance: the form can be on the page twice (join form + edit popup).
 const uid = Math.random().toString(36).slice(2, 8);
 
@@ -50,6 +180,14 @@ const current = computed<AvatarValue>(() => parseAvatar(model.value.avatar) ?? {
 // Old emoji avatars have no base: options are previewed (and saved) on the first character.
 const now = computed<AvatarValue>(() => ({ ...current.value, base: current.value.base || AVATAR_BASES[0].id }));
 const step = ref<Step>('base');
+// One section at a time (66+ characters is too long a scroll); opens on, and follows, the section of the current pick.
+const sections = computed(() => (step.value === 'tag' ? [] : SECTIONS[step.value]));
+const mine = computed(() => (step.value === 'tag' ? undefined : sections.value.find((section) => section.ids.includes(current.value[step.value as Exclude<Step, 'tag'>]))?.id));
+const opened = ref<Partial<Record<Step, string>>>({});
+watch(current, () => {
+	opened.value = {};
+});
+const section = computed(() => opened.value[step.value] ?? mine.value ?? sections.value[0]?.id);
 const displayName = computed(() => model.value.nickname.trim() || t('pf.nicknamePh'));
 
 const partName = (id: string): string => t(id ? `av.${id}` as MessageKey : 'av.none');
@@ -64,34 +202,21 @@ const stepValue = (value: Step): string =>
 const stepEmpty = (value: Step): boolean => (value === 'hat' || value === 'face' || value === 'item') && !current.value[value];
 
 // Every option is previewed on the current avatar, so a hat is shown on your own character.
-// The character step lists every family at once; hat and face are one group with "None" first.
-const groups = computed(() => {
+// Accessory sections start with "None".
+const options = computed(() => {
 	if (step.value === 'tag') {
 		return [];
 	}
-	if (step.value === 'base') {
-		return AVATAR_CATEGORIES.map((category) => ({
-			category,
-			options: AVATAR_BASES.filter((base) => base.category === category).map((base) => ({
-				id: base.id,
-				value: formatAvatar({ ...now.value, base: base.id }),
-				selected: current.value.base === base.id,
-			})),
-		}));
-	}
 	const slot = step.value;
+	const ids = sections.value.find((entry) => entry.id === section.value)?.ids ?? [];
 
-	return [
-		{
-			category: null,
-			options: ['', ...{ hat: AVATAR_HATS, face: AVATAR_FACES, item: AVATAR_ITEMS }[slot].map((part) => part.id)].map((id) => ({
-				id,
-				value: formatAvatar({ ...now.value, [slot]: id }),
-				selected: current.value.base !== '' && current.value[slot] === id,
-			})),
-		},
-	];
+	return (slot === 'base' ? ids : ['', ...ids]).map((id) => ({
+		id,
+		value: formatAvatar({ ...now.value, [slot]: id }),
+		selected: current.value.base !== '' && current.value[slot] === id,
+	}));
 });
+const sectionName = (id: string): string => t((step.value === 'base' ? `av.${id}` : `pf.sec.${id}`) as MessageKey);
 
 const nextStep = computed(() => STEPS[STEPS.findIndex((entry) => entry.value === step.value) + 1]);
 
@@ -220,15 +345,28 @@ const onStepKey = (event: KeyboardEvent): void => {
 					</section>
 				</template>
 
-				<section v-for="group in groups" :key="group.category ?? step" class="group">
-					<h3 v-if="group.category" class="group-title" :style="{ '--tint': CATEGORY_COLORS[group.category] }">
-						<span class="group-icon" aria-hidden="true"><AppIcon :name="CATEGORY_ICONS[group.category]" /></span>
-						{{ t(`av.${group.category}` as MessageKey) }}
-						<span class="count">{{ t('pf.familyCount', { n: group.options.length }) }}</span>
-					</h3>
-					<div class="grid" role="radiogroup" :aria-label="t(group.category ? `av.${group.category}` as MessageKey : `pf.step.${step}` as MessageKey)">
+				<div v-if="sections.length" class="families">
+					<button
+						v-for="entry in sections"
+						:key="entry.id"
+						type="button"
+						class="family"
+						:class="{ mine: mine === entry.id }"
+						:style="{ '--tint': entry.color }"
+						:aria-pressed="section === entry.id"
+						:title="t('pf.familyCount', { n: entry.ids.length })"
+						@click="opened[step] = entry.id"
+					>
+						<span class="group-icon" aria-hidden="true"><AppIcon :name="entry.icon" /></span>
+						{{ sectionName(entry.id) }}
+						<span class="count">{{ entry.ids.length }}</span>
+					</button>
+				</div>
+
+				<section v-if="section" :key="`${step}-${section}`" class="group">
+					<div class="grid" role="radiogroup" :aria-label="sectionName(section)">
 						<button
-							v-for="option in group.options"
+							v-for="option in options"
 							:key="option.id"
 							type="button"
 							role="radio"
@@ -594,6 +732,60 @@ const onStepKey = (event: KeyboardEvent): void => {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+}
+
+/* Family chips: wrap on phones, one row on wider screens. */
+.families {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.family {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+	border: 2px solid transparent;
+	border-radius: 999px;
+	background: var(--surface);
+	color: var(--text);
+	font: inherit;
+	font-size: 0.9rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: transform 0.15s, border-color 0.15s;
+}
+
+.family:hover {
+	transform: translateY(-2px);
+	border-color: color-mix(in srgb, var(--tint) 50%, transparent);
+}
+
+.family[aria-pressed='true'] {
+	border-color: var(--accent-line);
+	background: color-mix(in srgb, var(--tint) 22%, var(--surface));
+	box-shadow: 0 0.2rem 0 color-mix(in srgb, var(--accent) 55%, black);
+}
+
+/* Dot on the family holding the current character, so it stays findable from another family. */
+.family.mine::after {
+	content: '';
+	position: absolute;
+	top: -0.1rem;
+	right: -0.1rem;
+	width: 0.6rem;
+	height: 0.6rem;
+	border: 2px solid var(--surface-2);
+	border-radius: 50%;
+	background: var(--accent);
+}
+
+.family .group-icon {
+	width: 1.7rem;
+	height: 1.7rem;
+	font-size: 0.95rem;
 }
 
 .group-title {

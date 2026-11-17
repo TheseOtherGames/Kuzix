@@ -8,6 +8,11 @@
 - [feat] New seal, clownfish, seahorse and starfish avatars
 - [feat] New French tacos, pineapple, noodles and kebab avatars
 - [feat] New Plants avatar category with cactus and 10 new plants
+- [feat] New pea pod, oak tree and armadillo avatars
+- [style] Avatar picker shows one character family at a time
+- [style] Hats, face accessories and items are sorted into sections too
+- [style] Shorter, catchier character family names
+- [style] Removed the beard face accessory
 - [style] Redrawn octopus avatar
 
 ## 0.6.0 - 2026-11-15

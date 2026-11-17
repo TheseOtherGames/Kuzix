@@ -12,7 +12,7 @@ export type AvatarSlot = 'hat' | 'face' | 'item';
 export interface AvatarPart {
 	id: string;
 	svg: string;
-	/** Faces only (`data-anchor`): 'mouth' parts (beard, mustache…) follow the mouth instead of the eyes. */
+	/** Faces only (`data-anchor`): 'mouth' parts (mustache…) follow the mouth instead of the eyes. */
 	anchor: 'eyes' | 'mouth';
 }
 
