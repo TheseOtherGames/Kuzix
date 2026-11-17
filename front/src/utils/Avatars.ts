@@ -6,7 +6,7 @@
 // split it out if it ever needs to be queried on its own.
 // Unknown strings (old emoji avatars) are shown as text.
 
-export type AvatarCategory = 'animals' | 'food' | 'creatures' | 'sea';
+export type AvatarCategory = 'animals' | 'food' | 'creatures' | 'sea' | 'plants';
 export type AvatarSlot = 'hat' | 'face' | 'item';
 
 export interface AvatarPart {
@@ -115,6 +115,7 @@ export const AVATAR_CATEGORIES: AvatarCategory[] = [
 	'animals',
 	'food',
 	'sea',
+	'plants',
 	'creatures',
 ];
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.1 - 2026-11-17
+- [feat] New wolf avatar
+- [feat] New sushi avatar
+- [feat] New bat and turtle avatars
+- [feat] New eagle, crow and phoenix avatars
+- [feat] New seal, clownfish, seahorse and starfish avatars
+- [feat] New French tacos, pineapple, noodles and kebab avatars
+- [feat] New Plants avatar category with cactus and 10 new plants
+- [style] Redrawn octopus avatar
+
 ## 0.6.0 - 2026-11-15
 - [feat] Public quiz library: browse, preview and copy quizzes shared by the community
 - [feat] Publish your quizzes to the library, with a confirmation to publish or unpublish

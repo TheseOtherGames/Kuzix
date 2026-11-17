@@ -35,10 +35,10 @@ const STEPS: { value: Step; icon: string; color: string }[] = [
 	{ value: 'tag', icon: 'tag', color: 'var(--color-3)' },
 ];
 const CATEGORY_ICONS: Record<AvatarCategory, string> = {
-	animals: 'paw', food: 'donut', sea: 'puffer', creatures: 'monster',
+	animals: 'paw', food: 'donut', sea: 'puffer', plants: 'cactus', creatures: 'monster',
 };
 const CATEGORY_COLORS: Record<AvatarCategory, string> = {
-	animals: 'var(--color-4)', food: 'var(--color-1)', sea: 'var(--color-2)', creatures: 'var(--color-5)',
+	animals: 'var(--color-4)', food: 'var(--color-1)', sea: 'var(--color-2)', plants: 'var(--color-3)', creatures: 'var(--color-5)',
 };
 
 // Unique per instance: the form can be on the page twice (join form + edit popup).

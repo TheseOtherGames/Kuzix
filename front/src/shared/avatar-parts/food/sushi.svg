@@ -1,0 +1,31 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" data-eye-y="66" data-top="30">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M20 48h60q8 0 8 8v24q0 10-10 10h-56q-10 0-10-10v-24q0-8 8-8z"/>
+		<path d="M10 46q-2-18 20-20h40q22 2 20 20q-1 8-9 8h-62q-8 0-9-8z"/>
+	</g>
+	<g fill="#fff8ee">
+		<path d="M20 48h60q8 0 8 8v24q0 10-10 10h-56q-10 0-10-10v-24q0-8 8-8z"/>
+	</g>
+	<g fill="#e6dccd">
+		<ellipse cx="22" cy="80" rx="3" ry="2"/>
+		<ellipse cx="78" cy="82" rx="3" ry="2"/>
+		<ellipse cx="80" cy="62" rx="2" ry="3"/>
+		<ellipse cx="50" cy="85" rx="3" ry="2"/>
+	</g>
+	<path d="M10 46q-2-18 20-20h40q22 2 20 20q-1 8-9 8h-62q-8 0-9-8z" fill="#ff7a2f"/>
+	<g fill="none" stroke="#ffc9a8" stroke-width="3.5" stroke-linecap="round">
+		<path d="M28 30q-6 10-2 20"/>
+		<path d="M44 28q-6 12-2 24"/>
+		<path d="M60 28q-6 12-2 24"/>
+		<path d="M76 31q-6 10-2 19"/>
+	</g>
+	<path d="M18 40q2-7 9-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+	<circle cx="39" cy="66" r="4.5" fill="#2a2238"/>
+	<circle cx="61" cy="66" r="4.5" fill="#2a2238"/>
+	<circle cx="40.6" cy="64.4" r="1.6" fill="#fff"/>
+	<circle cx="62.6" cy="64.4" r="1.6" fill="#fff"/>
+	<path d="M44 75q6 6 12 0" fill="none" stroke="#2a2238" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<ellipse cx="32" cy="74" rx="5" ry="3" fill="#ff6b9a" opacity=".55"/>
+	<ellipse cx="68" cy="74" rx="5" ry="3" fill="#ff6b9a" opacity=".55"/>
+</svg>

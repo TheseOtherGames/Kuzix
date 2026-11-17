@@ -1,5 +1,15 @@
 # Journal des modifications
 
+## 0.6.1 - 2026-11-17
+- [feat] Nouvel avatar loup
+- [feat] Nouvel avatar sushi
+- [feat] Nouveaux avatars chauve-souris et tortue
+- [feat] Nouveaux avatars aigle, corbeau et phénix
+- [feat] Nouveaux avatars phoque, poisson-clown, hippocampe et étoile de mer
+- [feat] Nouveaux avatars tacos, ananas, nouilles et kebab
+- [feat] Nouvelle catégorie d’avatars Plantes avec le cactus et 10 nouvelles plantes
+- [style] Avatar pieuvre redessiné
+
 ## 0.6.0 - 2026-11-15
 - [feat] Bibliothèque de quiz publics : parcourir, prévisualiser et copier les quiz partagés par la communauté
 - [feat] Publiez vos quiz dans la bibliothèque, avec une confirmation pour publier ou dépublier
