@@ -1,0 +1,6 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<rect x="22" y="47" width="56" height="4" fill="#2a2238"/>
+	<path d="M26 47h22v7h-4v4h-14v-4h-4zM52 47h22v7h-4v4h-14v-4h-4z" fill="#2a2238" stroke="#2a2238" stroke-width="2"/>
+	<path d="M30 50h3v3h-3zM34 53h3v3h-3zM56 50h3v3h-3zM60 53h3v3h-3z" fill="#fff"/>
+</svg>

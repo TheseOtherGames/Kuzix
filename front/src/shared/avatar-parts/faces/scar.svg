@@ -1,0 +1,6 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<path d="M32 43l14 21" fill="none" stroke="#2a2238" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M32 43l14 21" fill="none" stroke="#ff6b9a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M34 48l5-3M37 53l5-3M40 58l5-3" fill="none" stroke="#2a2238" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

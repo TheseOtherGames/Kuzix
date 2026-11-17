@@ -9,6 +9,7 @@
 - [feat] New French tacos, pineapple, noodles and kebab avatars
 - [feat] New Plants avatar category with cactus and 10 new plants
 - [feat] New pea pod, oak tree and armadillo avatars
+- [feat] 45 new hats, face accessories and items
 - [style] Avatar picker shows one character family at a time
 - [style] Hats, face accessories and items are sorted into sections too
 - [style] Shorter, catchier character family names

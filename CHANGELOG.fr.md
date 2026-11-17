@@ -9,6 +9,7 @@
 - [feat] Nouveaux avatars tacos, ananas, nouilles et kebab
 - [feat] Nouvelle catégorie d’avatars Plantes avec le cactus et 10 nouvelles plantes
 - [feat] Nouveaux avatars petit pois, chêne et tatou
+- [feat] 45 nouveaux chapeaux, accessoires de visage et objets
 - [style] Le choix d’avatar affiche une famille de personnages à la fois
 - [style] Chapeaux, accessoires de visage et objets sont aussi rangés par sections
 - [style] Noms de familles de personnages plus courts et plus parlants

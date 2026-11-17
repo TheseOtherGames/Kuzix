@@ -1,0 +1,23 @@
+<!-- Copyright (c) 2026 TheseOtherGames. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="6" stroke-linejoin="round">
+		<path d="M27 30q0-24 23-24t23 24l7 22h-11l-4-20h-30l-4 20h-11z"/>
+	</g>
+	<g fill="#ffd23f">
+		<path d="M27 30q0-24 23-24t23 24l7 22h-11l-4-20h-30l-4 20h-11z"/>
+	</g>
+	<path d="M32 16q18-8 36 0M29 23q21-6 42 0" fill="none" stroke="#3d8bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<path d="M24 38h7M22 45h8M70 38h7M71 45h8" fill="none" stroke="#3d8bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="4" stroke-linejoin="round">
+		<rect x="27" y="27" width="46" height="6" rx="2"/>
+	</g>
+	<g fill="#3d8bff">
+		<rect x="27" y="27" width="46" height="6" rx="2"/>
+	</g>
+	<g fill="#2a2238" stroke="#2a2238" stroke-width="4" stroke-linejoin="round">
+		<path d="M50 23q-4-5 0-10q4 5 0 10z"/>
+	</g>
+	<g fill="#1fc96f">
+		<path d="M50 23q-4-5 0-10q4 5 0 10z"/>
+	</g>
+</svg>
