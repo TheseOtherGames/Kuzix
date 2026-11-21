@@ -173,13 +173,27 @@ const onLogout = (): void => {
 	transform: scale(1.08);
 }
 
+/* Phones: mark only (the link keeps its aria-label) so the admin pill still fits. */
 @media (max-width: 640px) {
-	.divider {
+	.divider,
+	.logo span {
 		display: none;
 	}
 
 	.logo {
 		font-size: 1.3rem;
+	}
+
+	.logo::after {
+		right: -0.6rem;
+	}
+
+	.logo .logo-mark {
+		margin-right: 0;
+	}
+
+	.nav {
+		gap: 0.25rem;
 	}
 }
 </style>

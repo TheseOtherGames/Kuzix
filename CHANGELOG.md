@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.2 - 2026-11-21
+- [fix] Mobile header no longer overflows with the admin tab
+
 ## 0.6.1 - 2026-11-17
 - [feat] New avatars: wolf, sushi, bat, turtle, eagle, crow, phoenix, seal, clownfish, seahorse, starfish, French tacos, pineapple, noodles, kebab, pea pod, oak tree and armadillo
 - [feat] New Plants avatar category with cactus and 10 new plants

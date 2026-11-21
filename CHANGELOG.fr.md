@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.6.2 - 2026-11-21
+- [fix] L'en-tête mobile ne déborde plus avec l'onglet admin
+
 ## 0.6.1 - 2026-11-17
 - [feat] Nouveaux avatars : loup, sushi, chauve-souris, tortue, aigle, corbeau, phénix, phoque, poisson-clown, hippocampe, étoile de mer, tacos, ananas, nouilles, kebab, petit pois, chêne et tatou
 - [feat] Nouvelle catégorie d’avatars Plantes avec le cactus et 10 nouvelles plantes
