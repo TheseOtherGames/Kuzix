@@ -2,6 +2,7 @@
 
 ## 0.6.2 - 2026-11-21
 - [feat] QR code pour rejoindre la partie dans le salon hôte
+- [feat] Les codes de quiz n'utilisent plus que des chiffres
 - [fix] L'en-tête mobile ne déborde plus avec l'onglet admin
 
 ## 0.6.1 - 2026-11-17

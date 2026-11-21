@@ -8,7 +8,7 @@ const code = defineModel<string>({ required: true });
 
 const chars = ref<string[]>(Array(props.length).fill(''));
 const boxes = ref<HTMLInputElement[]>([]);
-const placeholder = Array.from({ length: props.length }, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 36)]);
+const placeholder = Array.from({ length: props.length }, () => String(Math.floor(Math.random() * 10)));
 const joined = computed(() => chars.value.join(''));
 
 const sync = (): void => {
@@ -23,7 +23,7 @@ const onInput = (index: number, event: Event): void => {
 	const input = event.target as HTMLInputElement;
 	// Typing into a filled box without selection gives two chars: keep only the new one.
 	const raw = chars.value[index] && input.value.length === 2 ? input.value.replace(chars.value[index], '') : input.value;
-	const typed = raw.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, props.length - index);
+	const typed = raw.replace(/\D/g, '').slice(0, props.length - index);
 	if (!typed) {
 		chars.value[index] = '';
 		input.value = '';
@@ -60,7 +60,8 @@ const onKeydown = (index: number, event: KeyboardEvent): void => {
 			:key="charIndex"
 			ref="boxes"
 			:value="char"
-			inputmode="text"
+			inputmode="numeric"
+			pattern="[0-9]*"
 			autocomplete="off"
 			autocapitalize="off"
 			spellcheck="false"
@@ -89,6 +90,5 @@ const onKeydown = (index: number, event: KeyboardEvent): void => {
 	font-size: 1.6rem;
 	font-weight: 700;
 	text-align: center;
-	text-transform: lowercase;
 }
 </style>

@@ -6,7 +6,7 @@ import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { MAX_TITLE_LENGTH, uniqueTitle } from './title';
 import { findUserById } from '../user/user.service';
 
-const CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const CODE_CHARS = '0123456789';
 export const MIN_ANSWERS = 2;
 export const MAX_ANSWERS = 6;
 export const MAX_COUNTDOWN = 10;
