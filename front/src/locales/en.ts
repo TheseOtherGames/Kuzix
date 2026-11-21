@@ -292,6 +292,7 @@ export const en = {
 	'host.back': 'Dashboard',
 	'host.joinAt': 'Join at',
 	'host.withCode': 'with the code',
+	'host.qrCode': 'QR code to join the game',
 	'host.answered': '/ {n} answered',
 	'host.locked': 'Answers locked! Results at the end of the quiz.',
 	'host.podium': 'Podium',

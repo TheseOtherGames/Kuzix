@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
+import QrCode from '@/views/components/utils/image/QrCode.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import PlayerChip from '@/views/components/game/PlayerChip.vue';
 import type { PlayerPublic } from '@/interfaces/Game/GameInterface';
@@ -64,22 +65,25 @@ const shareLink = async (): Promise<void> => {
 			</section>
 
 			<section class="lobby-roster">
-				<h2 class="roster-title">
-					<span class="roster-count">{{ players.length }}</span>
-					{{ tp('host.roster', players.length) }}
-				</h2>
-				<div class="players">
-					<PlayerChip
-						v-for="player in players"
-						:key="player.id"
-						:avatar="player.avatar"
-						:nickname="player.nickname"
-						:dimmed="!player.connected"
-						removable
-						@remove="emit('kick', player)"
-					/>
-					<p v-if="!players.length" class="waiting muted">{{ t('host.waitingPlayers') }}</p>
+				<div class="roster-main">
+					<h2 class="roster-title">
+						<span class="roster-count">{{ players.length }}</span>
+						{{ tp('host.roster', players.length) }}
+					</h2>
+					<div class="players">
+						<PlayerChip
+							v-for="player in players"
+							:key="player.id"
+							:avatar="player.avatar"
+							:nickname="player.nickname"
+							:dimmed="!player.connected"
+							removable
+							@remove="emit('kick', player)"
+						/>
+						<p v-if="!players.length" class="waiting muted">{{ t('host.waitingPlayers') }}</p>
+					</div>
 				</div>
+				<QrCode class="lobby-qr" :value="joinLink" :label="t('host.qrCode')" />
 			</section>
 
 			<footer class="lobby-start">
@@ -208,9 +212,24 @@ const shareLink = async (): Promise<void> => {
 .lobby-roster {
 	display: flex;
 	flex: 1;
+	align-items: flex-start;
+	gap: clamp(1rem, 4vw, 4rem);
+	min-height: 0;
+}
+
+.roster-main {
+	display: flex;
+	flex: 1;
 	flex-direction: column;
 	gap: 1rem;
+	align-self: stretch;
+	min-width: 0;
 	min-height: 0;
+}
+
+.lobby-qr {
+	flex-shrink: 0;
+	width: clamp(9rem, 16vw, 15rem);
 }
 
 .roster-title {
@@ -276,6 +295,11 @@ const shareLink = async (): Promise<void> => {
 	}
 
 	.join-text {
+		align-items: center;
+	}
+
+	.lobby-roster {
+		flex-direction: column-reverse;
 		align-items: center;
 	}
 }

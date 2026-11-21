@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.6.2 - 2026-11-21
+- [feat] QR code to join the game in the host lobby
 - [fix] Mobile header no longer overflows with the admin tab
 
 ## 0.6.1 - 2026-11-17

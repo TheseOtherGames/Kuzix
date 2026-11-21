@@ -294,6 +294,7 @@ export const fr: Record<MessageKey, string> = {
 	'host.back': 'Tableau de bord',
 	'host.joinAt': 'Rejoignez sur',
 	'host.withCode': 'avec le code',
+	'host.qrCode': 'QR code pour rejoindre la partie',
 	'host.answered': '/ {n} ont répondu',
 	'host.locked': 'Réponses verrouillées ! Résultats à la fin du quiz.',
 	'host.podium': 'Podium',
