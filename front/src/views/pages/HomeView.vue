@@ -66,23 +66,23 @@ const join = async (): Promise<void> => {
 			</div>
 		</section>
 
-		<section>
+		<section id="screenshots">
 			<h2>{{ t('home.shotsTitle') }}</h2>
 			<p class="lead muted">{{ t('home.shotsText') }}</p>
 			<HomeShowcase />
 		</section>
 
-		<section>
+		<section id="how-it-works">
 			<h2>{{ t('home.stepsTitle') }}</h2>
 			<HomeSteps />
 		</section>
 
-		<section>
+		<section id="features">
 			<h2>{{ t('home.featuresTitle') }}</h2>
 			<HomeFeatures prefix="feature" :items="FEATURES" />
 		</section>
 
-		<section>
+		<section id="uses">
 			<h2>{{ t('home.usesTitle') }}</h2>
 			<HomeFeatures prefix="use" :items="USES" />
 		</section>
@@ -93,7 +93,7 @@ const join = async (): Promise<void> => {
 			<HomePricing />
 		</section>
 
-		<section>
+		<section id="faq">
 			<h2>{{ t('home.faqTitle') }}</h2>
 			<HomeFaq />
 		</section>

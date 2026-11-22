@@ -9,6 +9,8 @@ const PUBLIC_ROUTES = [
 	'/register',
 	'/brand',
 	'/library',
+	'/terms',
+	'/legal',
 ];
 const PRIVATE_PREFIXES = [
 	'/api/',
@@ -48,6 +50,17 @@ Sitemap: ${siteUrl}/sitemap.xml
 - [Sign up](${siteUrl}/register): create an account to build and host quizzes
 - [Brand kit](${siteUrl}/brand): logos, colours and style guide
 - [Library](${siteUrl}/library): public quizzes anyone can copy and play
+- [Terms of use](${siteUrl}/terms): rules for using Kuzix
+- [Legal notice](${siteUrl}/legal): publisher and hosting information
+
+## Home sections
+
+- [Screenshots](${siteUrl}/#screenshots): the host screen, lobby, player phone and results
+- [How it works](${siteUrl}/#how-it-works): create, host, play in three steps
+- [Features](${siteUrl}/#features): what the editor and live games can do
+- [Use cases](${siteUrl}/#uses): classrooms, teams and training, parties and events
+- [Pricing](${siteUrl}/#pricing): free during the beta, paid plans on the way
+- [FAQ](${siteUrl}/#faq): common questions
 
 ## Features
 

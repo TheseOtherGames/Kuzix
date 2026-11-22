@@ -4,6 +4,9 @@
 - [feat] New home page: screenshots, how it works, features, plans, FAQ
 - [feat] Click a home page screenshot to see it full size
 - [feat] Upcoming paid plans teased on the pricing section
+- [feat] Home page sections can be linked directly
+- [feat] Terms and legal pages listed for search engines
+- [feat] Main pages described for Google sitelinks
 - [fix] Server no longer crashes on a fresh database
 - [style] Section dividers on the home page
 

@@ -4,6 +4,9 @@
 - [feat] Nouvelle page d'accueil : captures, fonctionnement, fonctions, offres, FAQ
 - [feat] Clic sur une capture de l'accueil pour l'agrandir
 - [feat] Aperçu des futures offres payantes dans les tarifs
+- [feat] Les sections de l'accueil ont leur propre lien
+- [feat] Conditions et mentions légales visibles des moteurs de recherche
+- [feat] Pages principales décrites pour les liens Google
 - [fix] Le serveur ne plante plus sur une base de données neuve
 - [style] Séparateurs entre les sections de l'accueil
 
