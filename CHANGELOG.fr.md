@@ -1,5 +1,12 @@
 # Journal des modifications
 
+## 0.6.3 - 2026-11-22
+- [feat] Nouvelle page d'accueil : captures, fonctionnement, fonctions, offres, FAQ
+- [feat] Clic sur une capture de l'accueil pour l'agrandir
+- [feat] Aperçu des futures offres payantes dans les tarifs
+- [fix] Le serveur ne plante plus sur une base de données neuve
+- [style] Séparateurs entre les sections de l'accueil
+
 ## 0.6.2 - 2026-11-21
 - [feat] QR code pour rejoindre la partie dans le salon hôte
 - [feat] Les codes de quiz n'utilisent plus que des chiffres

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.3 - 2026-11-22
+- [feat] New home page: screenshots, how it works, features, plans, FAQ
+- [feat] Click a home page screenshot to see it full size
+- [feat] Upcoming paid plans teased on the pricing section
+- [fix] Server no longer crashes on a fresh database
+- [style] Section dividers on the home page
+
 ## 0.6.2 - 2026-11-21
 - [feat] QR code to join the game in the host lobby
 - [feat] Quiz codes now use only numbers

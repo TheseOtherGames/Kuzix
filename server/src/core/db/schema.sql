@@ -44,8 +44,6 @@ ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
 -- A quiz only has a join code while it is open (see openRun / closeRun).
 ALTER TABLE quizzes ALTER COLUMN code DROP NOT NULL;
-UPDATE quizzes q SET code = NULL
-WHERE code IS NOT NULL AND NOT EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL);
 
 -- Stable public reference (URLs, API); the integer id stays internal.
 ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS uid TEXT NOT NULL DEFAULT substr(md5(gen_random_uuid()::text), 1, 10);
@@ -90,6 +88,10 @@ CREATE TABLE IF NOT EXISTS runs (
 ALTER TABLE runs ADD COLUMN IF NOT EXISTS cleared_at TIMESTAMPTZ;
 
 CREATE UNIQUE INDEX IF NOT EXISTS runs_one_open_per_quiz ON runs (quiz_id) WHERE ended_at IS NULL;
+
+-- Needs runs, so it sits after its CREATE TABLE (a fresh database has no runs before).
+UPDATE quizzes q SET code = NULL
+WHERE code IS NOT NULL AND NOT EXISTS (SELECT 1 FROM runs r WHERE r.quiz_id = q.id AND r.ended_at IS NULL);
 
 CREATE TABLE IF NOT EXISTS players (
 	id SERIAL PRIMARY KEY,

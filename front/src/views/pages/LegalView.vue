@@ -28,7 +28,7 @@ const SECTIONS = {
 	],
 };
 
-// ponytail: legal identity lives here, not in i18n; fill in before going live.
+// Legal identity lives here, not in i18n; fill in before going live.
 const INFO = {
 	publisher: 'TheseOtherGames',
 	email: 'erick.paoletti@gmail.com',
