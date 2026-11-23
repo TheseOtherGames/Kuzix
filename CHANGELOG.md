@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.4 - 2026-11-24
+- [feat] Language button in the desktop header
+
 ## 0.6.3 - 2026-11-22
 - [feat] New home page: screenshots, how it works, features, plans, FAQ
 - [feat] Click a home page screenshot to see it full size

@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.6.4 - 2026-11-24
+- [feat] Bouton de langue dans l'en-tête sur ordinateur
+
 ## 0.6.3 - 2026-11-22
 - [feat] Nouvelle page d'accueil : captures, fonctionnement, fonctions, offres, FAQ
 - [feat] Clic sur une capture de l'accueil pour l'agrandir

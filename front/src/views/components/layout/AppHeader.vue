@@ -2,8 +2,8 @@
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import BaseModal from '@/views/components/utils/modal/BaseModal.vue';
-import { t } from '@/i18n';
-import { ref } from 'vue';
+import { LOCALES, locale, t } from '@/i18n';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { auth, logout } from '@/utils/Auth';
 import { cycleTheme, theme, THEME_ICONS } from '@/utils/Theme';
@@ -23,6 +23,12 @@ const LOGO_COLORS = [
 
 const router = useRouter();
 const logoutOpen = ref(false);
+
+const currentLocale = computed(() => LOCALES.find((option) => option.value === locale.value) ?? LOCALES[0]);
+
+const cycleLocale = (): void => {
+	locale.value = LOCALES[(LOCALES.indexOf(currentLocale.value) + 1) % LOCALES.length].value;
+};
 
 const onLogout = (): void => {
 	logoutOpen.value = false;
@@ -54,6 +60,15 @@ const onLogout = (): void => {
 				@click="cycleTheme"
 			>
 				<AppIcon :name="THEME_ICONS[theme]" />
+			</button>
+			<button
+				type="button"
+				class="round lang"
+				:data-tip="t('header.language', { language: currentLocale.label })"
+				:aria-label="t('header.language', { language: currentLocale.label })"
+				@click="cycleLocale"
+			>
+				<AppIcon :name="currentLocale.flag" />
 			</button>
 			<button v-if="auth.user" type="button" class="round logout" :data-tip="t('common.logOut')" :aria-label="t('common.logOut')" @click="logoutOpen = true">
 				<AppIcon name="power" />
@@ -163,7 +178,8 @@ const onLogout = (): void => {
 }
 
 /* Rotate the icon, not the button, so the tooltip stays level. */
-.theme:hover .app-icon {
+.theme:hover .app-icon,
+.lang:hover .app-icon {
 	transform: rotate(-20deg) scale(1.1);
 }
 
@@ -171,6 +187,13 @@ const onLogout = (): void => {
 	background: var(--danger);
 	color: var(--on-color);
 	transform: scale(1.08);
+}
+
+/* Desktop only: the header runs out of room below this. */
+@media (max-width: 900px) {
+	.lang {
+		display: none;
+	}
 }
 
 /* Phones: mark only (the link keeps its aria-label) so the admin pill still fits. */
