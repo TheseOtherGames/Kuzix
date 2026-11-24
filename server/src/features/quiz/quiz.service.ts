@@ -103,7 +103,7 @@ interface QuizSourceLink {
 // Returns the new quiz uid.
 export const createQuiz = async (ownerId: number, input: QuizInput, source: QuizSourceLink | null = null): Promise<string> => {
 	// Count-then-insert can race past the limit by one on parallel requests; fine for a plan cap.
-	const { rows: [{ count }] } = await pool.query<{ count: number }>('SELECT count(*)::int AS count FROM quizzes WHERE owner_id = $1', [ownerId]);
+	const { rows: [{ count }] } = await pool.query<{ count: number }>('SELECT count(*)::int AS count FROM quizzes WHERE owner_id = $1 AND deleted_at IS NULL', [ownerId]);
 	assert(count < (await findUserById(ownerId))!.limits.maxQuizzes, 'Quiz limit reached for your plan');
 	const title = await freeTitle(ownerId, input.title);
 

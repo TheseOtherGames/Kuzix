@@ -7,6 +7,7 @@ import { toast } from '@/utils/Toast';
 
 const TOKEN_KEY = 'kuzix-token';
 const PENDING_CLAIM_KEY = 'kuzix-pending-claim';
+const OAUTH_STARTED_KEY = 'kuzix-oauth-started';
 
 export const auth = reactive({
 	token: localStorage.getItem(TOKEN_KEY),
@@ -39,6 +40,19 @@ const claimPendingScore = async (): Promise<void> => {
 	} catch (error) {
 		toast.error((error as Error).message);
 	}
+};
+
+// The callback only trusts a token when this tab started the social login: a crafted
+// /auth/callback#token=… link would otherwise log the visitor into someone else's account.
+export const startOAuth = (): void => {
+	sessionStorage.setItem(OAUTH_STARTED_KEY, '1');
+};
+
+export const consumeOAuth = (): boolean => {
+	const started = sessionStorage.getItem(OAUTH_STARTED_KEY) !== null;
+	sessionStorage.removeItem(OAUTH_STARTED_KEY);
+
+	return started;
 };
 
 export const PROVIDER_LABELS: Record<string, string> = { google: 'Google', github: 'GitHub' };

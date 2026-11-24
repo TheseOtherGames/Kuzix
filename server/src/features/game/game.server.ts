@@ -1,9 +1,10 @@
-import type { Server } from 'node:http';
+import type { IncomingMessage, Server } from 'node:http';
 import { WebSocketServer, type WebSocket } from 'ws';
 import type { ClientMessage } from './game.types';
 import type { Quiz } from '../quiz/quiz.types';
 import { verifyToken } from '../auth/auth.service';
 import { assert, HttpError } from '../../core/httpError';
+import { createLimiter } from '../../core/rateLimit';
 import { findQuizIdByCode, findQuizIdByUid, getOpenRunId, getQuiz, MAX_COUNTDOWN } from '../quiz/quiz.service';
 import { cleanAvatar, cleanUsername } from '../user/user.service';
 import { Game, send, type GamePlayer } from './game';
@@ -30,18 +31,38 @@ const loadGame = async (quiz: Quiz): Promise<Game | null> => {
 	return game;
 };
 
-export const findGameByCode = async (raw: unknown): Promise<Game | null> => {
+// Codes are only 6 digits, so wrong guesses are capped per IP; right ones never count, so a classroom
+// behind one IP joins freely. ip null = unknown client (proxy not forwarding it): not limited.
+const codeGuesses = createLimiter(60, 60_000);
+
+export const findGameByCode = async (raw: unknown, ip: string | null): Promise<Game | null> => {
+	assert(!ip || !codeGuesses.wait(ip), 'Too many wrong codes, try again in a minute', 429);
 	const code = String(raw).toLowerCase();
 	const quizId = /^[a-z0-9]{6}$/.test(code) ? await findQuizIdByCode(code) : null;
 	const quiz = quizId ? await getQuiz(quizId) : null;
+	const game = quiz ? await loadGame(quiz) : null;
+	if (!game && ip) {
+		codeGuesses.hit(ip);
+	}
 
-	return quiz ? loadGame(quiz) : null;
+	return game;
 };
 
-const handle = async (ws: WebSocket, message: ClientMessage, session: Session | null): Promise<Session | null> => {
+// Same rule as Express 'trust proxy' loopback: behind the local nginx, the client is the last X-Forwarded-For entry.
+const clientIp = (req: IncomingMessage): string | null => {
+	const remote = req.socket.remoteAddress ?? null;
+	if (remote !== '127.0.0.1' && remote !== '::1' && remote !== '::ffff:127.0.0.1') {
+		return remote;
+	}
+	const forwarded = req.headers['x-forwarded-for'];
+
+	return typeof forwarded === 'string' ? forwarded.split(',').at(-1)!.trim() : null;
+};
+
+const handle = async (ws: WebSocket, ip: string | null, message: ClientMessage, session: Session | null): Promise<Session | null> => {
 	switch (message.type) {
 		case 'host': {
-			const userId = verifyToken(String(message.token));
+			const userId = verifyToken(String(message.token))?.userId ?? null;
 			const quizId = await findQuizIdByUid(message.quizUid);
 			const quiz = quizId ? await getQuiz(quizId) : null;
 			assert(quiz && userId === quiz.ownerId, 'Quiz not found', 404);
@@ -52,9 +73,11 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 			return { game };
 		}
 		case 'join': {
-			const game = await findGameByCode(message.code);
+			// One seat per connection: the client sends join once, as its greeting.
+			assert(!session, 'Already in a game', 409);
+			const game = await findGameByCode(message.code, ip);
 			assert(game, 'No open quiz with this code', 404);
-			const userId = message.token ? verifyToken(String(message.token)) : null;
+			const userId = message.token ? verifyToken(String(message.token))?.userId ?? null : null;
 			assert(userId !== game.quiz.ownerId, 'You cannot join your own quiz, host it instead', 403);
 			const player = await game.addPlayer(ws, cleanUsername(message.nickname), cleanAvatar(message.avatar), userId);
 
@@ -125,17 +148,20 @@ const handle = async (ws: WebSocket, message: ClientMessage, session: Session | 
 
 export const attachGameServer = (server: Server): void => {
 	const wss = new WebSocketServer({ server, path: '/ws', maxPayload: 4096 });
-	wss.on('connection', (ws) => {
+	wss.on('connection', (ws, req) => {
+		const ip = clientIp(req);
 		let session: Session | null = null;
-		ws.on('message', async (raw) => {
+		// One message at a time per socket, so each one sees the session the previous one left (no double join).
+		let queue = Promise.resolve();
+		const receive = async (raw: string): Promise<void> => {
 			let message: ClientMessage;
 			try {
-				message = JSON.parse(raw.toString());
+				message = JSON.parse(raw);
 			} catch {
 				return;
 			}
 			try {
-				const next = await handle(ws, message, session);
+				const next = await handle(ws, ip, message, session);
 				if (next && next.game !== session?.game) {
 					session?.game.disconnect(ws);
 				}
@@ -146,6 +172,9 @@ export const attachGameServer = (server: Server): void => {
 				}
 				send(ws, { type: 'error', message: error instanceof HttpError ? error.message : 'Something went wrong' });
 			}
+		};
+		ws.on('message', (raw) => {
+			queue = queue.then(() => receive(raw.toString()));
 		});
 		ws.on('close', () => {
 			session?.game.disconnect(ws);

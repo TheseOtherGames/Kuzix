@@ -24,7 +24,7 @@ app.use('/api/quizzes', quizRouter);
 app.use('/api/admin', adminRouter);
 // Lets the join page tell a wrong code apart before asking for a nickname.
 app.get('/api/games/:code', async (req, res) => {
-	res.status(await findGameByCode(req.params.code) ? 204 : 404).end();
+	res.status(await findGameByCode(req.params.code, req.ip ?? null) ? 204 : 404).end();
 });
 app.use('/api', notFound);
 

@@ -64,15 +64,24 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 		if (identity.rows[0]) {
 			return toUser(identity.rows[0]);
 		}
+		// Emails are stored lowercase (see cleanEmail); providers may not send them that way.
+		const email = profile.email?.toLowerCase() ?? null;
 		let user: UserRow | undefined;
-		if (profile.email) {
-			const existing = await client.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE email = $1`, [profile.email]);
+		if (email) {
+			// The provider verified this email; a password set at sign-up never was, so whoever registered it
+			// first may not own it. Drop that password and its sessions: only the email owner keeps a way in.
+			const existing = await client.query<UserRow>(
+				`UPDATE users SET tokens_valid_after = CASE WHEN password_hash IS NULL THEN tokens_valid_after ELSE now() END,
+					password_hash = NULL
+				WHERE email = $1 RETURNING ${USER_COLUMNS}`,
+				[email],
+			);
 			user = existing.rows[0];
 		}
 		if (!user) {
 			const created = await client.query<UserRow>(
 				`INSERT INTO users (email, username) VALUES ($1, $2) RETURNING ${USER_COLUMNS}`,
-				[profile.email, profile.username.slice(0, 24)],
+				[email, profile.username.slice(0, 24)],
 			);
 			user = created.rows[0];
 		}

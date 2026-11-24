@@ -23,11 +23,17 @@ export const signToken = (userId: number): string => {
 	return jwt.sign({ sub: String(userId) }, config.jwtSecret, { expiresIn: '7d' });
 };
 
-export const verifyToken = (token: string): number | null => {
+export interface TokenClaims {
+	userId: number;
+	// Seconds since the epoch.
+	issuedAt: number;
+}
+
+export const verifyToken = (token: string): TokenClaims | null => {
 	try {
 		const payload = jwt.verify(token, config.jwtSecret);
-		if (typeof payload === 'object' && payload.sub) {
-			return Number(payload.sub);
+		if (typeof payload === 'object' && payload.sub && payload.iat) {
+			return { userId: Number(payload.sub), issuedAt: payload.iat };
 		}
 
 		return null;

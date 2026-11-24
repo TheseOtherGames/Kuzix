@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.5 - 2026-11-24
+- [fix] Deleted quizzes no longer count toward the quiz limit
+- [security] Google/GitHub login secures accounts registered with that email
+- [security] Game codes can no longer be guessed in bulk
+- [security] One player per connection when joining a game
+- [security] Login links from someone else are refused
+
 ## 0.6.4 - 2026-11-24
 - [feat] Language button in the desktop header
 

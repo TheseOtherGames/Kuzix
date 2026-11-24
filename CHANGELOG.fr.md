@@ -1,5 +1,12 @@
 # Journal des modifications
 
+## 0.6.5 - 2026-11-24
+- [fix] Les quiz supprimés ne comptent plus dans la limite de quiz
+- [security] La connexion Google/GitHub sécurise les comptes créés avec cet e-mail
+- [security] Les codes de partie ne peuvent plus être devinés en masse
+- [security] Un seul joueur par connexion pour rejoindre une partie
+- [security] Les liens de connexion venant d'un tiers sont refusés
+
 ## 0.6.4 - 2026-11-24
 - [feat] Bouton de langue dans l'en-tête sur ordinateur
 
