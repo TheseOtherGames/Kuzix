@@ -2,6 +2,7 @@
 
 ## 0.6.5 - 2026-11-24
 - [fix] Deleted quizzes no longer count toward the quiz limit
+- [fix] Background glows no longer blow up on phones
 - [security] Google/GitHub login secures accounts registered with that email
 - [security] Game codes can no longer be guessed in bulk
 - [security] One player per connection when joining a game

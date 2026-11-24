@@ -148,12 +148,21 @@ body {
 	font-size: 1rem;
 	line-height: 1.5;
 	color: var(--text);
+	background: var(--bg);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Corner glows on a fixed viewport-sized layer: mobile browsers ignore background-attachment: fixed,
+   which sized the gradients to the whole page and blew them up into giant blobs. */
+body::after {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -2;
 	background:
 		radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--color-6) 16%, transparent), transparent 38%),
-		radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--color-2) 16%, transparent), transparent 42%),
-		var(--bg);
-	background-attachment: fixed;
-	-webkit-font-smoothing: antialiased;
+		radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--color-2) 16%, transparent), transparent 42%);
+	pointer-events: none;
 }
 
 /* Drifting, slightly blurred answer shapes (▲ ◆ ● ■ ★) behind everything. The blur lives in the SVG so it is rasterised once. */
