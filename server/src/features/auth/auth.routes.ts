@@ -17,7 +17,11 @@ const cleanEmail = (value: unknown): string => {
 };
 
 const cleanPassword = (value: unknown): string => {
-	assert(typeof value === 'string' && value.length >= 8 && value.length <= 200, 'Password must be at least 8 characters');
+	assert(
+		typeof value === 'string' && value.length >= 8 && value.length <= 200
+		&& /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^a-zA-Z\d]/.test(value),
+		'Password must be at least 8 characters with a lowercase, an uppercase, a digit and a special character',
+	);
 
 	return value;
 };

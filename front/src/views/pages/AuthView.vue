@@ -13,6 +13,8 @@ import { toast } from '@/utils/Toast';
 const route = useRoute();
 const router = useRouter();
 const isRegister = computed(() => route.meta.mode === 'register');
+// Mirrors the server rule in auth.routes.ts cleanPassword.
+const PASSWORD_PATTERN = '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).*';
 const form = reactive({ email: '', password: '', username: '' });
 const loading = ref(false);
 // Email a confirmation link went to; the card then shows ConfirmationSent instead of the form.
@@ -51,7 +53,7 @@ const submit = async (): Promise<void> => {
 		<template v-else>
 			<h1>{{ isRegister ? t('common.createAccount') : t('common.logIn') }}</h1>
 			<form class="form" @submit.prevent="submit">
-				<NicknameInput v-if="isRegister" v-model="form.username" :label="t('auth.username')" autocomplete="nickname" />
+				<NicknameInput v-if="isRegister" v-model="form.username" :label="t('auth.username')" minlength="3" autocomplete="nickname" />
 				<label>
 					{{ t('auth.email') }}
 					<input v-model="form.email" type="email" required autocomplete="email" />
@@ -62,9 +64,12 @@ const submit = async (): Promise<void> => {
 						v-model="form.password"
 						type="password"
 						:minlength="isRegister ? 8 : undefined"
+						:pattern="isRegister ? PASSWORD_PATTERN : undefined"
+						:title="isRegister ? t('auth.passwordRules') : undefined"
 						required
 						:autocomplete="isRegister ? 'new-password' : 'current-password'"
 					/>
+					<small v-if="isRegister" class="muted">{{ t('auth.passwordRules') }}</small>
 				</label>
 				<BaseButton type="submit" block size="lg" :loading="loading">
 					{{ isRegister ? t('auth.signUp') : t('common.logIn') }}

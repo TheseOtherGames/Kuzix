@@ -1,18 +1,18 @@
 # Journal des modifications
 
-## 0.6.6 - 2026-11-24
+## 0.6.5 - 2026-11-24
 - [feat] Confirmation de l'e-mail optionnelle pour les inscriptions par mot de passe
 - [fix] Traductions françaises manquantes pour les erreurs pour rejoindre une partie
-- [style] Nouvel écran « vérifiez votre boîte mail » après l'inscription
-- [style] E-mail de confirmation aux couleurs de Kuzix
-
-## 0.6.5 - 2026-11-24
 - [fix] Les quiz supprimés ne comptent plus dans la limite de quiz
 - [fix] Les halos du fond ne sont plus géants sur mobile
+- [security] Règles de mot de passe renforcées à l'inscription
+- [security] Les noms d'utilisateur font au moins 3 caractères
 - [security] La connexion Google/GitHub sécurise les comptes créés avec cet e-mail
 - [security] Les codes de partie ne peuvent plus être devinés en masse
 - [security] Un seul joueur par connexion pour rejoindre une partie
 - [security] Les liens de connexion venant d'un tiers sont refusés
+- [style] Nouvel écran « vérifiez votre boîte mail » après l'inscription
+- [style] E-mail de confirmation aux couleurs de Kuzix
 
 ## 0.6.4 - 2026-11-24
 - [feat] Bouton de langue dans l'en-tête sur ordinateur

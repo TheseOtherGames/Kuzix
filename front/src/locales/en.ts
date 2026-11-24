@@ -335,6 +335,7 @@ export const en = {
 	'auth.username': 'Username',
 	'auth.email': 'Email',
 	'auth.password': 'Password',
+	'auth.passwordRules': '8+ characters with a lowercase, an uppercase, a digit and a special character',
 	'auth.signUp': 'Sign up',
 	'auth.orContinue': 'or continue with',
 	'auth.haveAccount': 'Already have an account?',

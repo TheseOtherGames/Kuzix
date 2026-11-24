@@ -18,7 +18,7 @@ const toUser = <T extends UserRow>(row: T): T & User => {
 
 export const cleanUsername = (value: unknown): string => {
 	const username = typeof value === 'string' ? value.trim() : '';
-	assert(username.length >= 1 && username.length <= 24, 'Username must be 1 to 24 characters');
+	assert(username.length >= 3 && username.length <= 24, 'Username must be 3 to 24 characters');
 
 	return username;
 };
