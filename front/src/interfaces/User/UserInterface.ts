@@ -14,6 +14,8 @@ export type Plan = 'free';
 export interface PlanLimits {
 	maxQuestions: number;
 	maxQuizzes: number;
+	// Players per game, checked against the quiz owner's plan.
+	maxPlayers: number;
 }
 
 export interface AuthResponse {

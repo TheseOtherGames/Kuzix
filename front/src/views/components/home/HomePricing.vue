@@ -9,13 +9,29 @@ import BaseCard from '@/views/components/utils/card/BaseCard.vue';
 // Copy of the free plan (server/src/features/user/plans.ts) and the quiz rules (quiz.service.ts, schema.sql).
 // The page is public, so no user limits to read; serve them from an endpoint if plans start changing often.
 const LIMITS = {
-	quizzes: 10, questions: 20, minAnswers: 2, maxAnswers: 6, minTime: 5, maxTime: 120,
+	quizzes: 10, questions: 20, players: 30, minAnswers: 2, maxAnswers: 6, minTime: 5, maxTime: 120,
 };
 
 // Teaser cards for the paid plans in the works: blurred filler (aria-hidden), only the "coming soon" tag is real.
 const TEASERS = [
-	{ id: 'a', accent: 'var(--color-2)', lines: [14, 18, 12, 16, 10] },
-	{ id: 'b', accent: 'var(--color-3)', lines: [16, 12, 18, 14, 11] },
+	{ id: 'a',
+		accent: 'var(--color-2)',
+		lines: [
+			14,
+			18,
+			12,
+			16,
+			10,
+		] },
+	{ id: 'b',
+		accent: 'var(--color-3)',
+		lines: [
+			16,
+			12,
+			18,
+			14,
+			11,
+		] },
 ];
 </script>
 

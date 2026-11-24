@@ -310,7 +310,7 @@ export const en = {
 	'home.plan.1': 'Up to {quizzes} quizzes',
 	'home.plan.2': 'Up to {questions} questions per quiz',
 	'home.plan.3': '{minAnswers} to {maxAnswers} answers and {minTime} to {maxTime} s per question',
-	'home.plan.4': 'Unlimited games and players, no account needed to join',
+	'home.plan.4': 'Unlimited games, up to {players} players, no account needed to join',
 	'home.plan.5': 'AI prompt builder, JSON import and export',
 	'home.plan.6': 'Results, statistics and CSV exports',
 	'home.plan.7': 'Public library and custom avatars',

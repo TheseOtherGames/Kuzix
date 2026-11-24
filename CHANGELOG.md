@@ -1,7 +1,8 @@
 # Changelog
 
-## 0.6.5 - 2026-11-24
+## 0.7.0 - 2026-11-24
 - [feat] Optional email confirmation for password sign-ups
+- [feat] Games are capped at 30 players on the free plan
 - [fix] Missing French translations for game join errors
 - [fix] Deleted quizzes no longer count toward the quiz limit
 - [fix] Background glows no longer blow up on phones

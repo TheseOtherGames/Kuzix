@@ -42,6 +42,8 @@ export class Game {
 	private writes: Promise<void> = Promise.resolve();
 	private questionStartedAt = 0;
 	private timer: NodeJS.Timeout | null = null;
+	// Seats being inserted, counted so parallel joins can't overshoot maxPlayers.
+	private joining = 0;
 
 	constructor(readonly quiz: Quiz, readonly runId: number) {
 		this.revealMode = quiz.revealMode;
@@ -60,11 +62,15 @@ export class Game {
 		this.broadcast();
 	}
 
-	async addPlayer(ws: WebSocket, nickname: string, avatar: string, userId: number | null): Promise<GamePlayer> {
+	async addPlayer(ws: WebSocket, nickname: string, avatar: string, userId: number | null, maxPlayers: number): Promise<GamePlayer> {
 		if (this.phase === 'end') {
 			throw new HttpError(409, 'This game is over');
 		}
+		if (this.players.size + this.joining >= maxPlayers) {
+			throw new HttpError(409, 'This game is full');
+		}
 		const token = randomToken();
+		this.joining++;
 		const { rows } = await pool.query<{ id: number }>(
 			'INSERT INTO players (run_id, user_id, token, nickname, avatar) VALUES ($1, $2, $3, $4, $5) RETURNING id',
 			[
@@ -74,7 +80,7 @@ export class Game {
 				nickname,
 				avatar,
 			],
-		);
+		).finally(() => this.joining--);
 		const player: GamePlayer = {
 			id: rows[0].id, token, nickname, avatar, score: 0, ws, answers: new Map(),
 		};

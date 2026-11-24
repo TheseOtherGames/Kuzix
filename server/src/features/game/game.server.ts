@@ -6,7 +6,8 @@ import { verifyToken } from '../auth/auth.service';
 import { assert, HttpError } from '../../core/httpError';
 import { createLimiter } from '../../core/rateLimit';
 import { findQuizIdByCode, findQuizIdByUid, getOpenRunId, getQuiz, MAX_COUNTDOWN } from '../quiz/quiz.service';
-import { cleanAvatar, cleanUsername } from '../user/user.service';
+import { cleanAvatar, cleanUsername, findUserById } from '../user/user.service';
+import { PLANS } from '../user/plans';
 import { Game, send, type GamePlayer } from './game';
 import { findPlayerByToken, games } from './game.registry';
 
@@ -79,7 +80,9 @@ const handle = async (ws: WebSocket, ip: string | null, message: ClientMessage, 
 			assert(game, 'No open quiz with this code', 404);
 			const userId = message.token ? verifyToken(String(message.token))?.userId ?? null : null;
 			assert(userId !== game.quiz.ownerId, 'You cannot join your own quiz, host it instead', 403);
-			const player = await game.addPlayer(ws, cleanUsername(message.nickname), cleanAvatar(message.avatar), userId);
+			// The owner's plan sets the seat count (read per join, so an upgrade applies to the open game).
+			const maxPlayers = (await findUserById(game.quiz.ownerId))?.limits.maxPlayers ?? PLANS.free.maxPlayers;
+			const player = await game.addPlayer(ws, cleanUsername(message.nickname), cleanAvatar(message.avatar), userId, maxPlayers);
 
 			return { game, player };
 		}

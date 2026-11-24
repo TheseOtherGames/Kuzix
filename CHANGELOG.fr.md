@@ -1,7 +1,8 @@
 # Journal des modifications
 
-## 0.6.5 - 2026-11-24
+## 0.7.0 - 2026-11-24
 - [feat] Confirmation de l'e-mail optionnelle pour les inscriptions par mot de passe
+- [feat] Les parties sont limitées à 30 joueurs avec l'offre gratuite
 - [fix] Traductions françaises manquantes pour les erreurs pour rejoindre une partie
 - [fix] Les quiz supprimés ne comptent plus dans la limite de quiz
 - [fix] Les halos du fond ne sont plus géants sur mobile
