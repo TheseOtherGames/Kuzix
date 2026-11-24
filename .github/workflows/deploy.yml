@@ -27,6 +27,10 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+        env:
+          # Dummy values: config.ts requires them at import; tests mock the database.
+          DATABASE_URL: postgres://test:test@localhost:5432/test
+          JWT_SECRET: test
       - name: Build front
         run: npm run build
         env:
