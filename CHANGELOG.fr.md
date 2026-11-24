@@ -1,5 +1,11 @@
 # Journal des modifications
 
+## 0.6.6 - 2026-11-24
+- [feat] Confirmation de l'e-mail optionnelle pour les inscriptions par mot de passe
+- [fix] Traductions françaises manquantes pour les erreurs pour rejoindre une partie
+- [style] Nouvel écran « vérifiez votre boîte mail » après l'inscription
+- [style] E-mail de confirmation aux couleurs de Kuzix
+
 ## 0.6.5 - 2026-11-24
 - [fix] Les quiz supprimés ne comptent plus dans la limite de quiz
 - [fix] Les halos du fond ne sont plus géants sur mobile

@@ -30,6 +30,7 @@ export const router = createRouter({
 		},
 		{ path: '/library', component: () => import('@/views/pages/LibraryView.vue'), meta: { seo: { title: 'seo.libraryTitle', description: 'seo.libraryDescription' } } },
 		{ path: '/auth/callback', component: () => import('@/views/pages/AuthCallbackView.vue') },
+		{ path: '/auth/verify', component: () => import('@/views/pages/VerifyEmailView.vue') },
 		{ path: '/dashboard', component: () => import('@/views/pages/DashboardView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/new', component: () => import('@/views/pages/QuizEditorView.vue'), meta: { requiresAuth: true } },
 		{ path: '/quizzes/:id/edit', component: () => import('@/views/pages/QuizEditorView.vue'), meta: { requiresAuth: true } },

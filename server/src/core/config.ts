@@ -25,6 +25,14 @@ export const config = {
 	jwtSecret: required('JWT_SECRET'),
 	frontUrl: process.env.FRONT_URL ?? 'http://localhost:5173',
 	serverUrl: process.env.SERVER_URL ?? 'http://localhost:5173',
+	// Email confirmation for password accounts; off (sign-up logs in at once) when SMTP_HOST is empty.
+	smtp: {
+		host: process.env.SMTP_HOST ?? '',
+		port: Number(process.env.SMTP_PORT || 587),
+		user: process.env.SMTP_USER ?? '',
+		password: process.env.SMTP_PASSWORD ?? '',
+		from: process.env.SMTP_FROM || process.env.SMTP_USER || '',
+	},
 	oauth: {
 		google: {
 			clientId: process.env.GOOGLE_CLIENT_ID ?? '',

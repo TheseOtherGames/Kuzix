@@ -1,8 +1,8 @@
 import { reactive } from 'vue';
-import type { AuthResponse, Profile, User } from '@/interfaces/User/UserInterface';
+import type { AuthResponse, ConfirmationResponse, Profile, User } from '@/interfaces/User/UserInterface';
 import { api, ApiError } from '@/utils/API';
 import { randomBase } from '@/utils/Avatars';
-import { t } from '@/i18n';
+import { locale, t } from '@/i18n';
 import { toast } from '@/utils/Toast';
 
 const TOKEN_KEY = 'kuzix-token';
@@ -90,14 +90,23 @@ export const login = async (token: string, user?: User): Promise<void> => {
 	await claimPendingScore();
 };
 
+// locale: language of the confirmation email, when the server sends one.
 export const loginWithPassword = async (email: string, password: string): Promise<void> => {
-	const response = await api<AuthResponse>('/auth/login', 'POST', { email, password });
+	const response = await api<AuthResponse>('/auth/login', 'POST', { email, password, locale: locale.value });
 	await login(response.token, response.user);
 };
 
-export const register = async (email: string, password: string, username: string): Promise<void> => {
-	const response = await api<AuthResponse>('/auth/register', 'POST', { email, password, username });
+// False when the account waits for its email confirmation (the server has SMTP set up).
+export const register = async (email: string, password: string, username: string): Promise<boolean> => {
+	const response = await api<AuthResponse | ConfirmationResponse>('/auth/register', 'POST', {
+		email, password, username, locale: locale.value,
+	});
+	if ('confirmationSent' in response) {
+		return false;
+	}
 	await login(response.token, response.user);
+
+	return true;
 };
 
 export const updateProfile = async (profile: Profile): Promise<void> => {

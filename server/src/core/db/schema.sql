@@ -20,6 +20,12 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT;
 -- Tokens issued before this are refused (set when a verified social login takes over a password account).
 ALTER TABLE users ADD COLUMN IF NOT EXISTS tokens_valid_after TIMESTAMPTZ;
 
+-- Email proven by a confirmation link or an SSO provider (NULL = never proven, e.g. sign-ups made without SMTP).
+-- Only checked at password login while SMTP is configured.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ;
+-- Last confirmation email sent, to throttle resends.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_sent_at TIMESTAMPTZ;
+
 -- Account deleted by its owner: email, username and logins are wiped, quizzes and game history stay.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 

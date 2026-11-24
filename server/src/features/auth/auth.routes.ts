@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { config } from '../../core/config';
-import { hashPassword, randomToken, signToken, verifyPassword } from './auth.service';
+import { hashPassword, randomToken, readEmailToken, signEmailToken, signToken, verifyPassword } from './auth.service';
+import { mailEnabled, sendConfirmationEmail } from './auth.mail';
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { enabledProviders, exchangeCode, getProvider } from './oauth.providers';
-import { cleanUsername, createUser, findOrCreateOAuthUser, findUserWithPassword, isBanned } from '../user/user.service';
+import { claimConfirmationSend, cleanUsername, confirmEmail, createUser, findOrCreateOAuthUser, findUserWithPassword, isBanned, releaseConfirmationSend } from '../user/user.service';
 import { BANNED_MESSAGE } from './auth.middleware';
 
 const STATE_COOKIE = 'oauth_state';
@@ -29,6 +30,21 @@ const readCookie = (header: string | undefined, name: string): string | null => 
 
 const callbackUrl = (provider: string): string => `${config.serverUrl}/api/auth/${provider}/callback`;
 
+// At most one email per account every 5 minutes; the link lands on the front, which posts the token to /verify.
+const sendConfirmation = async (userId: number, locale: unknown): Promise<void> => {
+	const email = await claimConfirmationSend(userId);
+	if (!email) {
+		return;
+	}
+	try {
+		await sendConfirmationEmail(email, `${config.frontUrl}/auth/verify#token=${signEmailToken(userId, email)}`, locale);
+	} catch (error) {
+		await releaseConfirmationSend(userId);
+
+		throw error;
+	}
+};
+
 export const authRouter = Router();
 
 authRouter.post('/register', async (req, res) => {
@@ -37,6 +53,17 @@ authRouter.post('/register', async (req, res) => {
 	const username = cleanUsername(req.body?.username);
 	try {
 		const user = await createUser(email, await hashPassword(password), username);
+		// With SMTP, the account stays locked until the email is confirmed: no token yet.
+		if (mailEnabled) {
+			await sendConfirmation(user.id, req.body?.locale).catch((error: unknown) => {
+				console.error(error);
+
+				throw new HttpError(503, 'Your account was created but the confirmation email could not be sent. Log in to get a new one.');
+			});
+			res.status(202).json({ confirmationSent: true });
+
+			return;
+		}
 		res.status(201).json({ token: signToken(user.id), user });
 	} catch (error) {
 		if (isUniqueViolation(error)) {
@@ -55,8 +82,22 @@ authRouter.post('/login', async (req, res) => {
 		throw new HttpError(401, 'Invalid email or password');
 	}
 	assert(!found.banned, BANNED_MESSAGE, 403);
-	const { passwordHash, banned, ...user } = found;
+	if (mailEnabled && !found.emailVerified) {
+		// Sends a fresh link (throttled), so an expired or lost one is never a dead end.
+		await sendConfirmation(found.id, req.body?.locale).catch((error: unknown) => console.error(error));
+
+		throw new HttpError(403, 'Confirm your email first: check your inbox for the link');
+	}
+	const {
+		passwordHash, banned, emailVerified, ...user
+	} = found;
 	res.json({ token: signToken(user.id), user });
+});
+
+authRouter.post('/verify', async (req, res) => {
+	const claims = typeof req.body?.token === 'string' ? readEmailToken(req.body.token) : null;
+	assert(claims && await confirmEmail(claims.userId, claims.email), 'This confirmation link is invalid or has expired');
+	res.status(204).end();
 });
 
 authRouter.get('/providers', (_req, res) => {

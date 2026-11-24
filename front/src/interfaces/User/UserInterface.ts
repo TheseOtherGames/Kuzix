@@ -21,6 +21,11 @@ export interface AuthResponse {
 	user: User;
 }
 
+// Register answer when the server sends a confirmation email instead of logging in.
+export interface ConfirmationResponse {
+	confirmationSent: true;
+}
+
 export interface UserStats {
 	gamesPlayed: number;
 	totalScore: number;

@@ -36,9 +36,13 @@ export const findUserById = async (id: number): Promise<User | null> => {
 	return rows[0] ? toUser(rows[0]) : null;
 };
 
-export const findUserWithPassword = async (email: string): Promise<(User & { passwordHash: string | null; banned: boolean }) | null> => {
-	const { rows } = await pool.query<UserRow & { passwordHash: string | null; banned: boolean }>(
-		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash", banned_at IS NOT NULL AS banned FROM users WHERE email = $1`,
+type LoginRow = UserRow & { passwordHash: string | null; banned: boolean; emailVerified: boolean };
+
+export const findUserWithPassword = async (email: string): Promise<(User & LoginRow) | null> => {
+	const { rows } = await pool.query<LoginRow>(
+		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash", banned_at IS NOT NULL AS banned,
+			email_verified_at IS NOT NULL AS "emailVerified"
+		FROM users WHERE email = $1`,
 		[email],
 	);
 
@@ -68,11 +72,14 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 		const email = profile.email?.toLowerCase() ?? null;
 		let user: UserRow | undefined;
 		if (email) {
-			// The provider verified this email; a password set at sign-up never was, so whoever registered it
-			// first may not own it. Drop that password and its sessions: only the email owner keeps a way in.
+			// The provider verified this email. If the account never proved it (no confirmation link), whoever
+			// registered it first may not own it: drop that password and its sessions, only the email owner keeps a way in.
+			// (SET expressions all read the row as it was before the update.)
 			const existing = await client.query<UserRow>(
-				`UPDATE users SET tokens_valid_after = CASE WHEN password_hash IS NULL THEN tokens_valid_after ELSE now() END,
-					password_hash = NULL
+				`UPDATE users SET
+					tokens_valid_after = CASE WHEN password_hash IS NOT NULL AND email_verified_at IS NULL THEN now() ELSE tokens_valid_after END,
+					password_hash = CASE WHEN email_verified_at IS NULL THEN NULL ELSE password_hash END,
+					email_verified_at = coalesce(email_verified_at, now())
 				WHERE email = $1 RETURNING ${USER_COLUMNS}`,
 				[email],
 			);
@@ -80,7 +87,8 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 		}
 		if (!user) {
 			const created = await client.query<UserRow>(
-				`INSERT INTO users (email, username) VALUES ($1, $2) RETURNING ${USER_COLUMNS}`,
+				`INSERT INTO users (email, username, email_verified_at)
+				VALUES ($1, $2, CASE WHEN $1::text IS NULL THEN NULL ELSE now() END) RETURNING ${USER_COLUMNS}`,
 				[email, profile.username.slice(0, 24)],
 			);
 			user = created.rows[0];
@@ -92,6 +100,33 @@ export const findOrCreateOAuthUser = async (provider: string, profile: OAuthProf
 
 		return toUser(user);
 	});
+};
+
+// Reserves a confirmation email for the account: its address, or null when one went out less than 5 minutes ago.
+export const claimConfirmationSend = async (userId: number): Promise<string | null> => {
+	const { rows } = await pool.query<{ email: string }>(
+		`UPDATE users SET verification_sent_at = now()
+		WHERE id = $1 AND email IS NOT NULL AND (verification_sent_at IS NULL OR verification_sent_at < now() - interval '5 minutes')
+		RETURNING email`,
+		[userId],
+	);
+
+	return rows[0]?.email ?? null;
+};
+
+// The email failed to go out: let the next attempt send again at once.
+export const releaseConfirmationSend = async (userId: number): Promise<void> => {
+	await pool.query('UPDATE users SET verification_sent_at = NULL WHERE id = $1', [userId]);
+};
+
+// The link names the email it was sent to, so it stops working if the address changed since.
+export const confirmEmail = async (userId: number, email: string): Promise<boolean> => {
+	const { rowCount } = await pool.query(
+		'UPDATE users SET email_verified_at = coalesce(email_verified_at, now()) WHERE id = $1 AND email = $2 AND deleted_at IS NULL',
+		[userId, email],
+	);
+
+	return Boolean(rowCount);
 };
 
 export const updateProfile = async (id: number, username: string, avatar: string): Promise<User> => {

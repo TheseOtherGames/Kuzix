@@ -42,4 +42,24 @@ export const verifyToken = (token: string): TokenClaims | null => {
 	}
 };
 
+// Own key, so a confirmation link can never pass as a login token (and the other way round).
+const emailKey = `${config.jwtSecret}:confirm-email`;
+
+export const signEmailToken = (userId: number, email: string): string => {
+	return jwt.sign({ sub: String(userId), email }, emailKey, { expiresIn: '24h' });
+};
+
+export const readEmailToken = (token: string): { userId: number; email: string } | null => {
+	try {
+		const payload = jwt.verify(token, emailKey);
+		if (typeof payload === 'object' && payload.sub && typeof payload.email === 'string') {
+			return { userId: Number(payload.sub), email: payload.email };
+		}
+
+		return null;
+	} catch {
+		return null;
+	}
+};
+
 export const randomToken = (): string => randomBytes(24).toString('hex');

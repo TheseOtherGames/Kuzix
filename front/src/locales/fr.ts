@@ -344,6 +344,16 @@ export const fr: Record<MessageKey, string> = {
 	'auth.loggedIn': 'Connecté !',
 	'auth.loginFailed': 'La connexion a échoué',
 	'auth.loggingIn': 'Connexion en cours…',
+	'auth.sent.title': 'Vérifiez votre boîte mail',
+	'auth.sent.text': 'Presque fini ! Un lien de confirmation a été envoyé à',
+	'auth.sent.step1': 'Ouvrez l\'e-mail de Kuzix',
+	'auth.sent.step2': 'Appuyez sur « Confirmer mon e-mail »',
+	'auth.sent.step3': 'Revenez ici et connectez-vous',
+	'auth.sent.hint': 'Rien après quelques minutes ? Regardez dans vos spams. Le lien est valable 24 heures, et vous connecter en envoie un nouveau.',
+	'auth.sent.login': 'Aller à la connexion',
+	'auth.sent.change': 'Utiliser un autre e-mail',
+	'auth.confirming': 'Confirmation de votre e-mail…',
+	'auth.emailConfirmed': 'E-mail confirmé, vous pouvez vous connecter',
 	'auth.scoreSaved': 'Votre score a été enregistré sur votre profil',
 	'auth.expired': 'Votre session a expiré, reconnectez-vous',
 
@@ -968,6 +978,11 @@ export const fr: Record<MessageKey, string> = {
 // Server error messages arrive in English; keys are the exact server strings.
 export const frServerErrors: Record<string, string> = {
 	'Account not found': 'Compte introuvable',
+	'Already in a game': 'Déjà dans une partie',
+	'Confirm your email first: check your inbox for the link': 'Confirmez d\'abord votre e-mail : le lien est dans votre boîte de réception',
+	'This confirmation link is invalid or has expired': 'Ce lien de confirmation est invalide ou a expiré',
+	'Too many wrong codes, try again in a minute': 'Trop de codes erronés, réessayez dans une minute',
+	'Your account was created but the confirmation email could not be sent. Log in to get a new one.': 'Votre compte a été créé mais l\'e-mail de confirmation n\'a pas pu être envoyé. Connectez-vous pour en recevoir un nouveau.',
 	'An account already exists with this email': 'Un compte existe déjà avec cet e-mail',
 	'A quiz needs 1 to 100 questions': 'Un quiz doit avoir de 1 à 100 questions',
 	'Authentication required': 'Connexion requise',

@@ -17,7 +17,7 @@ app.set('trust proxy', 'loopback');
 app.use(express.json({ limit: '1mb' }));
 // Generous per-IP limits: a whole classroom can share one IP. Gameplay itself is on the WebSocket.
 app.use('/api', rateLimit(600, 60_000));
-app.use(['/api/auth/login', '/api/auth/register'], rateLimit(30, 60_000));
+app.use(['/api/auth/login', '/api/auth/register', '/api/auth/verify'], rateLimit(30, 60_000));
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/quizzes', quizRouter);
