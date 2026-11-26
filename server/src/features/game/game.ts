@@ -44,6 +44,8 @@ export class Game {
 	private timer: NodeJS.Timeout | null = null;
 	// Seats being inserted, counted so parallel joins can't overshoot maxPlayers.
 	private joining = 0;
+	// Owner's plan seat count, refreshed on host attach and every join; shown on the host lobby.
+	maxPlayers: number | null = null;
 
 	constructor(readonly quiz: Quiz, readonly runId: number) {
 		this.revealMode = quiz.revealMode;
@@ -66,6 +68,7 @@ export class Game {
 		if (this.phase === 'end') {
 			throw new HttpError(409, 'This game is over');
 		}
+		this.maxPlayers = maxPlayers;
 		if (this.players.size + this.joining >= maxPlayers) {
 			throw new HttpError(409, 'This game is full');
 		}
@@ -395,6 +398,7 @@ export class Game {
 			countdownSeconds: this.countdownSeconds,
 			countdown: this.countdownState(),
 			questionsCount: this.quiz.questions.length,
+			maxPlayers: this.maxPlayers,
 			players: [...this.players.values()]
 				.map((player) => ({
 					id: player.id,

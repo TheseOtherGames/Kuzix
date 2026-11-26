@@ -1,6 +1,8 @@
 # Changelog
 
 ## 0.7.1 - 2026-11-26
+- [feat] Waiting room shows seats left and game settings
+- [style] Redesigned host waiting room with join steps
 - [style] New waiting room screenshot on the home page
 
 ## 0.7.0 - 2026-11-24

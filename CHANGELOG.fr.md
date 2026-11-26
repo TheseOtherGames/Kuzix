@@ -1,6 +1,8 @@
 # Journal des modifications
 
 ## 0.7.1 - 2026-11-26
+- [feat] La salle d'attente affiche les places et réglages
+- [style] Salle d'attente de l'hôte repensée, étapes pour rejoindre
 - [style] Nouvelle capture de la salle d'attente sur la page d'accueil
 
 ## 0.7.0 - 2026-11-24

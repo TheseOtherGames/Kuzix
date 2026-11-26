@@ -27,6 +27,7 @@ export interface HostState {
 	countdownSeconds: number;
 	countdown: CountdownState | null;
 	questionsCount: number;
+	maxPlayers: number | null;
 	players: PlayerPublic[];
 	question: {
 		index: number;

@@ -69,6 +69,7 @@ const handle = async (ws: WebSocket, ip: string | null, message: ClientMessage, 
 			assert(quiz && userId === quiz.ownerId, 'Quiz not found', 404);
 			const game = await loadGame(quiz);
 			assert(game, 'Open the quiz before hosting it', 409);
+			game.maxPlayers = (await findUserById(quiz.ownerId))?.limits.maxPlayers ?? PLANS.free.maxPlayers;
 			game.attachHost(ws);
 
 			return { game };
