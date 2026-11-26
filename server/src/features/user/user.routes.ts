@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import type { PlayHistoryEntry } from './user.types';
-import { requireAuth } from '../auth/auth.middleware';
+import { readBearer, requireAuth } from '../auth/auth.middleware';
 import { assert, HttpError } from '../../core/httpError';
 import { abortGame } from '../game/game.registry';
-import { closeOwnerRuns, listOwnReports, listQuizzes } from '../quiz/quiz.service';
+import { closeOwnerRuns, getPublicProfile, listOwnReports, listQuizzes } from '../quiz/quiz.service';
 import {claimPlayer,
 	cleanAvatar,
 	cleanUsername,
@@ -16,6 +16,11 @@ import {claimPlayer,
 	updateProfile} from './user.service';
 
 export const userRouter = Router();
+
+// Public creator card, readable without an account.
+userRouter.get('/public/:uid', async (req, res) => {
+	res.json(await getPublicProfile(req.params.uid, readBearer(req)));
+});
 
 userRouter.use(requireAuth);
 

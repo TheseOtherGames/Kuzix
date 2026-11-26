@@ -1,7 +1,7 @@
 import { randomInt } from 'node:crypto';
 import type pg from 'pg';
 import { pool, withTransaction } from '../../core/db/pool';
-import type { Answer, PublicQuiz, QuizPreview, Question, Quiz, QuizInput, QuizSummary, Run, RunAnswer } from './quiz.types';
+import type { Answer, PublicProfile, PublicQuiz, QuizPreview, Question, Quiz, QuizInput, QuizSummary, Run, RunAnswer } from './quiz.types';
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { MAX_TITLE_LENGTH, uniqueTitle } from './title';
 import { findUserById } from '../user/user.service';
@@ -230,9 +230,10 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 // Search is a plain ILIKE on title and owner, capped like the admin lists; add paging when the library grows.
 // viewerId (optional) only adds display hints: isOwn hides the report button, reported fills it.
 // downloads = users who ever copied it: deleted copies still count, duplicates of a copy don't.
-export const listPublicQuizzes = async (search: string, viewerId: number | null): Promise<PublicQuiz[]> => {
+// ownerUid (optional) narrows it to one creator's public card.
+export const listPublicQuizzes = async (search: string, viewerId: number | null, ownerUid: string | null = null): Promise<PublicQuiz[]> => {
 	const { rows } = await pool.query<PublicQuiz>(
-		`SELECT s.uid, s.title, su.username AS owner, su.avatar AS "ownerAvatar", s.updated_at AS "updatedAt", s.moderation,
+		`SELECT s.uid, s.title, su.username AS owner, su.uid AS "ownerUid", su.avatar AS "ownerAvatar", s.updated_at AS "updatedAt", s.moderation,
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = s.id) AS "questionsCount",
 			(SELECT count(DISTINCT c.owner_id)::int FROM quizzes c WHERE c.source_id = s.id) AS downloads,
 			coalesce(s.owner_id = $2::int, false) AS "isOwn",
@@ -240,12 +241,28 @@ export const listPublicQuizzes = async (search: string, viewerId: number | null)
 		FROM quizzes s
 		JOIN users su ON su.id = s.owner_id
 		WHERE ${SOURCE_AVAILABLE} AND ($1 = '' OR s.title ILIKE '%' || $1 || '%' OR su.username ILIKE '%' || $1 || '%')
+			AND ($3::text IS NULL OR su.uid = $3)
 		ORDER BY s.updated_at DESC
 		LIMIT 200`,
-		[search, viewerId],
+		[search, viewerId, ownerUid],
 	);
 
 	return rows;
+};
+
+// 404 unless the user has a library quiz: a profile only exists through what its owner chose to publish.
+export const getPublicProfile = async (uid: string, viewerId: number | null): Promise<PublicProfile> => {
+	const quizzes = await listPublicQuizzes('', viewerId, uid);
+	assert(quizzes.length, 'Profile not found', 404);
+	const { rows } = await pool.query<{ createdAt: string }>('SELECT created_at AS "createdAt" FROM users WHERE uid = $1', [uid]);
+
+	return {
+		uid,
+		username: quizzes[0].owner,
+		avatar: quizzes[0].ownerAvatar,
+		createdAt: rows[0].createdAt,
+		quizzes,
+	};
 };
 
 // The library quiz behind a uid (copy) or a copy's source_id (pull), with the version it is at.

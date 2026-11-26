@@ -58,6 +58,10 @@ ALTER TABLE quizzes ALTER COLUMN code DROP NOT NULL;
 ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS uid TEXT NOT NULL DEFAULT substr(md5(gen_random_uuid()::text), 1, 10);
 CREATE UNIQUE INDEX IF NOT EXISTS quizzes_uid ON quizzes (uid);
 
+-- Public profile URL (/creators/<uid>); the integer id stays internal.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS uid TEXT NOT NULL DEFAULT substr(md5(gen_random_uuid()::text), 1, 10);
+CREATE UNIQUE INDEX IF NOT EXISTS users_uid ON users (uid);
+
 -- Library: a public quiz can be copied by anyone; a copy remembers its source and the source version it holds.
 ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
 ALTER TABLE quizzes ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;

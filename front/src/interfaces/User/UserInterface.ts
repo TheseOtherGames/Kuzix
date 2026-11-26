@@ -1,5 +1,7 @@
 export interface User {
 	id: number;
+	// Public profile reference (/creators/<uid>).
+	uid: string;
 	email: string | null;
 	username: string;
 	avatar: string;

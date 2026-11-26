@@ -1,5 +1,13 @@
 # Journal des modifications
 
+## 0.7.2 - 2026-11-26
+- [feat] Cartes de créateur publiques avec stats, recherche et tri
+- [feat] Les auteurs de la bibliothèque mènent à leur carte
+- [feat] La première publication prévient que votre carte devient publique
+- [feat] Bouton retour sur les cartes de créateur
+- [style] Bouton auteur plus visible avec infobulle sur les cartes
+- [style] Les quiz de la carte de créateur ne répètent plus l'auteur
+
 ## 0.7.1 - 2026-11-26
 - [feat] La salle d'attente affiche les places et réglages
 - [feat] Les cartes de la bibliothèque comptent les ajouts du quiz

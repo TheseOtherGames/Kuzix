@@ -29,6 +29,7 @@ export const router = createRouter({
 			path: '/legal', component: () => import('@/views/pages/LegalView.vue'), props: { page: 'legal' }, meta: { seo: { title: 'seo.legalTitle', description: 'seo.legalDescription' } },
 		},
 		{ path: '/library', component: () => import('@/views/pages/LibraryView.vue'), meta: { seo: { title: 'seo.libraryTitle', description: 'seo.libraryDescription' } } },
+		{ path: '/creators/:uid', component: () => import('@/views/pages/CreatorView.vue') },
 		{ path: '/auth/callback', component: () => import('@/views/pages/AuthCallbackView.vue') },
 		{ path: '/auth/verify', component: () => import('@/views/pages/VerifyEmailView.vue') },
 		{ path: '/dashboard', component: () => import('@/views/pages/DashboardView.vue'), meta: { requiresAuth: true } },

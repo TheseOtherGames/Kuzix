@@ -6,6 +6,7 @@ import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import PillButton from '@/views/components/utils/form/PillButton.vue';
 import BaseCard from '@/views/components/utils/card/BaseCard.vue';
 import ConfirmModal from '@/views/components/utils/modal/ConfirmModal.vue';
+import Notice from '@/views/components/utils/text/Notice.vue';
 import QuizCard from '@/views/components/dashboard/QuizCard.vue';
 import ShareModal from '@/views/components/dashboard/ShareModal.vue';
 import QuizPreviewList from '@/views/components/library/QuizPreviewList.vue';
@@ -29,6 +30,8 @@ const publishing = ref<QuizSummary | null>(null);
 const pulling = ref<QuizSummary | null>(null);
 const importing = ref(false);
 const atQuizLimit = computed(() => quizzes.value.length >= (auth.user?.limits.maxQuizzes ?? 0));
+// The creator card only exists while one quiz is public, so the first publish makes it visible.
+const hasPublic = computed(() => quizzes.value.some((quiz) => quiz.isPublic));
 
 const load = async (): Promise<void> => {
 	try {
@@ -134,6 +137,7 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 		<header class="top">
 			<h1>{{ t('dash.title') }} <span class="muted num">{{ quizzes.length }} / {{ auth.user?.limits.maxQuizzes }}</span></h1>
 			<div class="top-actions">
+				<PillButton v-if="hasPublic && auth.user" :to="`/creators/${auth.user.uid}`" :label="t('dash.publicProfile')"><AppIcon name="globe" /></PillButton>
 				<PillButton variant="secondary" :label="t('dash.import')" @click="importing = true"><AppIcon name="upload" /></PillButton>
 				<PillButton v-if="!atQuizLimit" to="/quizzes/new" variant="success" :label="t('dash.newQuiz')"><AppIcon name="plus" /></PillButton>
 			</div>
@@ -191,6 +195,7 @@ const importQuiz = (file: File | undefined): Promise<void> => run(async () => {
 			<template v-else>
 				<p>{{ t('dash.publishText', { title: publishing?.title ?? '' }) }}</p>
 				<p class="muted">{{ t('dash.publishHint') }}</p>
+				<Notice v-if="!hasPublic" icon="globe">{{ t('dash.publishProfile') }}</Notice>
 			</template>
 		</ConfirmModal>
 

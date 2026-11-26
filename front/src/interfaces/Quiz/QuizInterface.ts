@@ -63,6 +63,7 @@ export interface PublicQuiz {
 	uid: string;
 	title: string;
 	owner: string;
+	ownerUid: string;
 	ownerAvatar: string;
 	questionsCount: number;
 	downloads: number;
@@ -71,6 +72,15 @@ export interface PublicQuiz {
 	isOwn: boolean;
 	// The viewer has an open (not yet reviewed) report on it.
 	reported: boolean;
+}
+
+// Public creator card: only reachable while the user has at least one library quiz.
+export interface PublicProfile {
+	uid: string;
+	username: string;
+	avatar: string;
+	createdAt: string;
+	quizzes: PublicQuiz[];
 }
 
 export interface RunPlayer {

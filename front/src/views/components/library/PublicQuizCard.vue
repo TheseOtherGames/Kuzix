@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import NameTag from '@/views/components/utils/badge/NameTag.vue';
@@ -14,9 +15,12 @@ const props = defineProps<{
 	accent: string;
 	index: number;
 	copying: boolean;
+	// On the creator's own card every quiz has the same author: the date moves to the facts instead.
+	hideOwner?: boolean;
 }>();
 
 const emit = defineEmits<{ copy: []; preview: []; report: [] }>();
+const route = useRoute();
 
 // Cover stickers picked from the uid, so each quiz keeps the same ones across visits.
 const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.uid.charCodeAt(at) % ANSWER_ICONS.length]));
@@ -43,23 +47,25 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 			</button>
 		</header>
 
-		<div class="body">
-			<p class="owner">
+		<div class="body" :class="{ 'no-owner': hideOwner }">
+			<RouterLink v-if="!hideOwner" class="owner" :to="`/creators/${quiz.ownerUid}`" :aria-label="t('creator.open', { name: quiz.owner })" :data-tip="t('creator.open', { name: quiz.owner })">
 				<span class="avatar"><AvatarIcon :value="quiz.ownerAvatar" /></span>
 				<span class="who">
 					<NameTag :name="quiz.owner" :look="quiz.ownerAvatar" />
 					<small class="muted">{{ new Date(quiz.updatedAt).toLocaleDateString(locale) }}</small>
+					<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
 				</span>
-			</p>
+			</RouterLink>
 			<ul class="facts">
 				<li><AppIcon name="clipboard" /><strong>{{ quiz.questionsCount }}</strong> {{ tp('dash.questions', quiz.questionsCount) }}</li>
+				<li v-if="hideOwner"><AppIcon name="pencil" />{{ new Date(quiz.updatedAt).toLocaleDateString(locale) }}</li>
 				<li><AppIcon name="download" /><strong>{{ quiz.downloads }}</strong> {{ tp('library.downloads', quiz.downloads) }}</li>
 				<li v-if="quiz.moderation === 'warned'" class="warned"><AppIcon name="warning" />{{ t('library.warned') }}</li>
 			</ul>
 			<div class="actions">
 				<BaseButton variant="secondary" @click="emit('preview')"><AppIcon name="search" /> {{ t('library.preview') }}</BaseButton>
 				<BaseButton v-if="auth.user" variant="success" :loading="copying" @click="emit('copy')"><AppIcon name="plus" /> {{ t('library.copy') }}</BaseButton>
-				<BaseButton v-else variant="ghost" :to="`/login?redirect=${encodeURIComponent('/library')}`">{{ t('library.logInToCopy') }}</BaseButton>
+				<BaseButton v-else variant="ghost" :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`">{{ t('library.logInToCopy') }}</BaseButton>
 			</div>
 		</div>
 	</article>
@@ -214,17 +220,39 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 	padding: 0 1.25rem 1.25rem;
 }
 
-/* Avatar bubble overlapping the cover edge; relative so it paints above the (positioned) cover. */
+.body.no-owner {
+	padding-top: 1rem;
+}
+
+/* Avatar bubble overlapping the cover edge; relative so it paints above the (positioned) cover. Links to the creator card. */
 .owner {
 	position: relative;
 	display: flex;
+	align-self: flex-start;
 	align-items: flex-end;
 	gap: 0.6rem;
+	max-width: 100%;
 	margin: -1.5rem 0 0.9rem;
+	color: inherit;
+	text-decoration: none;
+}
+
+.owner:hover .avatar,
+.owner:focus-visible .avatar {
+	transform: translateY(-2px) rotate(-6deg);
+}
+
+.owner:focus-visible {
+	outline: none;
+}
+
+.owner:focus-visible .who {
+	box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .avatar {
 	position: relative;
+	transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 	display: inline-grid;
 	flex-shrink: 0;
 	place-items: center;
@@ -237,15 +265,44 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 	font-size: 1.75rem;
 }
 
-/* One line, so it stays below the cover edge. No overflow: hidden: NameTag's tilt and effects draw outside its box (it ellipsizes itself). */
+/* Pill with a chevron so the author reads as a link to their creator card. One line, so it stays below the cover edge.
+   No overflow: hidden: NameTag's tilt and effects draw outside its box (it ellipsizes itself). */
 .who {
 	display: flex;
 	align-items: center;
 	gap: 0.45rem;
 	min-width: 0;
-	padding-bottom: 0.1rem;
+	padding: 0.2rem 0.35rem 0.2rem 0.3rem;
+	border: 2px solid color-mix(in srgb, var(--tint) 35%, var(--border));
+	border-radius: 999px;
+	background: var(--surface-2);
 	font-size: 0.95rem;
 	white-space: nowrap;
+	transition: border-color 0.15s, background-color 0.15s;
+}
+
+.owner:hover .who,
+.owner:focus-visible .who {
+	border-color: var(--tint);
+	background: color-mix(in srgb, var(--tint) 18%, var(--surface-2));
+}
+
+.chevron {
+	flex-shrink: 0;
+	width: 1rem;
+	height: 1rem;
+	fill: none;
+	stroke: var(--text-muted);
+	stroke-width: 3;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.15s;
+}
+
+.owner:hover .chevron,
+.owner:focus-visible .chevron {
+	stroke: var(--text);
+	transform: translateX(2px);
 }
 
 .who small {

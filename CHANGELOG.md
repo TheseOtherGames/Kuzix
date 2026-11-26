@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2 - 2026-11-26
+- [feat] Public creator cards with stats, search and sort
+- [feat] Library authors link to their creator card
+- [feat] First publish warns that your creator card goes public
+- [feat] Back button on creator cards
+- [style] Clearer author button with tooltip on library cards
+- [style] Creator card quizzes no longer repeat the author
+
 ## 0.7.1 - 2026-11-26
 - [feat] Waiting room shows seats left and game settings
 - [feat] Library cards count how many times a quiz was added

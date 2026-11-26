@@ -6,7 +6,7 @@ import { assert, HttpError } from '../../core/httpError';
 import { POINTS_PER_DIFFICULTY } from '../game/scoring';
 
 // providers: how the account can log in ('password' + linked OAuth providers).
-const USER_COLUMNS = `id, email, username, avatar, plan, is_admin AS "isAdmin",
+const USER_COLUMNS = `id, uid, email, username, avatar, plan, is_admin AS "isAdmin",
 	ARRAY(SELECT 'password' WHERE users.password_hash IS NOT NULL
 		UNION ALL SELECT provider FROM user_identities WHERE user_id = users.id ORDER BY 1) AS providers`;
 
