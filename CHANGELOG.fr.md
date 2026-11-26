@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.7.6 - 2026-11-26
+- [fix] Les tableaux admin ne défilent plus sur le côté
+- [style] Mêmes boutons d'action dans tous les tableaux admin
+
 ## 0.7.5 - 2026-11-26
 - [feat] Rôles : badges avec limites personnalisées, donnés par les admins
 - [feat] Badge de rôle sur les profils publics et la bibliothèque

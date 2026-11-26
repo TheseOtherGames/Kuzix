@@ -102,34 +102,25 @@ import AdminDrawer from '@/views/components/admin/AdminDrawer.vue';
 	color: var(--text-muted);
 }
 
-/* Row actions (Quizzes moderation, Reports): flex on an inner div, a flex <td> stops being a table cell. */
-.page :deep(.mod) {
+/* Row action buttons (tool / tool-danger): flex on an inner div, a flex <td> stops being a table cell. */
+.page :deep(.row-actions) {
 	display: flex;
 	align-items: center;
-	gap: 0.35rem;
+	justify-content: flex-end;
+	gap: 0.4rem;
 }
 
-.page :deep(.mod-action) {
-	padding: 0.15rem 0.5rem;
-	border: 1px solid var(--border);
-	border-radius: 999px;
-	background: none;
-	color: var(--text-muted);
-	font: inherit;
-	font-size: 0.8rem;
-	white-space: nowrap;
-	cursor: pointer;
-	transition: border-color 0.15s, color 0.15s;
+/* The global tooltip hangs below and centred, so even hidden it widens .table-scroll at the right edge and under the last row: open row ones on the left. */
+.page :deep(.row-actions [data-tip])::before {
+	top: 50%;
+	right: calc(100% + 0.5rem);
+	left: auto;
+	translate: 0.25rem -50%;
 }
 
-.page :deep(.mod-action:hover) {
-	border-color: var(--accent-line);
-	color: var(--accent-text);
-}
-
-.page :deep(.mod-action.danger:hover) {
-	border-color: var(--danger);
-	color: var(--danger);
+.page :deep(.row-actions [data-tip]:hover)::before,
+.page :deep(.row-actions [data-tip]:focus-visible)::before {
+	translate: 0 -50%;
 }
 
 .page :deep(.admin-empty) {

@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import AdminModerationModal, { type ModerationTarget } from '@/views/components/admin/AdminModerationModal.vue';
 import AdminQuizTitle from '@/views/components/admin/AdminQuizTitle.vue';
 import AdminUserModal from '@/views/components/admin/AdminUserModal.vue';
+import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import type { AdminReport } from '@/interfaces/Admin/AdminInterface';
 import { api } from '@/utils/API';
@@ -70,7 +71,8 @@ const formatDate = (value: string): string => new Date(value).toLocaleString(loc
 						<th>{{ t('admin.col.owner') }}</th>
 						<th>{{ t('admin.reports.by') }}</th>
 						<th>{{ t('admin.reports.reason') }}</th>
-						<th>{{ status === 'open' ? t('admin.col.moderation') : t('admin.reports.resolvedBy') }}</th>
+						<th v-if="status === 'open'" class="num">{{ t('admin.col.actions') }}</th>
+						<th v-else>{{ t('admin.reports.resolvedBy') }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -90,11 +92,11 @@ const formatDate = (value: string): string => new Date(value).toLocaleString(loc
 						</td>
 						<td><p class="reason selectable">{{ report.reason }}</p></td>
 						<td>
-							<div v-if="status === 'open'" class="mod">
-								<button type="button" class="mod-action" @click="dismiss(report)">{{ t('admin.reports.dismiss') }}</button>
+							<div v-if="status === 'open'" class="row-actions">
+								<BaseButton variant="tool" @click="dismiss(report)"><AppIcon name="check" /> {{ t('admin.reports.dismiss') }}</BaseButton>
 								<template v-if="!report.deleted">
-									<button v-if="!report.moderation" type="button" class="mod-action" @click="moderate(report, 'warned')">{{ t('admin.mod.warn') }}</button>
-									<button v-if="report.moderation !== 'banned'" type="button" class="mod-action danger" @click="moderate(report, 'banned')">{{ t('admin.mod.ban') }}</button>
+									<BaseButton v-if="!report.moderation" variant="tool" @click="moderate(report, 'warned')"><AppIcon name="warning" /> {{ t('admin.mod.warn') }}</BaseButton>
+									<BaseButton v-if="report.moderation !== 'banned'" variant="tool-danger" @click="moderate(report, 'banned')"><AppIcon name="ban" /> {{ t('admin.mod.ban') }}</BaseButton>
 								</template>
 							</div>
 							<span v-else class="muted">{{ report.resolvedBy ?? '—' }} · {{ formatDate(report.resolvedAt!) }}</span>

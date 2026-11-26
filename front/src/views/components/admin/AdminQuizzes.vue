@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import AppIcon from '@/views/components/utils/image/AppIcon.vue';
+import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import AdminQuizTitle from '@/views/components/admin/AdminQuizTitle.vue';
 import AdminUserModal from '@/views/components/admin/AdminUserModal.vue';
 import AdminModerationModal, { type ModerationTarget } from '@/views/components/admin/AdminModerationModal.vue';
@@ -55,6 +57,7 @@ onMounted(load);
 						<th>{{ t('admin.col.status') }}</th>
 						<th>{{ t('admin.col.moderation') }}</th>
 						<th>{{ t('admin.col.created') }}</th>
+						<th class="num">{{ t('admin.col.actions') }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -73,16 +76,17 @@ onMounted(load);
 							<span v-if="quiz.isPublic" class="badge accent">{{ t('admin.status.public') }}</span>
 						</td>
 						<td>
-							<div class="mod">
-								<span v-if="quiz.moderation" class="badge bad" :data-tip="quiz.moderationReason ?? undefined">{{ t(`admin.mod.${quiz.moderation}`) }}</span>
-								<template v-if="!quiz.deleted">
-									<button v-if="quiz.moderation" type="button" class="mod-action" @click="moderating = { quiz, kind: null }">{{ t('admin.mod.clear') }}</button>
-									<button v-if="!quiz.moderation" type="button" class="mod-action" @click="moderating = { quiz, kind: 'warned' }">{{ t('admin.mod.warn') }}</button>
-									<button v-if="quiz.moderation !== 'banned'" type="button" class="mod-action danger" @click="moderating = { quiz, kind: 'banned' }">{{ t('admin.mod.ban') }}</button>
-								</template>
-							</div>
+							<span v-if="quiz.moderation" class="badge bad" :data-tip="quiz.moderationReason ?? undefined">{{ t(`admin.mod.${quiz.moderation}`) }}</span>
+							<span v-else class="muted">—</span>
 						</td>
 						<td class="muted">{{ new Date(quiz.createdAt).toLocaleDateString(locale) }}</td>
+						<td>
+							<div v-if="!quiz.deleted" class="row-actions">
+								<BaseButton v-if="quiz.moderation" variant="tool" @click="moderating = { quiz, kind: null }"><AppIcon name="undo" /> {{ t('admin.mod.clear') }}</BaseButton>
+								<BaseButton v-if="!quiz.moderation" variant="tool" @click="moderating = { quiz, kind: 'warned' }"><AppIcon name="warning" /> {{ t('admin.mod.warn') }}</BaseButton>
+								<BaseButton v-if="quiz.moderation !== 'banned'" variant="tool-danger" @click="moderating = { quiz, kind: 'banned' }"><AppIcon name="ban" /> {{ t('admin.mod.ban') }}</BaseButton>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.6 - 2026-11-26
+- [fix] Admin tables no longer scroll sideways
+- [style] Same action buttons in every admin table
+
 ## 0.7.5 - 2026-11-26
 - [feat] Roles: badges with custom limits, given by admins
 - [feat] Role badge on public profiles and library cards

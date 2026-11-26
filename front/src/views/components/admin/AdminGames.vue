@@ -62,7 +62,7 @@ const closeGame = async (): Promise<void> => {
 						<th>{{ t('admin.col.phase') }}</th>
 						<th>{{ t('admin.col.host') }}</th>
 						<th>{{ t('admin.col.players') }}</th>
-						<th></th>
+						<th class="num">{{ t('admin.col.actions') }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,8 +74,10 @@ const closeGame = async (): Promise<void> => {
 							<span class="badge" :class="game.hostConnected ? 'good' : 'bad'">{{ t(game.hostConnected ? 'admin.host.on' : 'admin.host.off') }}</span>
 						</td>
 						<td class="muted">{{ t('admin.online', { n: game.connected, total: game.players }) }}</td>
-						<td class="num">
-							<BaseButton size="sm" variant="danger" @click="closing = game"><AppIcon name="stop" /> {{ t('admin.close') }}</BaseButton>
+						<td>
+							<div class="row-actions">
+								<BaseButton variant="tool-danger" @click="closing = game"><AppIcon name="stop" /> {{ t('admin.close') }}</BaseButton>
+							</div>
 						</td>
 					</tr>
 				</tbody>

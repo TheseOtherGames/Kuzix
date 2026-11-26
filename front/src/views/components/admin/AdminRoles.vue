@@ -66,7 +66,7 @@ onMounted(load);
 						<th>{{ t('admin.roles.name') }}</th>
 						<th>{{ t('admin.roles.permissions') }}</th>
 						<th class="num">{{ t('admin.users') }}</th>
-						<th class="num">{{ t('admin.roles.actions') }}</th>
+						<th class="num">{{ t('admin.col.actions') }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -115,12 +115,5 @@ onMounted(load);
 
 .no-perk {
 	margin: 0;
-}
-
-/* A <div> inside the cell: flex on the <td> itself would break the table row. */
-.row-actions {
-	display: flex;
-	justify-content: flex-end;
-	gap: 0.4rem;
 }
 </style>
