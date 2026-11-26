@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.7.7 - 2026-11-26
+- [feat] Quatre nouveaux graphiques d'activité sur le tableau de bord admin
+- [style] Les graphiques admin gardent une largeur confortable
+
 ## 0.7.6 - 2026-11-26
 - [fix] Les tableaux admin ne défilent plus sur le côté
 - [style] Mêmes boutons d'action dans tous les tableaux admin

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.7 - 2026-11-26
+- [feat] Four new activity charts on the admin dashboard
+- [style] Admin charts keep a comfortable width
+
 ## 0.7.6 - 2026-11-26
 - [fix] Admin tables no longer scroll sideways
 - [style] Same action buttons in every admin table

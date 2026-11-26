@@ -11,7 +11,15 @@ export interface AdminOverview {
 	openReports: number;
 	liveGames: number;
 	livePlayers: number;
-	activity: { day: string; users: number; players: number }[];
+	activity: {
+		day: string;
+		users: number;
+		players: number;
+		quizzes: number;
+		games: number;
+		copies: number;
+		reports: number;
+	}[];
 }
 
 export interface AdminUser {

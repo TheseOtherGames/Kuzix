@@ -26,7 +26,12 @@ export const getOverview = async (): Promise<AdminOverview> => {
 	const { rows: activity } = await pool.query<AdminOverview['activity'][number]>(
 		`SELECT to_char(d, 'YYYY-MM-DD') AS day,
 			(SELECT count(*)::int FROM users WHERE created_at >= d AND created_at < d + interval '1 day') AS users,
-			(SELECT count(*)::int FROM players WHERE joined_at >= d AND joined_at < d + interval '1 day') AS players
+			(SELECT count(*)::int FROM players WHERE joined_at >= d AND joined_at < d + interval '1 day') AS players,
+			(SELECT count(*)::int FROM quizzes WHERE source_id IS NULL AND created_at >= d AND created_at < d + interval '1 day') AS quizzes,
+			(SELECT count(*)::int FROM runs r WHERE started_at >= d AND started_at < d + interval '1 day'
+				AND EXISTS (SELECT 1 FROM players p WHERE p.run_id = r.id)) AS games,
+			(SELECT count(*)::int FROM quizzes WHERE source_id IS NOT NULL AND created_at >= d AND created_at < d + interval '1 day') AS copies,
+			(SELECT count(*)::int FROM quiz_reports WHERE created_at >= d AND created_at < d + interval '1 day') AS reports
 		FROM generate_series(current_date - 29, current_date, interval '1 day') AS d`,
 	);
 	const live = [...games.values()];

@@ -34,7 +34,7 @@ const tiles = computed(() => {
 	];
 });
 
-const series = (key: 'users' | 'players') => overview.value?.activity.map((row) => ({ day: row.day, value: row[key] })) ?? [];
+const series = (key: Exclude<keyof AdminOverview['activity'][number], 'day'>) => overview.value?.activity.map((row) => ({ day: row.day, value: row[key] })) ?? [];
 
 onMounted(async () => {
 	try {
@@ -64,13 +64,17 @@ onMounted(async () => {
 	<div v-if="overview" class="charts">
 		<AdminChart :title="t('admin.chart.users')" :points="series('users')" color="var(--color-4)" />
 		<AdminChart :title="t('admin.chart.players')" :points="series('players')" color="var(--color-3)" />
+		<AdminChart :title="t('admin.chart.quizzes')" :points="series('quizzes')" color="var(--color-6)" />
+		<AdminChart :title="t('admin.chart.games')" :points="series('games')" color="var(--color-2)" />
+		<AdminChart :title="t('admin.chart.copies')" :points="series('copies')" color="var(--color-1)" />
+		<AdminChart :title="t('admin.chart.reports')" :points="series('reports')" color="var(--color-5)" />
 	</div>
 </template>
 
 <style scoped>
 .charts {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
 	gap: 1rem;
 	margin-top: 1rem;
 }
