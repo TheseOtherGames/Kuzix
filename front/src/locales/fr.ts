@@ -555,6 +555,7 @@ export const fr: Record<MessageKey, string> = {
 	'library.alreadyReported': 'Vous avez signalé ce quiz, un modérateur va l\'examiner',
 	'library.reported': 'Merci, les modérateurs vont examiner ce quiz',
 	'library.previewBy': 'Par {owner}',
+	'library.previewDuration': '~{n} min',
 	'library.logInToCopy': 'Se connecter pour copier',
 	'library.copied': '« {title} » ajouté à vos quiz',
 	'dash.imported': 'Quiz importé !',

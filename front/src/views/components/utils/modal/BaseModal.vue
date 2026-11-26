@@ -138,6 +138,24 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 	background: var(--surface);
 }
 
+/* The global tooltip hangs below and centred, so even hidden it widens the scrollable modal: open footer ones above, right-aligned, wrapping. */
+.actions :deep([data-tip])::before {
+	top: auto;
+	bottom: calc(100% + 0.6rem);
+	left: auto;
+	right: 0;
+	width: max-content;
+	max-width: min(18rem, calc(100vw - 2.5rem));
+	white-space: normal;
+	text-align: center;
+	translate: 0 0.25rem;
+}
+
+.actions :deep([data-tip]:hover)::before,
+.actions :deep([data-tip]:focus-visible)::before {
+	translate: 0 0;
+}
+
 /* Mobile: fullscreen on the dynamic viewport (dvh skips the browser bars), only the body scrolls. */
 @media (max-width: 640px) {
 	.backdrop {

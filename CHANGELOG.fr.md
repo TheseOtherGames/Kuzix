@@ -1,5 +1,9 @@
 # Journal des modifications
 
+## 0.7.4 - 2026-11-26
+- [fix] Les fenêtres ne défilent plus sur le côté
+- [style] Nouvel aperçu de quiz avec des cartes de questions colorées
+
 ## 0.7.3 - 2026-11-26
 - [feat] Le bouton d'ajout s'explique dans une infobulle
 - [fix] Un quiz de la bibliothèque ne s'ajoute qu'une fois à vos quiz

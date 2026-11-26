@@ -553,6 +553,7 @@ export const en = {
 	'library.alreadyReported': 'You reported this quiz, a moderator will review it',
 	'library.reported': 'Thanks, the moderators will review this quiz',
 	'library.previewBy': 'By {owner}',
+	'library.previewDuration': '~{n} min',
 	'library.logInToCopy': 'Log in to copy',
 	'library.copied': '"{title}" added to your quizzes',
 	'dash.imported': 'Quiz imported!',

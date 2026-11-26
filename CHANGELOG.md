@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.4 - 2026-11-26
+- [fix] Popups no longer scroll sideways
+- [style] Redesigned quiz preview with colourful question cards
+
 ## 0.7.3 - 2026-11-26
 - [feat] Add button explains itself in a tooltip
 - [fix] A library quiz can only be added to your quizzes once
