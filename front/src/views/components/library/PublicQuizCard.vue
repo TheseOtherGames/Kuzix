@@ -53,7 +53,7 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 			</p>
 			<ul class="facts">
 				<li><AppIcon name="clipboard" /><strong>{{ quiz.questionsCount }}</strong> {{ tp('dash.questions', quiz.questionsCount) }}</li>
-				<li><AppIcon name="page" /><strong>{{ quiz.copies }}</strong> {{ tp('library.copies', quiz.copies) }}</li>
+				<li><AppIcon name="download" /><strong>{{ quiz.downloads }}</strong> {{ tp('library.downloads', quiz.downloads) }}</li>
 				<li v-if="quiz.moderation === 'warned'" class="warned"><AppIcon name="warning" />{{ t('library.warned') }}</li>
 			</ul>
 			<div class="actions">

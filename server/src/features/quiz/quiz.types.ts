@@ -75,7 +75,7 @@ export interface PublicQuiz {
 	owner: string;
 	ownerAvatar: string;
 	questionsCount: number;
-	copies: number;
+	downloads: number;
 	updatedAt: string;
 	moderation: Moderation | null;
 	isOwn: boolean;

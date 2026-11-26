@@ -229,11 +229,12 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 
 // Search is a plain ILIKE on title and owner, capped like the admin lists; add paging when the library grows.
 // viewerId (optional) only adds display hints: isOwn hides the report button, reported fills it.
+// downloads = users who ever copied it: deleted copies still count, duplicates of a copy don't.
 export const listPublicQuizzes = async (search: string, viewerId: number | null): Promise<PublicQuiz[]> => {
 	const { rows } = await pool.query<PublicQuiz>(
 		`SELECT s.uid, s.title, su.username AS owner, su.avatar AS "ownerAvatar", s.updated_at AS "updatedAt", s.moderation,
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = s.id) AS "questionsCount",
-			(SELECT count(*)::int FROM quizzes c WHERE c.source_id = s.id AND c.deleted_at IS NULL) AS copies,
+			(SELECT count(DISTINCT c.owner_id)::int FROM quizzes c WHERE c.source_id = s.id) AS downloads,
 			coalesce(s.owner_id = $2::int, false) AS "isOwn",
 			EXISTS (SELECT 1 FROM quiz_reports r WHERE r.quiz_id = s.id AND r.reporter_id = $2::int AND r.resolved_at IS NULL) AS reported
 		FROM quizzes s
