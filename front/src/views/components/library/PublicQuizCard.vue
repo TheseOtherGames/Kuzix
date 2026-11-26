@@ -64,7 +64,7 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 			</ul>
 			<div class="actions">
 				<BaseButton variant="secondary" @click="emit('preview')"><AppIcon name="search" /> {{ t('library.preview') }}</BaseButton>
-				<BaseButton v-if="auth.user" variant="success" :loading="copying" @click="emit('copy')"><AppIcon name="plus" /> {{ t('library.copy') }}</BaseButton>
+				<BaseButton v-if="auth.user" variant="success" :loading="copying" :disabled="quiz.copied" :data-tip="t(quiz.copied ? 'library.alreadyCopiedTip' : 'library.copyTip')" @click="emit('copy')"><AppIcon name="plus" /> {{ t(quiz.copied ? 'library.alreadyCopied' : 'library.copy') }}</BaseButton>
 				<BaseButton v-else variant="ghost" :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`">{{ t('library.logInToCopy') }}</BaseButton>
 			</div>
 		</div>

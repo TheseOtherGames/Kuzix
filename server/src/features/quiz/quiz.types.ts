@@ -82,6 +82,8 @@ export interface PublicQuiz {
 	isOwn: boolean;
 	// The viewer has an open (not yet reviewed) report on it.
 	reported: boolean;
+	// The viewer already has a (not deleted) copy of it.
+	copied: boolean;
 }
 
 // Public creator card: only reachable while the user has at least one library quiz.

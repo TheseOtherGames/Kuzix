@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.3 - 2026-11-26
+- [feat] Add button explains itself in a tooltip
+- [fix] A library quiz can only be added to your quizzes once
+- [style] Tooltips stay readable on disabled buttons
+
 ## 0.7.2 - 2026-11-26
 - [feat] Public creator cards with stats, search and sort
 - [feat] Library authors link to their creator card

@@ -76,7 +76,7 @@ const copyQuiz = async (quiz: PublicQuiz): Promise<void> => {
 		<QuizPreviewList v-if="previewing" :url="`/quizzes/public/${previewing.uid}`" />
 		<template #actions>
 			<BaseButton variant="ghost" @click="previewing = null">{{ t('common.close') }}</BaseButton>
-			<BaseButton v-if="auth.user" variant="success" :loading="copying === previewing?.uid" @click="copyQuiz(previewing!)"><AppIcon name="plus" /> {{ t('library.copy') }}</BaseButton>
+			<BaseButton v-if="auth.user" variant="success" :loading="copying === previewing?.uid" :disabled="previewing?.copied" :data-tip="t(previewing?.copied ? 'library.alreadyCopiedTip' : 'library.copyTip')" @click="copyQuiz(previewing!)"><AppIcon name="plus" /> {{ t(previewing?.copied ? 'library.alreadyCopied' : 'library.copy') }}</BaseButton>
 			<BaseButton v-else variant="secondary" :to="`/login?redirect=${encodeURIComponent(route.fullPath)}`">{{ t('library.logInToCopy') }}</BaseButton>
 		</template>
 	</BaseModal>

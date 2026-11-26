@@ -228,7 +228,7 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 };
 
 // Search is a plain ILIKE on title and owner, capped like the admin lists; add paging when the library grows.
-// viewerId (optional) only adds display hints: isOwn hides the report button, reported fills it.
+// viewerId (optional) only adds display hints: isOwn hides the report button, reported fills it, copied disables adding it again.
 // downloads = users who ever copied it: deleted copies still count, duplicates of a copy don't.
 // ownerUid (optional) narrows it to one creator's public card.
 export const listPublicQuizzes = async (search: string, viewerId: number | null, ownerUid: string | null = null): Promise<PublicQuiz[]> => {
@@ -237,6 +237,7 @@ export const listPublicQuizzes = async (search: string, viewerId: number | null,
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = s.id) AS "questionsCount",
 			(SELECT count(DISTINCT c.owner_id)::int FROM quizzes c WHERE c.source_id = s.id) AS downloads,
 			coalesce(s.owner_id = $2::int, false) AS "isOwn",
+			EXISTS (SELECT 1 FROM quizzes c WHERE c.source_id = s.id AND c.owner_id = $2::int AND c.deleted_at IS NULL) AS copied,
 			EXISTS (SELECT 1 FROM quiz_reports r WHERE r.quiz_id = s.id AND r.reporter_id = $2::int AND r.resolved_at IS NULL) AS reported
 		FROM quizzes s
 		JOIN users su ON su.id = s.owner_id
@@ -337,6 +338,8 @@ export const listOwnReports = async (userId: number): Promise<{ quiz: string; re
 export const copyPublicQuiz = async (userId: number, uid: string): Promise<string> => {
 	const source = await findSource('uid', uid);
 	assert(source, 'Quiz not found', 404);
+	const { rowCount } = await pool.query('SELECT 1 FROM quizzes WHERE source_id = $1 AND owner_id = $2 AND deleted_at IS NULL', [source.quiz.id, userId]);
+	assert(!rowCount, 'This quiz is already in your quizzes', 409);
 
 	return createQuiz(userId, toInput(source.quiz), { id: source.quiz.id, syncedAt: source.updatedAt });
 };

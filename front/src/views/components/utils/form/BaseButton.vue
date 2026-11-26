@@ -32,7 +32,9 @@ withDefaults(defineProps<{
 </template>
 
 <style scoped>
+/* Disabled fades the colours through --fade, not opacity: opacity would also fade the data-tip tooltip drawn on the button. */
 .btn {
+	--fade: 100%;
 	--btn-color: var(--accent);
 	--btn-on: var(--on-accent);
 	display: inline-flex;
@@ -42,12 +44,12 @@ withDefaults(defineProps<{
 	padding: 0.65rem 1.25rem;
 	border: none;
 	border-radius: 999px;
-	background: var(--btn-color);
-	color: var(--btn-on);
+	background: color-mix(in srgb, var(--btn-color) var(--fade), transparent);
+	color: color-mix(in srgb, var(--btn-on) var(--fade), transparent);
 	font-weight: 600;
 	text-decoration: none;
 	cursor: pointer;
-	box-shadow: 0 0.25rem 0 color-mix(in srgb, var(--btn-color) 60%, black);
+	box-shadow: 0 0.25rem 0 color-mix(in srgb, color-mix(in srgb, var(--btn-color) 60%, black) var(--fade), transparent);
 	transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
 	white-space: nowrap;
 }
@@ -70,8 +72,12 @@ withDefaults(defineProps<{
 }
 
 .btn:disabled {
-	opacity: 0.5;
+	--fade: 50%;
 	cursor: not-allowed;
+}
+
+.btn:disabled > :slotted(.app-icon) {
+	opacity: 0.5;
 }
 
 .secondary {
@@ -91,8 +97,8 @@ withDefaults(defineProps<{
 
 .ghost {
 	background: transparent;
-	color: var(--text);
-	box-shadow: inset 0 0 0 2px var(--border);
+	color: color-mix(in srgb, var(--text) var(--fade), transparent);
+	box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--border) var(--fade), transparent);
 }
 
 .ghost:hover:not(:disabled) {
@@ -109,10 +115,10 @@ withDefaults(defineProps<{
 .tool-danger {
 	gap: 0.3rem;
 	padding: 0.45rem 0.55rem;
-	border: 2px solid var(--border);
+	border: 2px solid color-mix(in srgb, var(--border) var(--fade), transparent);
 	border-radius: var(--radius-sm);
-	background: var(--surface-2);
-	color: var(--text);
+	background: color-mix(in srgb, var(--surface-2) var(--fade), transparent);
+	color: color-mix(in srgb, var(--text) var(--fade), transparent);
 	box-shadow: none;
 	font-size: 0.8rem;
 	font-weight: 500;

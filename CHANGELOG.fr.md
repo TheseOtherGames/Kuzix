@@ -1,5 +1,10 @@
 # Journal des modifications
 
+## 0.7.3 - 2026-11-26
+- [feat] Le bouton d'ajout s'explique dans une infobulle
+- [fix] Un quiz de la bibliothèque ne s'ajoute qu'une fois à vos quiz
+- [style] Les infobulles restent lisibles sur les boutons désactivés
+
 ## 0.7.2 - 2026-11-26
 - [feat] Cartes de créateur publiques avec stats, recherche et tri
 - [feat] Les auteurs de la bibliothèque mènent à leur carte
