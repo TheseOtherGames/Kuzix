@@ -1,3 +1,4 @@
+import type { UserRole } from '../user/user.types';
 import type { Moderation } from '../quiz/quiz.types';
 
 export interface AdminOverview {
@@ -20,6 +21,8 @@ export interface AdminUser {
 	avatar: string;
 	plan: string;
 	isAdmin: boolean;
+	roleId: number | null;
+	role: UserRole | null;
 	bannedAt: string | null;
 	createdAt: string;
 	quizzes: number;
@@ -88,4 +91,10 @@ export interface AdminReport {
 	moderation: Moderation | null;
 	isPublic: boolean;
 	deleted: boolean;
+}
+
+export interface AdminRole extends UserRole {
+	id: number;
+	// Users holding it.
+	users: number;
 }

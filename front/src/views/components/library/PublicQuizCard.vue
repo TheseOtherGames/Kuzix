@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import NameTag from '@/views/components/utils/badge/NameTag.vue';
+import RoleBadge from '@/views/components/utils/badge/RoleBadge.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import type { PublicQuiz } from '@/interfaces/Quiz/QuizInterface';
 import { ANSWER_ICONS } from '@/utils/Answers';
@@ -52,6 +53,7 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 				<span class="avatar"><AvatarIcon :value="quiz.ownerAvatar" /></span>
 				<span class="who">
 					<NameTag :name="quiz.owner" :look="quiz.ownerAvatar" />
+					<RoleBadge v-if="quiz.ownerRole" class="owner-role" :role="quiz.ownerRole" icon-only />
 					<small class="muted">{{ new Date(quiz.updatedAt).toLocaleDateString(locale) }}</small>
 					<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
 				</span>
@@ -303,6 +305,16 @@ const stickers = computed(() => [0, 3, 6].map((at) => ANSWER_ICONS[props.quiz.ui
 .owner:focus-visible .chevron {
 	stroke: var(--text);
 	transform: translateX(2px);
+}
+
+/* The role icon has its own tooltip: hide the link's "open creator" one while it is hovered. */
+.owner-role {
+	margin-left: -0.2rem;
+	font-size: 0.85rem;
+}
+
+.owner:has(.owner-role:hover)::before {
+	opacity: 0;
 }
 
 .who small {

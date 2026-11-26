@@ -5,7 +5,8 @@ import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import BaseButton from '@/views/components/utils/form/BaseButton.vue';
 import BaseModal from '@/views/components/utils/modal/BaseModal.vue';
 import NameTag from '@/views/components/utils/badge/NameTag.vue';
-import type { AdminUserDetail } from '@/interfaces/Admin/AdminInterface';
+import RoleBadge from '@/views/components/utils/badge/RoleBadge.vue';
+import type { AdminRole, AdminUserDetail } from '@/interfaces/Admin/AdminInterface';
 import { api } from '@/utils/API';
 import { locale, t, tp } from '@/i18n';
 import { toast } from '@/utils/Toast';
@@ -20,8 +21,11 @@ const user = ref<AdminUserDetail | null>(null);
 const confirming = ref<Action | null>(null);
 const reason = ref('');
 const saving = ref(false);
+const roles = ref<AdminRole[]>([]);
 
 const isSelf = computed(() => user.value?.id === auth.user?.id);
+const canManageRoles = computed(() => auth.user?.adminAreas.includes('roles') ?? false);
+const canBan = computed(() => Boolean(auth.user?.adminAreas.includes('users') && (canManageRoles.value || !user.value?.isAdmin)));
 const formatDate = (iso: string): string => new Date(iso).toLocaleDateString(locale.value);
 
 const load = async (id: number): Promise<void> => {
@@ -40,7 +44,25 @@ watch(() => props.userId, (id) => {
 	if (id) {
 		load(id);
 	}
+	if (id && canManageRoles.value) {
+		api<AdminRole[]>('/admin/roles').then((list) => {
+			roles.value = list;
+		}, () => {});
+	}
 }, { immediate: true });
+
+const setRole = async (event: Event): Promise<void> => {
+	const target = user.value!;
+	const value = (event.target as HTMLSelectElement).value;
+	try {
+		await api(`/admin/users/${target.id}/role`, 'PUT', { roleId: value ? Number(value) : null });
+		toast.success(t('admin.roles.assigned'));
+		emit('changed');
+		await load(target.id);
+	} catch (error) {
+		toast.error((error as Error).message);
+	}
+};
 
 const CONFIRM: Record<Action, { title: Parameters<typeof t>[0]; text: Parameters<typeof t>[0]; button: Parameters<typeof t>[0]; variant: 'primary' | 'danger' | 'success' }> = {
 	grant: {
@@ -109,6 +131,7 @@ const run = async (): Promise<void> => {
 						<span v-if="user.bannedAt" class="badge bad">{{ t('admin.status.banned') }}</span>
 						<span class="badge" :class="{ accent: user.isAdmin }">{{ t(user.isAdmin ? 'admin.role.admin' : 'admin.role.user') }}</span>
 						<span class="badge">{{ user.plan }}</span>
+						<RoleBadge v-if="user.role" :role="user.role" />
 						<span v-if="isSelf" class="badge">{{ t('admin.you') }}</span>
 					</div>
 				</div>
@@ -118,6 +141,14 @@ const run = async (): Promise<void> => {
 				<strong>{{ t('admin.bannedOn', { date: formatDate(user.bannedAt) }) }}</strong>
 				<p class="selectable">{{ user.banReason ?? t('admin.noReason') }}</p>
 			</div>
+
+			<label v-if="canManageRoles" class="role-pick">
+				<span>{{ t('admin.roles.assign') }}</span>
+				<select :value="user.roleId ?? ''" @change="setRole">
+					<option value="">{{ t('admin.roles.noRole') }}</option>
+					<option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
+				</select>
+			</label>
 
 			<dl class="facts">
 				<div><dt>{{ t('admin.info.email') }}</dt><dd class="selectable">{{ user.email ?? '—' }}</dd></div>
@@ -165,11 +196,13 @@ const run = async (): Promise<void> => {
 			<template v-else>
 				<BaseButton variant="ghost" @click="emit('close')">{{ t('common.close') }}</BaseButton>
 				<template v-if="user && !isSelf">
-					<BaseButton variant="ghost" @click="confirming = user.isAdmin ? 'revoke' : 'grant'">
+					<BaseButton v-if="canManageRoles" variant="ghost" @click="confirming = user.isAdmin ? 'revoke' : 'grant'">
 						{{ t(user.isAdmin ? 'admin.removeAdmin' : 'admin.makeAdmin') }}
 					</BaseButton>
-					<BaseButton v-if="user.bannedAt" variant="success" @click="confirming = 'unban'">{{ t('admin.unban') }}</BaseButton>
-					<BaseButton v-else variant="danger" @click="confirming = 'ban'">{{ t('admin.ban') }}</BaseButton>
+					<template v-if="canBan">
+						<BaseButton v-if="user.bannedAt" variant="success" @click="confirming = 'unban'">{{ t('admin.unban') }}</BaseButton>
+						<BaseButton v-else variant="danger" @click="confirming = 'ban'">{{ t('admin.ban') }}</BaseButton>
+					</template>
 				</template>
 			</template>
 		</template>
@@ -362,6 +395,14 @@ const run = async (): Promise<void> => {
 	flex-basis: 100%;
 	margin: 0;
 	white-space: pre-wrap;
+}
+
+.role-pick {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.75rem;
+	font-weight: 600;
 }
 
 .reason {

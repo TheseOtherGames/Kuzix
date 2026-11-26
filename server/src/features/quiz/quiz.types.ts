@@ -1,3 +1,5 @@
+import type { UserRole } from '../user/user.types';
+
 export type RevealMode = 'question' | 'end';
 
 export interface AnswerInput {
@@ -75,6 +77,7 @@ export interface PublicQuiz {
 	owner: string;
 	ownerUid: string;
 	ownerAvatar: string;
+	ownerRole: UserRole | null;
 	questionsCount: number;
 	downloads: number;
 	updatedAt: string;
@@ -91,6 +94,7 @@ export interface PublicProfile {
 	uid: string;
 	username: string;
 	avatar: string;
+	role: UserRole | null;
 	createdAt: string;
 	quizzes: PublicQuiz[];
 }

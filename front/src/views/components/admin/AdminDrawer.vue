@@ -1,32 +1,19 @@
 <script setup lang="ts">
 import AppIcon from '@/views/components/utils/image/AppIcon.vue';
-import type { MessageKey } from '@/locales/en';
+import { computed } from 'vue';
+import { auth } from '@/utils/Auth';
+import { ADMIN_PAGES } from '@/utils/Roles';
 import { t } from '@/i18n';
 
-const SECTIONS: { to: string; label: MessageKey; icon: string; tint: string }[] = [
-	{
-		to: '/admin', label: 'admin.overview', icon: 'chart', tint: 'var(--color-2)',
-	},
-	{
-		to: '/admin/users', label: 'admin.users', icon: 'players', tint: 'var(--color-4)',
-	},
-	{
-		to: '/admin/quizzes', label: 'admin.quizzes', icon: 'folder', tint: 'var(--color-6)',
-	},
-	{
-		to: '/admin/games', label: 'admin.games', icon: 'signal', tint: 'var(--color-1)',
-	},
-	{
-		to: '/admin/reports', label: 'admin.reports.title', icon: 'flag', tint: 'var(--color-5)',
-	},
-];
+// Only the pages the user's admin areas open.
+const sections = computed(() => ADMIN_PAGES.filter((page) => auth.user?.adminAreas.includes(page.area)));
 </script>
 
 <template>
 	<aside class="drawer">
 		<p class="drawer-title"><AppIcon name="crown" /> {{ t('admin.title') }}</p>
 		<nav class="drawer-nav" :aria-label="t('admin.nav')">
-			<RouterLink v-for="section in SECTIONS" :key="section.to" :to="section.to" class="drawer-link" :style="{ '--tint': section.tint }">
+			<RouterLink v-for="section in sections" :key="section.to" :to="section.to" class="drawer-link" :style="{ '--tint': section.tint }">
 				<span class="drawer-icon"><AppIcon :name="section.icon" /></span>
 				<span>{{ t(section.label) }}</span>
 			</RouterLink>

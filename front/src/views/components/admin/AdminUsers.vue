@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import AdminUserModal from '@/views/components/admin/AdminUserModal.vue';
+import RoleBadge from '@/views/components/utils/badge/RoleBadge.vue';
 import type { AdminUser } from '@/interfaces/Admin/AdminInterface';
 import { api } from '@/utils/API';
 import { locale, t } from '@/i18n';
@@ -71,6 +72,7 @@ onMounted(load);
 							<span class="role">
 								<span v-if="user.bannedAt" class="badge bad">{{ t('admin.status.banned') }}</span>
 								<span class="badge" :class="{ accent: user.isAdmin }">{{ t(user.isAdmin ? 'admin.role.admin' : 'admin.role.user') }}</span>
+								<RoleBadge v-if="user.role" :role="user.role" />
 								<span v-if="user.id === auth.user?.id" class="muted">{{ t('admin.you') }}</span>
 							</span>
 						</td>

@@ -5,6 +5,7 @@ import type { Answer, PublicProfile, PublicQuiz, QuizPreview, Question, Quiz, Qu
 import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { MAX_TITLE_LENGTH, uniqueTitle } from './title';
 import { findUserById } from '../user/user.service';
+import { readRole, roleColumns, type RoleRow } from '../user/roles';
 
 const CODE_CHARS = '0123456789';
 export const MIN_ANSWERS = 2;
@@ -232,8 +233,8 @@ export const listQuizzes = async (ownerId: number): Promise<QuizSummary[]> => {
 // downloads = users who ever copied it: deleted copies still count, duplicates of a copy don't.
 // ownerUid (optional) narrows it to one creator's public card.
 export const listPublicQuizzes = async (search: string, viewerId: number | null, ownerUid: string | null = null): Promise<PublicQuiz[]> => {
-	const { rows } = await pool.query<PublicQuiz>(
-		`SELECT s.uid, s.title, su.username AS owner, su.uid AS "ownerUid", su.avatar AS "ownerAvatar", s.updated_at AS "updatedAt", s.moderation,
+	const { rows } = await pool.query<Omit<PublicQuiz, 'ownerRole'> & RoleRow>(
+		`SELECT s.uid, s.title, su.username AS owner, su.uid AS "ownerUid", su.avatar AS "ownerAvatar", ${roleColumns('su.role_id')}, s.updated_at AS "updatedAt", s.moderation,
 			(SELECT count(*)::int FROM questions qu WHERE qu.quiz_id = s.id) AS "questionsCount",
 			(SELECT count(DISTINCT c.owner_id)::int FROM quizzes c WHERE c.source_id = s.id) AS downloads,
 			coalesce(s.owner_id = $2::int, false) AS "isOwn",
@@ -248,7 +249,11 @@ export const listPublicQuizzes = async (search: string, viewerId: number | null,
 		[search, viewerId, ownerUid],
 	);
 
-	return rows;
+	return rows.map((row) => {
+		const { role, ...quiz } = readRole(row);
+
+		return { ...quiz, ownerRole: role };
+	});
 };
 
 // 404 unless the user has a library quiz: a profile only exists through what its owner chose to publish.
@@ -261,6 +266,7 @@ export const getPublicProfile = async (uid: string, viewerId: number | null): Pr
 		uid,
 		username: quizzes[0].owner,
 		avatar: quizzes[0].ownerAvatar,
+		role: quizzes[0].ownerRole,
 		createdAt: rows[0].createdAt,
 		quizzes,
 	};

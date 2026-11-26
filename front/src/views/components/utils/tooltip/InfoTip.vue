@@ -2,7 +2,8 @@
 import { ref, useId } from 'vue';
 import { t } from '@/i18n';
 
-defineProps<{ text: string }>();
+// The default slot replaces the "i" with a custom trigger (e.g. RoleBadge), `label` is then its aria-label.
+defineProps<{ text: string; label?: string }>();
 
 const MARGIN_PX = 8;
 const id = useId();
@@ -39,16 +40,16 @@ const hide = (): void => {
 	<span class="info-tip" @mouseenter="show" @mouseleave="hide">
 		<span
 			ref="icon"
-			class="icon"
+			:class="$slots.default ? 'trigger' : 'icon'"
 			role="button"
 			tabindex="0"
-			:aria-label="t('common.moreInfo')"
+			:aria-label="label ?? t('common.moreInfo')"
 			:aria-describedby="id"
 			@click.prevent="show"
 			@focus="show"
 			@blur="hide"
 			@keydown.esc="hide"
-		>i</span>
+		><slot>i</slot></span>
 		<span :id="id" ref="bubble" popover="manual" role="tooltip" class="bubble">{{ text }}</span>
 	</span>
 </template>
@@ -81,6 +82,11 @@ const hide = (): void => {
 	transition: background 0.15s, color 0.15s, transform 0.15s;
 }
 
+.trigger {
+	display: inline-flex;
+	cursor: help;
+}
+
 .info-tip:hover .icon,
 .icon:focus-visible {
 	background: var(--color-2);
@@ -107,6 +113,7 @@ const hide = (): void => {
 	line-height: 1.4;
 	letter-spacing: normal;
 	text-transform: none;
+	white-space: pre-line;
 	pointer-events: none;
 }
 

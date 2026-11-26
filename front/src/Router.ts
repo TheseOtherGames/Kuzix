@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { auth } from '@/utils/Auth';
+import { ADMIN_PAGES } from '@/utils/Roles';
+import type { AdminArea } from '@/interfaces/User/UserInterface';
 import type { MessageKey } from '@/locales/en';
 
 declare module 'vue-router' {
@@ -7,6 +9,10 @@ declare module 'vue-router' {
 		requiresAuth?: boolean;
 		requiresAdmin?: boolean;
 		immersive?: boolean;
+		// Uses the whole window width instead of the centred column (admin).
+		wide?: boolean;
+		// Admin page: the area the user needs (see AdminArea).
+		adminArea?: AdminArea;
 		mode?: 'login' | 'register';
 		// Indexable page: its <title> and meta description. Pages without it get noindex (see App.vue).
 		seo?: { title: MessageKey; description: MessageKey };
@@ -42,13 +48,14 @@ export const router = createRouter({
 		{
 			path: '/admin',
 			component: () => import('@/views/pages/AdminView.vue'),
-			meta: { requiresAuth: true, requiresAdmin: true },
+			meta: { requiresAuth: true, requiresAdmin: true, wide: true },
 			children: [
-				{ path: '', component: () => import('@/views/components/admin/AdminOverview.vue') },
-				{ path: 'users', component: () => import('@/views/components/admin/AdminUsers.vue') },
-				{ path: 'quizzes', component: () => import('@/views/components/admin/AdminQuizzes.vue') },
-				{ path: 'games', component: () => import('@/views/components/admin/AdminGames.vue') },
-				{ path: 'reports', component: () => import('@/views/components/admin/AdminReports.vue') },
+				{ path: '', component: () => import('@/views/components/admin/AdminOverview.vue'), meta: { adminArea: 'overview' } },
+				{ path: 'users', component: () => import('@/views/components/admin/AdminUsers.vue'), meta: { adminArea: 'users' } },
+				{ path: 'quizzes', component: () => import('@/views/components/admin/AdminQuizzes.vue'), meta: { adminArea: 'quizzes' } },
+				{ path: 'games', component: () => import('@/views/components/admin/AdminGames.vue'), meta: { adminArea: 'games' } },
+				{ path: 'reports', component: () => import('@/views/components/admin/AdminReports.vue'), meta: { adminArea: 'reports' } },
+				{ path: 'roles', component: () => import('@/views/components/admin/AdminRoles.vue'), meta: { adminArea: 'roles' } },
 			],
 		},
 		{ path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/pages/NotFoundView.vue') },
@@ -61,10 +68,19 @@ router.beforeEach((to) => {
 	}
 	// UX only: the server checks admin access on every /api/admin call.
 	// Same page as a wrong URL (URL kept), so /admin doesn't reveal it exists.
-	if (to.meta.requiresAdmin && !auth.user?.isAdmin) {
-		return {
-			name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, query: to.query, hash: to.hash,
-		};
+	if (to.meta.requiresAdmin) {
+		const areas = auth.user?.adminAreas ?? [];
+		if (to.meta.adminArea && !areas.includes(to.meta.adminArea)) {
+			// /admin (overview) without the overview: open the first page the user may see instead.
+			const first = ADMIN_PAGES.find((page) => areas.includes(page.area));
+			if (to.meta.adminArea === 'overview' && first) {
+				return first.to;
+			}
+
+			return {
+				name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, query: to.query, hash: to.hash,
+			};
+		}
 	}
 
 	return true;

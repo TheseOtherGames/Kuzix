@@ -1,9 +1,12 @@
 import { pool } from '../../core/db/pool';
-import { assert } from '../../core/httpError';
+import { assert, HttpError, isUniqueViolation } from '../../core/httpError';
 import { abortGame, games } from '../game/game.registry';
 import { closeOwnerRuns, closeRun } from '../quiz/quiz.service';
-import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminReport, AdminUser, AdminUserDetail } from './admin.types';
+import type { AdminLiveGame, AdminOverview, AdminQuiz, AdminReport, AdminRole, AdminUser, AdminUserDetail } from './admin.types';
 import type { Moderation } from '../quiz/quiz.types';
+import type { UserRole } from '../user/user.types';
+import { ADMIN_COLUMNS, ADMIN_SECTIONS, LIMIT_COLUMNS, readRole, roleColumns, type RoleRow } from '../user/roles';
+import type { PlanLimits } from '../user/user.types';
 
 // Lists are capped at 200 rows with a text search, add paging when that stops being enough.
 const LIST_LIMIT = 200;
@@ -34,12 +37,13 @@ export const getOverview = async (): Promise<AdminOverview> => {
 };
 
 const ADMIN_USER_COLUMNS = `u.id, u.email, u.username, u.avatar, u.plan, u.is_admin AS "isAdmin",
+	u.role_id AS "roleId", ${roleColumns('u.role_id')},
 	u.banned_at AS "bannedAt", u.created_at AS "createdAt",
 	(SELECT count(*)::int FROM quizzes q WHERE q.owner_id = u.id AND q.deleted_at IS NULL) AS quizzes,
 	(SELECT count(*)::int FROM players p WHERE p.user_id = u.id) AS "gamesPlayed"`;
 
 export const listUsers = async (search: string): Promise<AdminUser[]> => {
-	const { rows } = await pool.query<AdminUser>(
+	const { rows } = await pool.query<Omit<AdminUser, 'role'> & RoleRow>(
 		`SELECT ${ADMIN_USER_COLUMNS}
 		FROM users u
 		WHERE $1 = '' OR u.username ILIKE '%' || $1 || '%' OR u.email ILIKE '%' || $1 || '%'
@@ -48,7 +52,7 @@ export const listUsers = async (search: string): Promise<AdminUser[]> => {
 		[search],
 	);
 
-	return rows;
+	return rows.map(readRole);
 };
 
 export const setAdmin = async (actorId: number, userId: number, isAdmin: boolean): Promise<void> => {
@@ -58,7 +62,7 @@ export const setAdmin = async (actorId: number, userId: number, isAdmin: boolean
 };
 
 export const getUserDetail = async (userId: number): Promise<AdminUserDetail> => {
-	const { rows } = await pool.query<AdminUserDetail>(
+	const { rows } = await pool.query<Omit<AdminUserDetail, 'role'> & RoleRow>(
 		`SELECT ${ADMIN_USER_COLUMNS}, u.ban_reason AS "banReason", u.password_hash IS NOT NULL AS "hasPassword",
 			(SELECT coalesce(sum(score), 0)::int FROM players p WHERE p.user_id = u.id) AS "totalScore",
 			ARRAY(SELECT provider FROM user_identities i WHERE i.user_id = u.id ORDER BY provider) AS providers,
@@ -79,13 +83,14 @@ export const getUserDetail = async (userId: number): Promise<AdminUserDetail> =>
 	);
 	assert(rows[0], 'Account not found', 404);
 
-	return rows[0];
+	return readRole(rows[0]);
 };
 
 // A ban also ends the user's open quizzes, so nobody keeps playing a game they can no longer host.
-export const banUser = async (actorId: number, userId: number, reason: string | null): Promise<void> => {
+// canBanAdmins: only full admins may ban another full admin (a role with the users section may not).
+export const banUser = async (actorId: number, userId: number, reason: string | null, canBanAdmins: boolean): Promise<void> => {
 	assert(actorId !== userId, 'You cannot ban yourself');
-	const { rowCount } = await pool.query('UPDATE users SET banned_at = now(), ban_reason = $2 WHERE id = $1', [userId, reason]);
+	const { rowCount } = await pool.query('UPDATE users SET banned_at = now(), ban_reason = $2 WHERE id = $1 AND ($3 OR NOT is_admin)', [userId, reason, canBanAdmins]);
 	assert(rowCount, 'Account not found', 404);
 	for (const quizId of await closeOwnerRuns(userId)) {
 		abortGame(quizId);
@@ -181,4 +186,66 @@ export const listReports = async (resolved: boolean): Promise<AdminReport[]> => 
 export const dismissReport = async (adminId: number, reportId: number): Promise<void> => {
 	const { rowCount } = await pool.query('UPDATE quiz_reports SET resolved_at = now(), resolved_by = $2 WHERE id = $1 AND resolved_at IS NULL', [reportId, adminId]);
 	assert(rowCount, 'Report not found', 404);
+};
+
+export const listRoles = async (): Promise<AdminRole[]> => {
+	const { rows } = await pool.query<{ id: number; users: number } & RoleRow>(
+		`SELECT r.id, ${roleColumns('r.id')}, (SELECT count(*)::int FROM users u WHERE u.role_id = r.id) AS users
+		FROM roles r ORDER BY r.name`,
+	);
+
+	return rows.map((row) => {
+		const { role, ...rest } = readRole(row);
+
+		return { ...role!, ...rest };
+	});
+};
+
+const roleNameTaken = (error: unknown): never => {
+	if (isUniqueViolation(error)) {
+		throw new HttpError(409, 'A role with this name already exists');
+	}
+
+	throw error;
+};
+
+const LIMIT_KEYS = Object.keys(LIMIT_COLUMNS) as (keyof PlanLimits)[];
+
+const ROLE_COLUMNS = [...LIMIT_KEYS.map((key) => LIMIT_COLUMNS[key]), ...ADMIN_SECTIONS.map((section) => ADMIN_COLUMNS[section])];
+
+// $1..$3 = name, icon, colour, then one parameter per ROLE_COLUMNS entry.
+const roleValues = (role: UserRole): (string | number | boolean | null)[] => [
+	role.name,
+	role.icon,
+	role.color,
+	...LIMIT_KEYS.map((key) => role.limits[key] ?? null),
+	...ADMIN_SECTIONS.map((section) => role.admin.includes(section)),
+];
+
+export const createRole = async (role: UserRole): Promise<void> => {
+	const params = ROLE_COLUMNS.map((_, index) => `$${index + 4}`);
+	await pool.query(`INSERT INTO roles (name, icon, color, ${ROLE_COLUMNS.join(', ')}) VALUES ($1, $2, $3, ${params.join(', ')})`, roleValues(role))
+		.catch(roleNameTaken);
+};
+
+export const updateRole = async (roleId: number, role: UserRole): Promise<void> => {
+	const sets = ROLE_COLUMNS.map((column, index) => `${column} = $${index + 5}`);
+	const result = await pool.query(`UPDATE roles SET name = $2, icon = $3, color = $4, ${sets.join(', ')} WHERE id = $1`, [roleId, ...roleValues(role)])
+		.catch(roleNameTaken);
+	assert(result.rowCount, 'Role not found', 404);
+};
+
+// Holders fall back to their plan (users.role_id is ON DELETE SET NULL).
+export const deleteRole = async (roleId: number): Promise<void> => {
+	const { rowCount } = await pool.query('DELETE FROM roles WHERE id = $1', [roleId]);
+	assert(rowCount, 'Role not found', 404);
+};
+
+export const setUserRole = async (userId: number, roleId: number | null): Promise<void> => {
+	if (roleId !== null) {
+		const { rowCount } = await pool.query('SELECT 1 FROM roles WHERE id = $1', [roleId]);
+		assert(rowCount, 'Role not found', 404);
+	}
+	const { rowCount } = await pool.query('UPDATE users SET role_id = $2 WHERE id = $1', [userId, roleId]);
+	assert(rowCount, 'Account not found', 404);
 };

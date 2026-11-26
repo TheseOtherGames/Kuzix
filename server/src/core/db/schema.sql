@@ -29,6 +29,26 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_sent_at TIMESTAMPTZ;
 -- Account deleted by its owner: email, username and logins are wiped, quizzes and game history stay.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 
+-- Admin-made roles: a badge (name, icon, colour) shown on public pages. Each max_* overrides the same limit
+-- of the holder's plan, NULL keeps the plan value (LIMIT_COLUMNS in server/src/features/user/roles.ts).
+CREATE TABLE IF NOT EXISTS roles (
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL UNIQUE,
+	icon TEXT NOT NULL,
+	color TEXT NOT NULL,
+	max_quizzes INTEGER CHECK (max_quizzes > 0),
+	max_questions INTEGER CHECK (max_questions > 0),
+	max_players INTEGER CHECK (max_players > 0),
+	-- Admin panel sections the role opens (ADMIN_COLUMNS in roles.ts). Roles and the admin flag stay full-admin only.
+	admin_overview BOOLEAN NOT NULL DEFAULT false,
+	admin_users BOOLEAN NOT NULL DEFAULT false,
+	admin_quizzes BOOLEAN NOT NULL DEFAULT false,
+	admin_games BOOLEAN NOT NULL DEFAULT false,
+	admin_reports BOOLEAN NOT NULL DEFAULT false,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS role_id INTEGER REFERENCES roles(id) ON DELETE SET NULL;
+
 CREATE TABLE IF NOT EXISTS user_identities (
 	provider TEXT NOT NULL,
 	provider_user_id TEXT NOT NULL,

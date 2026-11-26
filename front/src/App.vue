@@ -46,7 +46,7 @@ const openChangelog = (): void => {
 
 <template>
 	<AppHeader v-if="!$route.meta.immersive" />
-	<main class="main" :class="{ immersive: $route.meta.immersive }">
+	<main class="main" :class="{ immersive: $route.meta.immersive, wide: $route.meta.wide }">
 		<RouterView />
 	</main>
 	<footer v-if="!$route.meta.immersive" class="footer">
@@ -231,6 +231,10 @@ const openChangelog = (): void => {
 	50% {
 		transform: scale(1.35);
 	}
+}
+
+.main.wide {
+	width: 100%;
 }
 
 .main.immersive {

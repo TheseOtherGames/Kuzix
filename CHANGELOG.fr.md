@@ -1,5 +1,10 @@
 # Journal des modifications
 
+## 0.7.5 - 2026-11-26
+- [feat] Rôles : badges avec limites personnalisées, donnés par les admins
+- [feat] Badge de rôle sur les profils publics et la bibliothèque
+- [feat] Les rôles peuvent ouvrir certaines sections de l'administration
+
 ## 0.7.4 - 2026-11-26
 - [fix] Les fenêtres ne défilent plus sur le côté
 - [style] Nouvel aperçu de quiz avec des cartes de questions colorées

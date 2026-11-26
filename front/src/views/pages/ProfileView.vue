@@ -11,6 +11,7 @@ import ProfileStats from '@/views/components/profile/ProfileStats.vue';
 import GameHistory from '@/views/components/profile/GameHistory.vue';
 import SettingsCard from '@/views/components/profile/SettingsCard.vue';
 import AccountCard from '@/views/components/profile/AccountCard.vue';
+import RoleCard from '@/views/components/profile/RoleCard.vue';
 import type { PlayerAnswerDetail } from '@/interfaces/Quiz/QuizInterface';
 import type { PlayHistoryEntry, Profile, UserStats } from '@/interfaces/User/UserInterface';
 import { api } from '@/utils/API';
@@ -175,6 +176,7 @@ const showGame = async (entry: PlayHistoryEntry): Promise<void> => {
 		<section v-else id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" class="settings-panel">
 			<SettingsCard class="narrow" />
 			<AccountCard class="narrow" :exporting="exporting" @export="exportData" @delete="confirmingDelete = true" />
+			<RoleCard class="narrow" />
 		</section>
 
 		<BaseModal :open="Boolean(selected)" :title="selected?.quizTitle ?? ''" wide @close="selected = null">

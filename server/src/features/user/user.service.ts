@@ -1,19 +1,24 @@
 import { pool, withTransaction } from '../../core/db/pool';
 import type { OAuthProfile, Plan, PlayHistoryEntry, User, UserStats } from './user.types';
 import { PLANS } from './plans';
+import { adminAreasOf, mergeLimits, readRole, roleColumns, type RoleRow } from './roles';
 import type { PlayerAnswerDetail } from '../quiz/quiz.types';
 import { assert, HttpError } from '../../core/httpError';
 import { POINTS_PER_DIFFICULTY } from '../game/scoring';
 
 // providers: how the account can log in ('password' + linked OAuth providers).
-const USER_COLUMNS = `id, uid, email, username, avatar, plan, is_admin AS "isAdmin",
+const USER_COLUMNS = `id, uid, email, username, avatar, plan, is_admin AS "isAdmin", ${roleColumns('users.role_id')},
 	ARRAY(SELECT 'password' WHERE users.password_hash IS NOT NULL
 		UNION ALL SELECT provider FROM user_identities WHERE user_id = users.id ORDER BY 1) AS providers`;
 
-type UserRow = Omit<User, 'limits'>;
+type UserRow = Omit<User, 'limits' | 'role' | 'adminAreas'> & RoleRow;
 
-const toUser = <T extends UserRow>(row: T): T & User => {
-	return { ...row, limits: PLANS[row.plan as Plan] ?? PLANS.free };
+const toUser = <T extends UserRow>(row: T): Omit<T, keyof RoleRow> & User => {
+	const user = readRole(row);
+
+	return {
+		...user, limits: mergeLimits(PLANS[row.plan as Plan] ?? PLANS.free, user.role), adminAreas: adminAreasOf(row.isAdmin, user.role),
+	};
 };
 
 export const cleanUsername = (value: unknown): string => {
@@ -38,7 +43,7 @@ export const findUserById = async (id: number): Promise<User | null> => {
 
 type LoginRow = UserRow & { passwordHash: string | null; banned: boolean; emailVerified: boolean };
 
-export const findUserWithPassword = async (email: string): Promise<(User & LoginRow) | null> => {
+export const findUserWithPassword = async (email: string): Promise<(User & Omit<LoginRow, keyof RoleRow>) | null> => {
 	const { rows } = await pool.query<LoginRow>(
 		`SELECT ${USER_COLUMNS}, password_hash AS "passwordHash", banned_at IS NOT NULL AS banned,
 			email_verified_at IS NOT NULL AS "emailVerified"

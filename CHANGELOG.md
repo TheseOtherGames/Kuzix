@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.5 - 2026-11-26
+- [feat] Roles: badges with custom limits, given by admins
+- [feat] Role badge on public profiles and library cards
+- [feat] Roles can open chosen admin panel sections
+
 ## 0.7.4 - 2026-11-26
 - [fix] Popups no longer scroll sideways
 - [style] Redesigned quiz preview with colourful question cards

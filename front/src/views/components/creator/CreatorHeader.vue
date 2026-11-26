@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AvatarIcon from '@/views/components/utils/image/AvatarIcon.vue';
 import NameTag from '@/views/components/utils/badge/NameTag.vue';
+import RoleBadge from '@/views/components/utils/badge/RoleBadge.vue';
 import type { PublicProfile } from '@/interfaces/Quiz/QuizInterface';
 import { locale, t } from '@/i18n';
 
@@ -11,7 +12,10 @@ defineProps<{ profile: PublicProfile }>();
 	<header class="creator">
 		<span class="portrait"><AvatarIcon :value="profile.avatar" /></span>
 		<div class="who">
-			<h1><NameTag :name="profile.username" :look="profile.avatar" /></h1>
+			<div class="name">
+				<h1><NameTag :name="profile.username" :look="profile.avatar" /></h1>
+				<RoleBadge v-if="profile.role" :role="profile.role" />
+			</div>
 			<p class="muted">{{ t('creator.since', { date: new Date(profile.createdAt).toLocaleDateString(locale, { month: 'long', year: 'numeric' }) }) }}</p>
 		</div>
 	</header>
@@ -48,6 +52,13 @@ defineProps<{ profile: PublicProfile }>();
 /* No overflow: hidden: NameTag draws its effects outside its box. */
 .who {
 	min-width: 0;
+}
+
+.name {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.75rem;
 }
 
 .who h1 {
