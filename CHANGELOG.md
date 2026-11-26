@@ -1,40 +1,28 @@
 # Changelog
 
-## 0.7.7 - 2026-11-26
-- [feat] Four new activity charts on the admin dashboard
-- [style] Admin charts keep a comfortable width
-
-## 0.7.6 - 2026-11-26
-- [fix] Admin tables no longer scroll sideways
-- [style] Same action buttons in every admin table
-
-## 0.7.5 - 2026-11-26
-- [feat] Roles: badges with custom limits, given by admins
-- [feat] Role badge on public profiles and library cards
-- [feat] Roles can open chosen admin panel sections
-
-## 0.7.4 - 2026-11-26
-- [fix] Popups no longer scroll sideways
-- [style] Redesigned quiz preview with colourful question cards
-
-## 0.7.3 - 2026-11-26
-- [feat] Add button explains itself in a tooltip
-- [fix] A library quiz can only be added to your quizzes once
-- [style] Tooltips stay readable on disabled buttons
-
-## 0.7.2 - 2026-11-26
+## 0.8.0 - 2026-11-26
+- [feat] Waiting room shows seats left and game settings
+- [feat] Library cards count how many times a quiz was added
 - [feat] Public creator cards with stats, search and sort
 - [feat] Library authors link to their creator card
 - [feat] First publish warns that your creator card goes public
 - [feat] Back button on creator cards
-- [style] Clearer author button with tooltip on library cards
-- [style] Creator card quizzes no longer repeat the author
-
-## 0.7.1 - 2026-11-26
-- [feat] Waiting room shows seats left and game settings
-- [feat] Library cards count how many times a quiz was added
+- [feat] Add button explains itself in a tooltip
+- [feat] Roles: badges with custom limits, given by admins
+- [feat] Role badge on public profiles and library cards
+- [feat] Roles can open chosen admin panel sections
+- [feat] Four new activity charts on the admin dashboard
+- [fix] A library quiz can only be added to your quizzes once
+- [fix] Popups no longer scroll sideways
+- [fix] Admin tables no longer scroll sideways
 - [style] Redesigned host waiting room with join steps
 - [style] New waiting room screenshot on the home page
+- [style] Clearer author button with tooltip on library cards
+- [style] Creator card quizzes no longer repeat the author
+- [style] Tooltips stay readable on disabled buttons
+- [style] Redesigned quiz preview with colourful question cards
+- [style] Same action buttons in every admin table
+- [style] Admin charts keep a comfortable width
 
 ## 0.7.0 - 2026-11-24
 - [feat] Optional email confirmation for password sign-ups

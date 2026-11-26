@@ -1,40 +1,28 @@
 # Journal des modifications
 
-## 0.7.7 - 2026-11-26
-- [feat] Quatre nouveaux graphiques d'activité sur le tableau de bord admin
-- [style] Les graphiques admin gardent une largeur confortable
-
-## 0.7.6 - 2026-11-26
-- [fix] Les tableaux admin ne défilent plus sur le côté
-- [style] Mêmes boutons d'action dans tous les tableaux admin
-
-## 0.7.5 - 2026-11-26
-- [feat] Rôles : badges avec limites personnalisées, donnés par les admins
-- [feat] Badge de rôle sur les profils publics et la bibliothèque
-- [feat] Les rôles peuvent ouvrir certaines sections de l'administration
-
-## 0.7.4 - 2026-11-26
-- [fix] Les fenêtres ne défilent plus sur le côté
-- [style] Nouvel aperçu de quiz avec des cartes de questions colorées
-
-## 0.7.3 - 2026-11-26
-- [feat] Le bouton d'ajout s'explique dans une infobulle
-- [fix] Un quiz de la bibliothèque ne s'ajoute qu'une fois à vos quiz
-- [style] Les infobulles restent lisibles sur les boutons désactivés
-
-## 0.7.2 - 2026-11-26
+## 0.8.0 - 2026-11-26
+- [feat] La salle d'attente affiche les places et réglages
+- [feat] Les cartes de la bibliothèque comptent les ajouts du quiz
 - [feat] Cartes de créateur publiques avec stats, recherche et tri
 - [feat] Les auteurs de la bibliothèque mènent à leur carte
 - [feat] La première publication prévient que votre carte devient publique
 - [feat] Bouton retour sur les cartes de créateur
-- [style] Bouton auteur plus visible avec infobulle sur les cartes
-- [style] Les quiz de la carte de créateur ne répètent plus l'auteur
-
-## 0.7.1 - 2026-11-26
-- [feat] La salle d'attente affiche les places et réglages
-- [feat] Les cartes de la bibliothèque comptent les ajouts du quiz
+- [feat] Le bouton d'ajout s'explique dans une infobulle
+- [feat] Rôles : badges avec limites personnalisées, donnés par les admins
+- [feat] Badge de rôle sur les profils publics et la bibliothèque
+- [feat] Les rôles peuvent ouvrir certaines sections de l'administration
+- [feat] Quatre nouveaux graphiques d'activité sur le tableau de bord admin
+- [fix] Un quiz de la bibliothèque ne s'ajoute qu'une fois à vos quiz
+- [fix] Les fenêtres ne défilent plus sur le côté
+- [fix] Les tableaux admin ne défilent plus sur le côté
 - [style] Salle d'attente de l'hôte repensée, étapes pour rejoindre
 - [style] Nouvelle capture de la salle d'attente sur la page d'accueil
+- [style] Bouton auteur plus visible avec infobulle sur les cartes
+- [style] Les quiz de la carte de créateur ne répètent plus l'auteur
+- [style] Les infobulles restent lisibles sur les boutons désactivés
+- [style] Nouvel aperçu de quiz avec des cartes de questions colorées
+- [style] Mêmes boutons d'action dans tous les tableaux admin
+- [style] Les graphiques admin gardent une largeur confortable
 
 ## 0.7.0 - 2026-11-24
 - [feat] Confirmation de l'e-mail optionnelle pour les inscriptions par mot de passe
