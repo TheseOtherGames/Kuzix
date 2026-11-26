@@ -1,5 +1,8 @@
 # Journal des modifications
 
+## 0.7.1 - 2026-11-26
+- [style] Nouvelle capture de la salle d'attente sur la page d'accueil
+
 ## 0.7.0 - 2026-11-24
 - [feat] Confirmation de l'e-mail optionnelle pour les inscriptions par mot de passe
 - [feat] Les parties sont limitées à 30 joueurs avec l'offre gratuite

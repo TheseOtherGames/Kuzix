@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.1 - 2026-11-26
+- [style] New waiting room screenshot on the home page
+
 ## 0.7.0 - 2026-11-24
 - [feat] Optional email confirmation for password sign-ups
 - [feat] Games are capped at 30 players on the free plan
